@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.8.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<tx:annotation-driven/>
+	
+	
+	<jpa:repositories base-package="com.javateam.service.deprecated" /> 
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+    <bean id="dataSource"
+         class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+         <property name="driverClass" value="oracle.jdbc.OracleDriver" />
+         <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe" />
+         <property name="username" value="s_prj" />
+         <property name="password" value="1234" />
+    </bean>
+    
+    <!-- myBatis -->
+    <!-- <bean id="sqlSessionFactory"
+           class="org.mybatis.spring.SqlSessionFactoryBean">
+         <property name="dataSource" ref="dataSource" />
+         <property name="configLocation" 
+         		   value="classpath:/META-INF/mybatis-config.xml" />
+    </bean>
+     
+    <bean id="sqlSession"
+          class="org.mybatis.spring.SqlSessionTemplate">
+         <constructor-arg name="sqlSessionFactory"
+                          ref="sqlSessionFactory" />
+    </bean> -->
+    
+    <!--  JPA/hibernate -->
+    
+    <!-- <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/META-INF/jpa-resources.properties</value>
+            </list>
+        </property>
+    </bean> -->
+    
+<!--     <context:property-placeholder 
+    		 location="classpath:/META-INF/jpa-resources.properties" /> -->
+    
+<!--     <bean id="namingStrategy" class="${hibernate.ejb.naming_strategy}" /> -->
+    
+    
+    <!-- <bean id="mainDataSource" 
+    	  class="com.jolbox.bonecp.BoneCPDataSource" 
+    	  destroy-method="close"> 
+    	  
+    	<property name="driverClass" value="com.mysql.jdbc.Driver" /> 
+    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/jpa_db" /> 
+    	<property name="username" value="jpa_u"/> 
+    	<property name="password" value="******"/> 
+    	<property name="idleConnectionTestPeriodInMinutes" value="60"/> 
+    	<property name="idleMaxAgeInMinutes" value="240"/> 
+    	<property name="maxConnectionsPerPartition" value="30"/> 
+    	<property name="minConnectionsPerPartition" value="10"/> 
+    	<property name="partitionCount" value="3"/> 
+    	<property name="acquireIncrement" value="5"/> 
+    	<property name="statementsCacheSize" value="100"/> 
+    	<property name="releaseHelperThreads" value="3"/> 
+   	</bean>  -->
+   	
+   	<!-- Spring/JPA --> 
+   	<jpa:repositories base-package="com.javateam.service.deprecated" /> 
+   	
+   	<bean class="org.springframework.orm.jpa.JpaTransactionManager" 
+   		  id="transactionManager"> 
+   		  
+  		<property name="entityManagerFactory" ref="entityManagerFactory" /> 
+  		<property name="jpaDialect"> 
+  			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" /> 
+ 		</property> 
+	</bean> 
+	
+	<bean id="entityManagerFactory" 
+		  class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"> 
+		
+		<property name="dataSource" ref="dataSource" /> 
+		<property name="packagesToScan" value="com.javateam.model.vo"/> 
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"> 
+				<property name="generateDdl" value="true" /> 
+				<property name="showSql" value="true"/> 
+				<property name="databasePlatform" 
+						  value="org.hibernate.dialect.Oracle10gDialect"/> 
+				<property name="database" value="ORACLE"/> 
+			</bean> 
+		</property> 
+		<property name="jpaProperties"> 
+			<value>hibernate.cache.use_second_level_cache = true 
+				   hibernate.cache.region.factory_class = org.hibernate.cache.ehcache.EhCacheRegionFactory 
+				   hibernate.cache.use_query_cache = true 
+				   hibernate.generate_statistics = true
+			</value> 
+		</property> 
+	</bean>
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+    <!-- Fileupload : 파일 관리자 id(multipartResolver)는 가급적 그대로 사용할 것! -->
+     <bean id="multipartResolver"
+                class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+                  <property name="maxUploadSize" value="5000000" />  <!-- 파일 크기 제한 : 50MB -->
+    </bean>          
+   
+    <!-- File repository : 파일 저장소 -->
+    <bean id="uploadDirResource" class="org.springframework.core.io.FileSystemResource">
+        <constructor-arg>
+          <value>D:\\jsh-work\\used-image\\</value>
+          <!--<value>E:/fileUpload/upload/</value> -->
+        </constructor-arg>
+    </bean>
+    
+    <!-- 트랜잭션 템플릿 추가 -->
+    <bean id="transactionTemplate"
+         class="org.springframework.transaction.support.TransactionTemplate"
+         p:transactionManager-ref="transactionManager" />
+	
+</beans>
