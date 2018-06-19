@@ -1,7 +1,9 @@
 /**
  * 
  */
-package com.javateam.service.deprecated;
+package com.javateam.service;
+
+import java.util.List;
 
 import com.javateam.model.vo.BoardVO;
 
@@ -11,4 +13,8 @@ import com.javateam.model.vo.BoardVO;
  */
 public interface BoardService {
 	void insertBoard(BoardVO boardVO);
+
+	int getListCount();
+
+	List<BoardVO> getArticleList(int page, int limit);
 }

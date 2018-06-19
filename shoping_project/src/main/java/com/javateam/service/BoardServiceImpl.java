@@ -1,12 +1,15 @@
 /**
  * 
  */
-package com.javateam.service.deprecated;
+package com.javateam.service;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.javateam.model.vo.BoardVO;
+import com.javateam.service.deprecated.JpaDAO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,5 +34,19 @@ public class BoardServiceImpl implements BoardService {
 		dao.insert(board);
 
 	}
+	
+   @Override
+   public int getListCount() {
+      
+       log.info("getListCount");      
+       return dao.list().size();
+   } //   
+
+   @Override
+   public List<BoardVO> getArticleList(int page, int limit) {
+
+       log.info("getArticleList");
+       return dao.getListByPageAndLimit(page, limit);
+   } //
 
 }

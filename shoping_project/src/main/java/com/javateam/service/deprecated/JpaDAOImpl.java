@@ -71,8 +71,6 @@ public class JpaDAOImpl implements JpaDAO {
 
 		System.out.println(board);
 		
-		board.setBoardSubject("안녕하세요.");
-		
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 
 			@Override
@@ -169,5 +167,45 @@ public class JpaDAOImpl implements JpaDAO {
 
 		return entityManager.find(BoardVO.class, boardNum);
 	}
+	
+	
+		@SuppressWarnings("unchecked")
+	    @Override
+	    public List<BoardVO> getListByPageAndLimit(int page, int limit) {
+	 
+	        log.info("getListByPageAndLimit");
+	       
+	        List<BoardVO> list = null;
+	        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+	        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+	     
+	        TransactionStatus status = transactionManager.getTransaction(def);
+	       
+	        String board_list_sql = "SELECT * FROM (" +
+	                        "                SELECT " +
+	                        "                       m.*," +
+	                        "                       FLOOR((ROWNUM - 1)/? + 1) page " +
+	                        "                FROM (" +
+	                        "                         SELECT * FROM board_tbl " +
+	                        "                ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC " +
+	                        "                     ) m" +
+	                        "              )" +
+	                        "      WHERE page = ?";
+	       
+	        try {
+	             list = entityManager.createNativeQuery(board_list_sql, BoardVO.class)
+	                                .setParameter(1, limit)
+	                                .setParameter(2, page)
+	                                .getResultList();
+	             
+	             transactionManager.commit(status);
+	        } catch (Exception e) {
+	             log.debug("getListByPageAndLimit error");
+	             transactionManager.rollback(status);
+	        } //
+	       
+	        return list;   
+	    } //
+	 
 
 }

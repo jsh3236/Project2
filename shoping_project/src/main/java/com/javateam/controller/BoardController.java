@@ -3,11 +3,10 @@ package com.javateam.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.javateam.model.vo.BoardDTO;
 import com.javateam.model.vo.BoardVO;
-import com.javateam.service.deprecated.BoardService;
+import com.javateam.model.vo.PageInfo;
+import com.javateam.service.BoardService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -114,6 +114,44 @@ public class BoardController {
 
 		 return "/admin/msg"; // 메시지 페이지
 	} //
+	
+
+    @RequestMapping("/list.do/{page}")
+    public String listBoard(@PathVariable("page") int page,
+                          Model model) {
+     
+      int limit = 10; // 페이지당 글수
+      List<BoardVO> articleList;
+     
+      page = page!=0 ? page : 1; // page 설정
+     
+      int listCount = boardSvc.getListCount();
+     
+      articleList= boardSvc.getArticleList(page, limit);
+     
+      //총 페이지 수.
+      int maxPage=(int)((double)listCount/limit+0.95); //0.95를 더해서 올림 처리.
+      // 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
+      int startPage = (((int) ((double)page / 10 + 0.9)) - 1) * 10 + 1;
+      //현재 페이지에 보여줄 마지막 페이지 수(10, 20, 30, ...)
+      int endPage = startPage+10-1;
+     
+      if (endPage> maxPage) endPage= maxPage;
+     
+      PageInfo pageInfo = new PageInfo();
+      pageInfo.setEndPage(endPage);
+      pageInfo.setListCount(listCount);
+      pageInfo.setMaxPage(maxPage);
+      pageInfo.setPage(page);
+      pageInfo.setStartPage(startPage);
+     
+      model.addAttribute("pageInfo", pageInfo);
+      model.addAttribute("articleList", articleList);
+     
+      System.out.println("listBoard");
+      
+      return "/board/mouseBoard";
+  } // 
 	
 
 	@RequestMapping("/keyBoardwrite")

@@ -19,4 +19,5 @@ public interface JpaDAO {
 	void update(BoardVO board);
 	boolean delete(int boardNum);
 	BoardVO get(int boardNum);
+	List<BoardVO> getListByPageAndLimit(int page, int limit);
 }

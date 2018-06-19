@@ -39,7 +39,7 @@
 			<h1><a href="${pageContext.request.contextPath}/">Computer</a></h1>
 			<nav>
 				<ul class="menu">
-					<li><a href="${pageContext.request.contextPath}/mouse">Mouse</a></li>
+					<li><a href="${pageContext.request.contextPath}/admin/list.do/{page}">Mouse</a></li>
 					<li><a href="${pageContext.request.contextPath}/keyboard">KeyBoard</a></li>
 					<li><a href="${pageContext.request.contextPath}/head">Headphone</a></li>
 					<li><a href="${pageContext.request.contextPath}/monitor">Monitor</a></li>
@@ -63,7 +63,7 @@
 			<h1><a href="${pageContext.request.contextPath}/">Computer</a></h1>
 			<nav>
 				<ul class="menu">
-					<li><a href="${pageContext.request.contextPath}/mouse">Mouse</a></li>
+					<li><a href="${pageContext.request.contextPath}/admin/list.do">Mouse</a></li>
 					<li><a href="${pageContext.request.contextPath}/keyboard">KeyBoard</a></li>
 					<li><a href="${pageContext.request.contextPath}/head">Headphone</a></li>
 					<li><a href="${pageContext.request.contextPath}/monitor">Monitor</a></li>
