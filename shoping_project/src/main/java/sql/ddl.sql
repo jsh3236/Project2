@@ -44,7 +44,7 @@ CREATE  TABLE users (
  );
 
 
-// Å×ÀÌºí ÄÃ·³ ±æÀÌ ¼³Á¤
+// ï¿½ï¿½ï¿½Ìºï¿½ ï¿½Ã·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 column username format a10;
 column password format a30;
@@ -55,7 +55,7 @@ column address format a30;
 column email format a20;
 
 
-//Å×ÀÌºí º¸±â ÆíÇÏ°Ô
+//ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½
 set linesize 150
 set pagesize 150
 
@@ -63,20 +63,24 @@ set pagesize 150
 
 
 CREATE TABLE BOARD_TBL (
-    BOARD_NUM INT, -- ±Û ¹øÈ£ (oracle¿¡¼­´Â number ¼ººÐÀ¸·Î ÀÚµ¿ º¯È¯µÊ)
-    BOARD_NAME VARCHAR(30) NOT NULL, -- ÀÛ¼ºÀÚ (oracle¿¡¼­´Â varchar2 ¼ººÐÀ¸·Î ÀÚµ¿ º¯È¯µÊ)
-    BOARD_PASS VARCHAR(15) NOT NULL, -- ºñ¹Ð¹øÈ£
-    BOARD_SUBJECT VARCHAR(50) NOT NULL, -- Á¦¸ñ
-    BOARD_CONTENT VARCHAR(2000) NOT NULL, -- ³»¿ë
-    BOARD_FILE VARCHAR(50) NOT NULL, -- Ã·ºÎ ÆÄÀÏ
-    BOARD_RE_REF INT NOT NULL, -- °ü·Ã±Û ¹øÈ£
-    BOARD_RE_LEV INT NOT NULL, -- ´ä±Û ·¹º§
-    BOARD_RE_SEQ INT NOT NULL, -- °ü·Ã±Û Áß Ãâ·Â ¼ø¼­
-    BOARD_READCOUNT INT DEFAULT 0, -- Á¶È¸¼ö
-    BOARD_DATE DATE, -- ÀÛ¼ºÀÏ
+    BOARD_NUM INT, -- ï¿½ï¿½ ï¿½ï¿½È£ (oracleï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ number ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½È¯ï¿½ï¿½)
+    BOARD_NAME VARCHAR(30) NOT NULL, -- ï¿½Û¼ï¿½ï¿½ï¿½ (oracleï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ varchar2 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ï¿½È¯ï¿½ï¿½)
+    BOARD_PASS VARCHAR(15) NOT NULL, -- ï¿½ï¿½Ð¹ï¿½È£
+    BOARD_SUBJECT VARCHAR(50) NOT NULL, -- ï¿½ï¿½ï¿½ï¿½
+    BOARD_PRICE INT NOT NULL,
+    BOARD_CONTENT VARCHAR(2000) NOT NULL, -- ï¿½ï¿½ï¿½ï¿½
+    BOARD_FILE VARCHAR(50) NOT NULL, -- Ã·ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    BOARD_RE_REF INT NOT NULL, -- ï¿½ï¿½ï¿½Ã±ï¿½ ï¿½ï¿½È£
+    BOARD_RE_LEV INT NOT NULL, -- ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    BOARD_RE_SEQ INT NOT NULL, -- ï¿½ï¿½ï¿½Ã±ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    BOARD_READCOUNT INT DEFAULT 0, -- ï¿½ï¿½È¸ï¿½ï¿½
+    BOARD_DATE DATE, -- ï¿½Û¼ï¿½ï¿½ï¿½
     PRIMARY KEY(BOARD_NUM)
 );
  
--- º¸¿Ï
+-- ï¿½ï¿½ï¿½ï¿½
 ALTER TABLE board MODIFY board_num INT DEFAULT 0;
 ALTER TABLE board MODIFY BOARD_NAME VARCHAR(30);
+
+
+out.println("<script>alert('3');</script>");

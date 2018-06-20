@@ -28,6 +28,11 @@ public class HomeController {
 		
 	}
 	
+
+	@RequestMapping("/test")
+	public void test() {
+	}
+	
 	@RequestMapping("/welcome")
 	public void welcome() {
 	}

@@ -11,9 +11,22 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.javateam.secureApp1">
+	<logger name="com.javateam.controller">
 		<level value="info" />
 	</logger>
+	
+	<logger name="com.javateam.model.vo">
+		<level value="info" />
+	</logger>
+	
+	<logger name="com.javateam.service">
+		<level value="info" />
+	</logger>
+	
+	<logger name="com.javateam.deprecated">
+		<level value="info" />
+	</logger>
+	
 	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">

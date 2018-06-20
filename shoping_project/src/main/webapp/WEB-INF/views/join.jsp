@@ -51,26 +51,26 @@ font {
 
 <!-- jQuery UI CSS : 캘린더(datePicker) -->
 <link rel="stylesheet"
-	href="<c:url value='/jQuery/ui/1.12.1/jquery-ui.min.css' />">
+	href="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.css' />">
 
 <!-- 주소검색 : daum -->
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
 <!-- jQuery -->
-<script src="<c:url value='/jQuery/3.3.1/jquery-3.3.1.min.js' />"></script>
+<script src="<c:url value='/js/jQuery/3.3.1/jquery-3.3.1.min.js' />"></script>
 
 <!-- jQuery UI -->
-<script src="<c:url value='/jQuery/ui/1.12.1/jquery-ui.min.js' />"></script>
+<script src="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.js' />"></script>
 
 <!-- jQuery UI : 캘린더(datePicker) 설정(한글 지원) -->
-<script src="<c:url value='/custom/datepicker.ko.js' />"></script>
+<script src="<c:url value='/js/custom/datepicker.ko.js' />"></script>
 
 <!-- 폼 점검(form validation) -->
 <%-- <script src="<c:url value='/custom/memberJoinAngularValidator.js' />"></script> --%>
 
 <!-- AngularJS lib -->
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.10/angular.min.js"></script> -->
-<script src="<c:url value='/angularjs/1.6.10/angular.min.js' />"></script>
+<script src="<c:url value='/js/angularjs/1.6.10/angular.min.js' />"></script>
 
 
 <!-- AngularJS -->

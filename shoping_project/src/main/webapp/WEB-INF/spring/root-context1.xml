@@ -117,7 +117,7 @@
     <!-- File repository : 파일 저장소 -->
     <bean id="uploadDirResource" class="org.springframework.core.io.FileSystemResource">
         <constructor-arg>
-          <value>D:\\jsh-work\\used-image\\</value>
+          <value>/resources/image/</value>
           <!--<value>E:/fileUpload/upload/</value> -->
         </constructor-arg>
     </bean>

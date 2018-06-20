@@ -178,6 +178,14 @@ font {
 							rows="20" required="required"></textarea> <form:errors
 							path="boardContent" /></td>
 				</tr>
+				
+				<tr>
+					<th><label for="boardPrice">금 액</label></th>
+					<td class="td_right"><input name="boardPrice" type="text"
+						id="boardPrice" required="required" style="height: 25px;"/>  <form:errors
+							path="boardPrice" /></td>
+				</tr>
+				
 				<tr>
 					<th><label for="boardFile"> 메인 사진 </label></th>
 					<td class="td_right"><input name="boardFile" type="file"

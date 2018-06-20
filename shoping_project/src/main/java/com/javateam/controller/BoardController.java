@@ -68,16 +68,37 @@ public class BoardController {
 		// 업로드 파일 처리
 		if (!boardDTO.getBoardFile().isEmpty() && file != null) { // 파일 유효성 점검
 
-			String fileName = file.getOriginalFilename();
+			String image = file.getOriginalFilename();
 
 			// 파일 저장소(E:\\lsh\\fileupload) 에 저장
 			try {
 				byte[] bytes = file.getBytes();
 
-				File outFileName = new File(uploadDirResource.getPath() + fileName);
-				fos = new FileOutputStream(outFileName);
-
+				File imageFile = new File(uploadDirResource.getPath() + image);
+				
+				
+				 // 같은 이름의 파일이름 처리
+	            if(imageFile.exists())
+	            {
+	                  for(int i = 0; true; i++)
+	                  {
+	                        imageFile = new File("C:\\test", image + "_" + i);
+	    
+	                        if(!imageFile.exists())
+	                        {
+	                              image = image + "_" + i;
+	                              break;
+	                        }
+	                  }
+	            }
+	            
+	            fos = new FileOutputStream(imageFile);
 				fos.write(bytes);
+				
+				// 썸네일 이미지 생성
+/*	            File destFile = new File("C:\\test", image + ".small.jpg");
+	           ImageUtil.resize(imageFile, destFile, 50, ImageUtil.RATIO);*/
+
 
 			} catch (IOException e) {
 				log.info("BoardController save File writing error ! ");
@@ -116,10 +137,10 @@ public class BoardController {
 	} //
 	
 
-    @RequestMapping("/list.do/{page}")
+    @RequestMapping("/list/{page}")
     public String listBoard(@PathVariable("page") int page,
                           Model model) {
-     
+    	
       int limit = 10; // 페이지당 글수
       List<BoardVO> articleList;
      
@@ -150,7 +171,7 @@ public class BoardController {
      
       System.out.println("listBoard");
       
-      return "/board/mouseBoard";
+      return "board/mouseBoard";
   } // 
 	
 

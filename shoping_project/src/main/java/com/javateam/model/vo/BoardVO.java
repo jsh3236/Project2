@@ -65,6 +65,9 @@ public class BoardVO {
 	@Column(name="board_content", nullable=false, length=2000)
 	private String boardContent; // 글 내용
 	
+	@Column(name="board_price", nullable=false, length=200)
+	private int boardPrice; // 금액
+	
 	@Column(name="board_file", nullable=true, length=2000)
 	private String boardFile; // 첨부 파일
 	
@@ -90,6 +93,7 @@ public class BoardVO {
         this.boardNum = board.getBoardNum();
         this.boardSubject = board.getBoardSubject();
         this.boardContent = board.getBoardContent();
+        this.boardPrice = board.getBoardPrice();
         this.boardFile = board.getBoardFile().getOriginalFilename(); // 파일명 저장
         this.boardReRef = board.getBoardReRef();
         this.boardReLev = board.getBoardReLev();
