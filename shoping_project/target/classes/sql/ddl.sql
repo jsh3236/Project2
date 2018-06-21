@@ -67,6 +67,7 @@ CREATE TABLE BOARD_TBL (
     BOARD_NAME VARCHAR(30) NOT NULL, -- �ۼ��� (oracle������ varchar2 �������� �ڵ� ��ȯ��)
     BOARD_PASS VARCHAR(15) NOT NULL, -- ��й�ȣ
     BOARD_SUBJECT VARCHAR(50) NOT NULL, -- ����
+    BOARD_PRICE INT NOT NULL,
     BOARD_CONTENT VARCHAR(2000) NOT NULL, -- ����
     BOARD_FILE VARCHAR(50) NOT NULL, -- ÷�� ����
     BOARD_RE_REF INT NOT NULL, -- ���ñ� ��ȣ

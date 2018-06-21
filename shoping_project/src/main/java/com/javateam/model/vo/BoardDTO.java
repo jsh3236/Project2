@@ -26,9 +26,9 @@ public class BoardDTO {
     @Size(min=1, max=2000, message="글 내용을 입력하십시오")
     private String boardContent; // 글 내용
     
-    @Size(min=1, max=200, message="금액을 입력하십시오")
     private int boardPrice;
     
+    private MultipartFile boardFileContent; 
     private MultipartFile boardFile; // 첨부 파일
     private int boardReRef; // 관련글 번호
     private int boardReLev; // 답글 레벨

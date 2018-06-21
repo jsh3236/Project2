@@ -179,18 +179,11 @@ font {
 							path="boardContent" /></td>
 				</tr>
 				
-				
 				<tr>
 					<th><label for="boardPrice">금 액</label></th>
 					<td class="td_right"><input name="boardPrice" type="text"
 						id="boardPrice" required="required" style="height: 25px;"/>  <form:errors
 							path="boardPrice" /></td>
-				</tr>
-				
-				<tr>
-					<th><label for="boardFileContent"> 내용 사진 </label></th>
-					<td class="td_right"><input name="boardFileContent" type="file"
-						id="boardFileContent" /></td>
 				</tr>
 				
 				<tr>
@@ -201,7 +194,7 @@ font {
 			</table>
 			<br>
 			<section id="commandCell">
-				<input type="submit" value="등록">&nbsp;&nbsp; <input
+				<input type="submit" value="수정">&nbsp;&nbsp; <input
 					type="reset" value="다시쓰기" />
 			</section>
 

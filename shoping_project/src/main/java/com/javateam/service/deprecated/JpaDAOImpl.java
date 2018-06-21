@@ -70,21 +70,21 @@ public class JpaDAOImpl implements JpaDAO {
 	public void insert(BoardVO board) {
 
 		System.out.println(board);
-		
+
 		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
 
 			@Override
 			protected void doInTransactionWithoutResult(TransactionStatus status) {
 
 				try {
-					
+
 					entityManager.merge(board);
-					
+
 				} catch (Exception e) {
-					
+
 					log.debug("insert error : {}", e);
 					status.setRollbackOnly();
-					
+
 				}
 			}
 		});
@@ -167,45 +167,63 @@ public class JpaDAOImpl implements JpaDAO {
 
 		return entityManager.find(BoardVO.class, boardNum);
 	}
-	
-	
-		@SuppressWarnings("unchecked")
-	    @Override
-	    public List<BoardVO> getListByPageAndLimit(int page, int limit) {
-	 
-	        log.info("getListByPageAndLimit");
-	       
-	        List<BoardVO> list = null;
-	        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-	        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-	     
-	        TransactionStatus status = transactionManager.getTransaction(def);
-	       
-	        String board_list_sql = "SELECT * FROM (" +
-	                        "                SELECT " +
-	                        "                       m.*," +
-	                        "                       FLOOR((ROWNUM - 1)/? + 1) page " +
-	                        "                FROM (" +
-	                        "                         SELECT * FROM board_tbl " +
-	                        "                ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC " +
-	                        "                     ) m" +
-	                        "              )" +
-	                        "      WHERE page = ?";
-	       
-	        try {
-	             list = entityManager.createNativeQuery(board_list_sql, BoardVO.class)
-	                                .setParameter(1, limit)
-	                                .setParameter(2, page)
-	                                .getResultList();
-	             
-	             transactionManager.commit(status);
-	        } catch (Exception e) {
-	             log.debug("getListByPageAndLimit error");
-	             transactionManager.rollback(status);
-	        } //
-	       
-	        return list;   
-	    } //
-	 
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<BoardVO> getListByPageAndLimit(int page, int limit) {
+
+		log.info("getListByPageAndLimit");
+
+		List<BoardVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+
+		String board_list_sql = "SELECT * FROM (" + "                SELECT " + "                       m.*,"
+				+ "                       FLOOR((ROWNUM - 1)/? + 1) page " + "                FROM ("
+				+ "                         SELECT * FROM board_tbl "
+				+ "                ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC " + "                     ) m"
+				+ "              )" + "      WHERE page = ?";
+
+		try {
+			list = entityManager.createNativeQuery(board_list_sql, BoardVO.class).setParameter(1, limit)
+					.setParameter(2, page).getResultList();
+
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.debug("getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+
+		return list;
+	} //
+
+	@Override
+	public void updateReadCount(int boardNum) {
+
+        log.info("updateReadCount");
+        log.info("boardNum : {}", boardNum);
+       
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        TransactionStatus status = transactionManager.getTransaction(def);
+       
+        try {
+            entityManager.createNativeQuery("UPDATE board_tbl SET "
+                                       + "board_read_count = board_read_count + 1 "
+                                       + "WHERE board_num=?")
+                         .setParameter(1, boardNum)
+                         .executeUpdate(); 
+ 
+            transactionManager.commit(status); 
+           
+        } catch (Exception e) {
+            log.info("error");
+            transactionManager.rollback(status);
+        } // try
+       
+    } //
+
 
 }

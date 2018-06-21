@@ -11,22 +11,25 @@
 <style type="text/css">
 
 	/* reset */
-	*{margin: 0; padding: 0;}
-	li{list-style: none;}
-	a{text-decoration: none;}
+	*{margin: 0; padding: 0}
+	li{list-style: none}
+	a{text-decoration: none}
+	header{list-style: none}
+	h1{list-style: none}
 	
 	/* common */
 	.wrapper{width: 100%; margin: 0 auto;}
 	.clearfix{content: ''; display: block; clear: both;}
 	
 	/* header */
-	header{height: 75px; border: 1px solid #D3D3D3;
-		   position: fixed; width: 100%; z-index: 9999; top: 0; left: 0; color: white;}
-	header a{display:  block; color: black;}
-	h1{color: black; line-height: 75px; float: left; padding-left: 200px; font-size: 30px;}
-	.menu{float:right;  font-size: 15px;}
-	.menu li{float: left;}
-	.menu a{line-height: 75px; color: black; padding: 0 15px; display:  block;}
+	.myHeader{height: 75px; border: 1px solid #D3D3D3;
+		   position: fixed; width: 100%; z-index: 9999; top: 0; left: 0; background-color: white;}
+	.myHeader a{display:  block; color: black;}
+	.myH1{color: black; line-height: 75px; float: left; padding-left: 200px;
+	 font-size: 30px;  margin-top: 0px; font-weight: bold}
+	.menu{float:right;  font-size: 15px; font-weight: bold}
+	.menu li{float: left; font-weight: bold}
+	.menu a{line-height: 75px; color: black; padding: 0 15px; display:  block; }
 	
 </style>
 
@@ -34,12 +37,12 @@
 <body>
 <sec:authorize access="!isAuthenticated()">
 <h1>
-	<header>
+	<header class="myHeader">
 		<div class="wrapper">
-			<h1><a href="${pageContext.request.contextPath}/">Computer</a></h1>
+			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">Computer</a></h1>
 			<nav>
 				<ul class="menu">
-					<li><a href="${pageContext.request.contextPath}/admin/list/1">Mouse</a></li>
+					<li><a href="${pageContext.request.contextPath}/board/mouse/1">Mouse</a></li>
 					<li><a href="${pageContext.request.contextPath}/keyboard">KeyBoard</a></li>
 					<li><a href="${pageContext.request.contextPath}/head">Headphone</a></li>
 					<li><a href="${pageContext.request.contextPath}/monitor">Monitor</a></li>
@@ -58,12 +61,12 @@
 
 <sec:authorize access="hasRole('ROLE_ADMIN')">
 <h1>
-	<header>
+	<header class="myHeader">
 		<div class="wrapper">
-			<h1><a href="${pageContext.request.contextPath}/">Computer</a></h1>
+			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">Computer</a></h1>
 			<nav>
 				<ul class="menu">
-					<li><a href="${pageContext.request.contextPath}/admin/list/1">Mouse</a></li>
+					<li><a href="${pageContext.request.contextPath}/board/mouse/1">Mouse</a></li>
 					<li><a href="${pageContext.request.contextPath}/keyboard">KeyBoard</a></li>
 					<li><a href="${pageContext.request.contextPath}/head">Headphone</a></li>
 					<li><a href="${pageContext.request.contextPath}/monitor">Monitor</a></li>
@@ -83,12 +86,12 @@
 
 <sec:authorize access="hasRole('ROLE_USER')">
 <h1>
-	<header>
+	<header class="myHeader">
 		<div class="wrapper">
-			<h1><a href="${pageContext.request.contextPath}/">Computer</a></h1>
+			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">Computer</a></h1>
 			<nav>
 				<ul class="menu">
-					<li><a href="${pageContext.request.contextPath}/admin/list/1">Mouse</a></li>
+					<li><a href="${pageContext.request.contextPath}/board/mouse/1">Mouse</a></li>
 					<li><a href="${pageContext.request.contextPath}/keyboard">KeyBoard</a></li>
 					<li><a href="${pageContext.request.contextPath}/head">Headphone</a></li>
 					<li><a href="${pageContext.request.contextPath}/monitor">Monitor</a></li>

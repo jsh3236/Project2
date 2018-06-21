@@ -179,7 +179,7 @@ font {
 </head>
 
 <body ng-app="joinBody" ng-controller="joinAngularController">
-
+<div><jsp:include page="include.jsp" flush="false" /></div>
 	<form id="join" 
 		  name="join" 
 		  action="joinAction" 
