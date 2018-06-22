@@ -108,8 +108,6 @@ a {
 					</div>
 				</div>
  -->
-		</div>
-		</div>
 	</sec:authorize>
 	<!-- 게시글정보 보기(팝업) 끝 -->
 
@@ -148,10 +146,10 @@ a {
 						<sec:authorize
 							access="hasRole('ROLE_ADMIN')">
 							<button type="button" class="btn btn-info btn-lg"
-								onclick="location.href='${pageContext.request.contextPath}/admin/mouseBoardwrite'"
+								onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'"
 								style="margin-left: 50px">수정</button>
 							<button type="button" class="btn btn-info btn-lg"
-								onclick="location.href='${pageContext.request.contextPath}/admin/mouseBoardwrite'">삭제
+								onclick="location.href='${pageContext.request.contextPath}/admin/deleteAction.do/boardNum/${article.boardNum}/page/${pageInfo.page}'">삭제
 							</button>
 						</sec:authorize></td>
 					<c:if test="${(st.count + (pageInfo.page-1)*10)%2 eq 0}">

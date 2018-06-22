@@ -67,4 +67,18 @@ public class BoardServiceImpl implements BoardService {
         return dao.get(boardNum);
 	}
 
+	@Override
+	public boolean deleteBoard(int boardNum) {
+		log.info("deleteBoard");
+		
+        return dao.delete(boardNum);
+	}
+
+	@Override
+	public void updateBoard(BoardVO board) {
+		log.info("updateBoard");
+		
+        dao.update(board);
+	}
+
 }

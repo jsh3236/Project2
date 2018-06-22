@@ -188,16 +188,18 @@ font {
 				</tr>
 				
 				<tr>
+					<th><label for="boardFile"> 메인 사진 </label></th>
+					<td class="td_right"><input name="boardFile" type="file"
+						id="boardFile" /></td>
+				</tr>
+				
+				<tr>
 					<th><label for="boardFileContent"> 내용 사진 </label></th>
 					<td class="td_right"><input name="boardFileContent" type="file"
 						id="boardFileContent" /></td>
 				</tr>
 				
-				<tr>
-					<th><label for="boardFile"> 메인 사진 </label></th>
-					<td class="td_right"><input name="boardFile" type="file"
-						id="boardFile" /></td>
-				</tr>
+
 			</table>
 			<br>
 			<section id="commandCell">

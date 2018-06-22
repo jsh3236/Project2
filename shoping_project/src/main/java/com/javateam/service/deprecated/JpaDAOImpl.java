@@ -140,9 +140,24 @@ public class JpaDAOImpl implements JpaDAO {
 		BoardVO board = entityManager.find(BoardVO.class, boardNum);
 		// PK만으로는 삭제안됨.
 
-		log.info("board {}", board);
-
-		try {
+		log.info("Delete board {}", board);
+		
+		System.out.println("JpaDAOImpl.boardNum : "+boardNum);
+        try {
+            entityManager.createNativeQuery("DELETE FROM board_tbl "
+                                       + "WHERE board_num=?")
+                         .setParameter(1, boardNum)
+                         .executeUpdate(); 
+ 
+            transactionManager.commit(status); 
+           
+        } catch (Exception e) {
+            log.info("error");
+            transactionManager.rollback(status);
+            return false;
+        } // try
+		
+/*		try {
 			entityManager.remove(board);
 			transactionManager.commit(status);
 		} catch (Exception e) {
@@ -150,7 +165,7 @@ public class JpaDAOImpl implements JpaDAO {
 			transactionManager.rollback(status);
 			return false;
 		} // try
-
+*/
 		return true;
 
 	} //

@@ -157,40 +157,48 @@ font {
 	<!-- 게시판 등록 -->
 	<section id="writeForm">
 
-		<h2>마우스 상품 등록</h2>
+		<h2>마우스 상품 수정</h2>
 
 		<form:form modelAttribute="board"
-			action="${pageContext.request.contextPath}/admin/writeAction.do"
+			action="${pageContext.request.contextPath}/admin/updateAction.do"
 			method="post" enctype="multipart/form-data" name="boardform">
 
 			<table class="type03">
 
 				<tr>
 					<th><label for="boardSubject">제 목</label></th>
-					<td class="td_right" style="height: 20px;"><input name="boardSubject" type="text"
-						id="boardSubject" required="required" style="height: 25px;"/> <form:errors
-							path="boardSubject" /></td><br>
+					<td class="td_right" style="height: 20px;">
+						<input name="boardSubject" type="text" id="boardSubject" required="required" style="height: 25px;"
+							value="${article.boardSubject}" />
+						<form:errors path="boardSubject" /></td><br>
 				</tr>
 				
 				<tr>
 					<th><label for="boardContent">내 용</label></th>
 					<td><textarea id="boardContent" name="boardContent" cols="60"
 							rows="20" required="required"></textarea> <form:errors
-							path="boardContent" /></td>
+							path="boardContent" value="${article.boardContent}"/></td>
 				</tr>
 				
 				<tr>
 					<th><label for="boardPrice">금 액</label></th>
 					<td class="td_right"><input name="boardPrice" type="text"
 						id="boardPrice" required="required" style="height: 25px;"/>  <form:errors
-							path="boardPrice" /></td>
+							path="boardPrice" value="${article.boardPrice}"/></td>
 				</tr>
 				
 				<tr>
 					<th><label for="boardFile"> 메인 사진 </label></th>
 					<td class="td_right"><input name="boardFile" type="file"
-						id="boardFile" /></td>
+						id="boardFile" value="${article.boardFile}"/></td>
 				</tr>
+				
+				<tr>
+					<th><label for="boardFileContent"> 내용 사진 </label></th>
+					<td class="td_right"><input name="boardFileContent" type="file"
+						id="boardFileContent" value="${article.boardFileContent}"/></td>
+				</tr>
+				
 			</table>
 			<br>
 			<section id="commandCell">

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,15 +51,26 @@ public class AdminController {
 	@RequestMapping("/test")
 	@ResponseBody
 	public String test(HttpServletRequest request) {
+		String image = "g903_0_1_1.jpg";
+		String image2 = "g903_1.jpg";
+		String regex = "^\\S+_+[0-9]+\\.[a-z]+$";
 		
-		for(int i = 0; true; i++)
+		for(int i = 0; i<10; i++)
         {
-		String image = "g903.jpg";
-		image = image.substring(0, image.indexOf('.'));
-	  	image =  image + "_" + i+".jpg";
+			System.out.println("image : "+image+", regex : "+regex);
+			System.out.println("matches : "+image.matches(regex));
+			System.out.println("matches2 : "+image2.matches(regex));
+			
+			
+			if(image.matches(regex)) image = image.substring(0, image.indexOf('.')-2);
+			else image = image.substring(0, image.indexOf('.'));
+		  	image =  image + "_" + i+".jpg";
+		  	
+		  	System.out.println("for문 "+i+"번 돌아갔다");
 	  	
-	  	return image;
         }
+		
+		return image;
 		
 	}
 
@@ -109,6 +121,24 @@ public class AdminController {
 		return "redirect:/board/mouse/1";
 	} //
 	
+	@RequestMapping(value="/deleteAction.do/boardNum/{boardNum}/page/{page}")
+	public String deleteAction(@PathVariable("boardNum") int boardNum,@PathVariable("page") int page) {
+		
+		System.out.println("게시판 삭제 처리");
+		System.out.println("게시글 번호 : "+ boardNum);
+		log.info("현재 페이지 : {}",page);
+
+		// 게시글 삭제
+		if (boardSvc.deleteBoard(boardNum)) { 
+
+			log.info("delete fail!");
+
+			return "redirect:/board/mouse/{page}";
+		} //
+
+		return "redirect:/board/mouse/{page}";
+	} //
+	
 	public String fileUpload(MultipartFile file, BoardDTO boardDTO, HttpServletRequest request,BoardVO boardVO) {
 		FileOutputStream fos = null;
 
@@ -116,7 +146,8 @@ public class AdminController {
 		if (file != null) { // 파일 유효성 점검
 
 			String image = file.getOriginalFilename();
-
+			String regex = "^\\S+_+[0-9]+\\.[a-z]+$";
+			
 			// 파일 저장소에 저장
 			try {
 				byte[] bytes = file.getBytes();
@@ -129,15 +160,20 @@ public class AdminController {
 	            {
 	                  for(int i = 0; true; i++)
 	                  {
-	                	  	image = image.substring(0, image.indexOf('.'));
-	                	  	image =  image + "_" + i+".jpg";
-	                	  	System.out.println("image 값 : "+image);
+		          			
+		        			if(image.matches(regex)) image = image.substring(0, image.indexOf('.')-2);
+		        			else image = image.substring(0, image.indexOf('.'));
+		        		  	image =  image + "_" + i+".jpg";
+	                	  	System.out.println("1: image 값 : "+image);
 	                        imageFile = new File(request.getRealPath(uploadDirResource.getPath()), image);
 	    
 	                        if(!imageFile.exists())
 	                        {
-	                              image = image + "_" + i;
-	                              break;
+	                			if(image.matches(regex)) image = image.substring(0, image.indexOf('.')-2);
+	                			else image = image.substring(0, image.indexOf('.'));
+	                		  	image =  image + "_" + i+".jpg";
+	                        	System.out.println("2: image 값 : "+image);
+	                            break;
 	                        }
 	                  }
 	            }
@@ -173,6 +209,60 @@ public class AdminController {
 		
 	}
 	
+	@RequestMapping("update/boardNum/{boardNum}")
+    public String boardDetail(@PathVariable("boardNum") int boardNum, Model model) {
+        log.info("update.boardNum : {}",boardNum);
+        
+        model.addAttribute("article", boardSvc.getArticle(boardNum));
+        
+        return "/admin/update";
+    } //
+	
 
+	@RequestMapping(value="/updateAction.do")
+	public String updateAction(@Valid @ModelAttribute("board") BoardDTO boardDTO, BindingResult result,
+			Model model, RedirectAttributes ra, HttpServletRequest request) {
+		
+		System.out.println("게시판 수정 처리");
+		System.out.println("게시글 : "+ boardDTO);
+
+		if (result.hasErrors()) { // 폼 유효성 점검
+
+			log.info("form invalid !");
+
+			return "/admin/writing";
+		} //
+
+		MultipartFile file = boardDTO.getBoardFile(); // 업로드 파일
+		MultipartFile file2 = boardDTO.getBoardFileContent();
+		BoardVO boardVO = new BoardVO(boardDTO); // DTO -> VO
+		
+		boardVO.setBoardFile(fileUpload(file, boardDTO, request,boardVO));
+		boardVO.setBoardFileContent(fileUpload(file2, boardDTO, request,boardVO));
+
+		// 게시글 등록일
+		// boardVO.setBoardDate(new Date(System.currentTimeMillis()));
+
+/*		String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()))
+				.toString();
+
+		log.info("등록일 {}", dateString);
+		boardVO.setBoardDate(dateString);
+		
+
+		log.info("등록일 {}", boardVO.getBoardDate());
+		*/
+		
+		// 게시글 업데이트
+		boardSvc.updateBoard(boardVO);
+
+		// 결과 메시지 생성
+		//model.addAttribute("msg", "게시글을 성공적으로 저장하였습니다");
+		/*ra.addAttribute("msg", "게시글");*/
+	/*	listBoard(1,model);// 메시지 페이지*/
+	/*	return "board/mouseBoard"; */
+		
+		return "redirect:/board/mouse/1";
+	} //
 
 }

@@ -15,7 +15,7 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
 	<resources mapping="/resources/**" location="/resources/" />
 	
-	<!-- image path -->
+	<!-- image path /image로 불러와짐 -->
 	<resources mapping="/image/**" location="/resources/image/" />
 	
 	<!-- javascript -->
@@ -23,9 +23,9 @@
 	
 	<!-- file upload path : 반드시 네트워크 경로 쓸 것.
          windows 경로 (X)  ex) E:\lsh\fileupload (X) -->
-    <resources mapping="/uploadPath/**" location="/resources/image/" />
-    <!-- file:///C:/eclipse-jee-oxygen-3a-win32-x86_64/eclipse/eGovFrameDev-3.7.0-64bit/work4/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/shoping_project/resources/image/ -->
-               <!-- location="file:///C://Users//ss//git//Project//shoping_project//src//main//webapp//resources//image//"  /> -->
+    <resources mapping="/uploadPath/**" location="file:///C://Users//ss//git//Project//shoping_project//src//main//webapp//resources//image//" />
+<!--     file:///C:/eclipse-jee-oxygen-3a-win32-x86_64/eclipse/eGovFrameDev-3.7.0-64bit/work4/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps/shoping_project/resources/image/
+               location="file:///C://Users//ss//git//Project//shoping_project//src//main//webapp//resources//image//"  /> -->
                
                
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
@@ -40,3 +40,5 @@
 	<context:component-scan base-package="com.javateam.model.jpavo" />
 	
 </beans:beans>
+
+

@@ -16,6 +16,9 @@ public class PasswordEncoderGenerator {
 			System.out.println(hashedPassword);
 		//	i++;
 		//}
+			
+			
+			
 	}
 
 }
