@@ -36,6 +36,7 @@
 </head>
 <body>
 <sec:authorize access="!isAuthenticated()">
+<input type="hidden" id="username" name="username" value="<sec:authentication property="principal.username" />" />
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">
@@ -60,6 +61,7 @@
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_ADMIN')">
+<input type="hidden" id="username" name="username" value="<sec:authentication property="principal.username" />" />
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">
@@ -85,6 +87,7 @@
 
 
 <sec:authorize access="hasRole('ROLE_USER')">
+<input type="hidden" id="username" name="username" value="<sec:authentication property="principal.username" />" />
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">

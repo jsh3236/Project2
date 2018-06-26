@@ -1,12 +1,31 @@
 <%--@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"--%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="ko-kr">
 <head>
 <meta charset="UTF-8"> 
 <title>MVC 게시판</title>
+
+<!-- jQuery : 3.2.1 -->
+<script src="<c:url value='/js/jQuery/3.2.1/jquery-3.2.1.min.js' />"></script>
+
+<script>
+
+$(document).ready(function(){
+	
+ 	$("#updateBtn").click(function (e) {
+ 		
+ 		
+ 		alert("정보가 업데이트 되었습니다.");
+	   
+	}); // updateBtn 
+
+}); //
+
+</script>
  
 
 <style type="text/css">
@@ -162,13 +181,15 @@ font {
 		<form:form modelAttribute="board"
 			action="${pageContext.request.contextPath}/admin/updateAction.do"
 			method="post" enctype="multipart/form-data" name="boardform">
+			
+			<input type="hidden" id=boardNum name=boardNum value="${article.boardNum}" />
 
 			<table class="type03">
 
 				<tr>
 					<th><label for="boardSubject">제 목</label></th>
 					<td class="td_right" style="height: 20px;">
-						<input name="boardSubject" type="text" id="boardSubject" required="required" style="height: 25px;"
+						<input name="boardSubject" type="text" id="boardSubject" required="required" style="height: 25px; width: 300px;"
 							value="${article.boardSubject}" />
 						<form:errors path="boardSubject" /></td><br>
 				</tr>
@@ -176,15 +197,15 @@ font {
 				<tr>
 					<th><label for="boardContent">내 용</label></th>
 					<td><textarea id="boardContent" name="boardContent" cols="60"
-							rows="20" required="required"></textarea> <form:errors
-							path="boardContent" value="${article.boardContent}"/></td>
+							rows="20" required="required">${article.boardContent}</textarea> <form:errors
+							path="boardContent" /></td>
 				</tr>
 				
 				<tr>
 					<th><label for="boardPrice">금 액</label></th>
 					<td class="td_right"><input name="boardPrice" type="text"
-						id="boardPrice" required="required" style="height: 25px;"/>  <form:errors
-							path="boardPrice" value="${article.boardPrice}"/></td>
+						id="boardPrice" required="required" style="height: 25px;" value="${article.boardPrice}"/>  <form:errors
+							path="boardPrice" /></td>
 				</tr>
 				
 				<tr>
@@ -196,13 +217,13 @@ font {
 				<tr>
 					<th><label for="boardFileContent"> 내용 사진 </label></th>
 					<td class="td_right"><input name="boardFileContent" type="file"
-						id="boardFileContent" value="${article.boardFileContent}"/></td>
+						id="boardFileContent"  value="${article.boardFileContent}"/></td>
 				</tr>
 				
 			</table>
 			<br>
 			<section id="commandCell">
-				<input type="submit" value="수정">&nbsp;&nbsp; <input
+				<input type="submit" id="updateBtn" value="수정">&nbsp;&nbsp; <input
 					type="reset" value="다시쓰기" />
 			</section>
 

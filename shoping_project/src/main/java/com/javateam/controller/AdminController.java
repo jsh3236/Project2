@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.eclipse.jdt.internal.compiler.parser.ParserBasicInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
@@ -108,6 +109,18 @@ public class AdminController {
 
 		log.info("등록일 {}", boardVO.getBoardDate());
 		
+		System.out.println("옵션 받기 : "+request.getParameter("boardOption"));
+		String length = request.getParameter("inputLength");
+		for(int i=0; i<Integer.parseInt(length);  i++) {
+			System.out.println("셀렉트"+i+" : "+request.getParameter("option"+i));
+		}
+		
+		String boardOption = request.getParameter("boardOption");
+		for(int i=0; i<Integer.parseInt(length);  i++) {
+			boardOption += ","+request.getParameter("option"+i);
+		}
+		
+		boardVO.setBoardOption(boardOption);
 		
 		// 게시글 저장
 		boardSvc.insertBoard(boardVO);
@@ -133,55 +146,54 @@ public class AdminController {
 
 			log.info("delete fail!");
 
-			return "redirect:/board/mouse/{page}";
+			return "redirect:/board/mouse/1";
 		} //
 
-		return "redirect:/board/mouse/{page}";
+		return "redirect:/board/mouse/1";
 	} //
 	
 	public String fileUpload(MultipartFile file, BoardDTO boardDTO, HttpServletRequest request,BoardVO boardVO) {
 		FileOutputStream fos = null;
-
+		String path = "D:\\jsh-work\\used-image\\";
+		
+		
 		// 업로드 파일 처리
 		if (file != null) { // 파일 유효성 점검
-
 			String image = file.getOriginalFilename();
-			String regex = "^\\S+_+[0-9]+\\.[a-z]+$";
+			String regex = "\\S+_+[0-9]+\\.[a-z]+";
 			
 			// 파일 저장소에 저장
 			try {
 				byte[] bytes = file.getBytes();
 
 				//File imageFile = new File(uploadDirResource.getPath() + image);
-				File imageFile = new File(request.getRealPath(uploadDirResource.getPath()) + image);
-				
+				File imageFile = new File(path+image);
 				 // 같은 이름의 파일이름 처리
 	            if(imageFile.exists())
 	            {
-	                  for(int i = 0; true; i++)
+	                  for(int i = 0; ; i++)
 	                  {
 		          			
 		        			if(image.matches(regex)) image = image.substring(0, image.indexOf('.')-2);
+		        			else if(i>=10) image = image.substring(0, image.indexOf('.')-(i-7)); // _ 늘어나는 버그패치 06/26
 		        			else image = image.substring(0, image.indexOf('.'));
 		        		  	image =  image + "_" + i+".jpg";
-	                	  	System.out.println("1: image 값 : "+image);
-	                        imageFile = new File(request.getRealPath(uploadDirResource.getPath()), image);
+	                	  	System.out.println("### 1: image 값 : "+image);
+	                        imageFile = new File(path+image);
 	    
 	                        if(!imageFile.exists())
 	                        {
+	                        	System.out.println("6");
 	                			if(image.matches(regex)) image = image.substring(0, image.indexOf('.')-2);
 	                			else image = image.substring(0, image.indexOf('.'));
 	                		  	image =  image + "_" + i+".jpg";
-	                        	System.out.println("2: image 값 : "+image);
+	                        	System.out.println("### 2: image 값 : "+image);
 	                            break;
 	                        }
 	                  }
 	            }
-	            System.out.println("imageFile 값 : "+imageFile);
 	            fos = new FileOutputStream(imageFile);
 				fos.write(bytes);
-				
-				
 				
 				log.info("파일 업로드 성공");
 				// 썸네일 이미지 생성
@@ -206,7 +218,6 @@ public class AdminController {
 			return image;
 		} // 
 		return null;
-		
 	}
 	
 	@RequestMapping("update/boardNum/{boardNum}")
@@ -233,34 +244,16 @@ public class AdminController {
 			return "/admin/writing";
 		} //
 
-		MultipartFile file = boardDTO.getBoardFile(); // 업로드 파일
-		MultipartFile file2 = boardDTO.getBoardFileContent();
+		MultipartFile file = boardDTO.getBoardFile(); // 업로드 메인사진
+		MultipartFile file2 = boardDTO.getBoardFileContent(); // 업로드 컨텐트사진
 		BoardVO boardVO = new BoardVO(boardDTO); // DTO -> VO
 		
 		boardVO.setBoardFile(fileUpload(file, boardDTO, request,boardVO));
 		boardVO.setBoardFileContent(fileUpload(file2, boardDTO, request,boardVO));
 
-		// 게시글 등록일
-		// boardVO.setBoardDate(new Date(System.currentTimeMillis()));
-
-/*		String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()))
-				.toString();
-
-		log.info("등록일 {}", dateString);
-		boardVO.setBoardDate(dateString);
-		
-
-		log.info("등록일 {}", boardVO.getBoardDate());
-		*/
-		
 		// 게시글 업데이트
 		boardSvc.updateBoard(boardVO);
 
-		// 결과 메시지 생성
-		//model.addAttribute("msg", "게시글을 성공적으로 저장하였습니다");
-		/*ra.addAttribute("msg", "게시글");*/
-	/*	listBoard(1,model);// 메시지 페이지*/
-	/*	return "board/mouseBoard"; */
 		
 		return "redirect:/board/mouse/1";
 	} //

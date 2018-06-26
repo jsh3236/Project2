@@ -6,14 +6,15 @@ package com.javateam.service;
 import java.util.List;
 
 import com.javateam.model.vo.BoardVO;
+import com.javateam.model.vo.OrderListVO;
+
 
 /**
  * @author ss
  *
  */
-public interface BoardService {
-	
-	void insertBoard(BoardVO boardVO);
+public interface OrderlistService {
+	void insertBoard(OrderListVO orderlistVO);
 	
 	
 	int getListCount();

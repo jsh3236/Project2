@@ -22,6 +22,19 @@
 <!-- bootstrap JS : 3.3.7 -->
 <script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
 
+<!-- 성공 팝업창 뜨기 -->
+<script>
+
+
+function deleteBtn(boardNum) {
+ 	alert("삭제 되었습니다.");
+ 	location.href='${pageContext.request.contextPath}/admin/deleteAction.do/boardNum/'+boardNum+'/page/${pageInfo.page}';
+	   
+}; // deleteBtn 
+
+
+</script>
+
 <!-- 천단위 가격표시 -->
 <script>
 /* window.onLoad=function numberFormat() {
@@ -148,8 +161,8 @@ a {
 							<button type="button" class="btn btn-info btn-lg"
 								onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'"
 								style="margin-left: 50px">수정</button>
-							<button type="button" class="btn btn-info btn-lg"
-								onclick="location.href='${pageContext.request.contextPath}/admin/deleteAction.do/boardNum/${article.boardNum}/page/${pageInfo.page}'">삭제
+							<button type="button" id="deleteBtn" class="btn btn-info btn-lg"
+								onclick="deleteBtn(${article.boardNum})">삭제
 							</button>
 						</sec:authorize></td>
 					<c:if test="${(st.count + (pageInfo.page-1)*10)%2 eq 0}">

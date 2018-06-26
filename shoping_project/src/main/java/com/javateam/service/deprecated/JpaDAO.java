@@ -6,6 +6,7 @@ package com.javateam.service.deprecated;
 import java.util.List;
 
 import com.javateam.model.vo.BoardVO;
+import com.javateam.model.vo.OrderListVO;
 
 
 /**
@@ -15,6 +16,7 @@ import com.javateam.model.vo.BoardVO;
 public interface JpaDAO {
 	
 	void insert(BoardVO board);
+	void insert(OrderListVO orderlist);
 	List<BoardVO> list();
 	void update(BoardVO board);
 	boolean delete(int boardNum);

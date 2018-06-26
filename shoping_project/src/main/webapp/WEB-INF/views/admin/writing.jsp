@@ -151,6 +151,41 @@ font {
 }
 </style>
 
+<!-- jQuery : 3.2.1 -->
+<script src="http://code.jquery.com/jquery-Latest.min.js"></script>
+
+<script>
+var arrInput = new Array(0);
+var arrInputValue = new Array(0);
+ 
+function addInput() {
+	$(document).ready( function() {
+	  arrInput.push(arrInput.length);
+	  arrInputValue.push("");
+	  $('#inputLength').val(arrInput.length);
+	  
+	  display();
+	});
+}
+ 
+function display() {
+  document.getElementById('parah').innerHTML="";
+  for (intI=0;intI<arrInput.length;intI++) {
+    document.getElementById('parah').innerHTML+=createInput(arrInput[intI], arrInputValue[intI]);
+  }
+}
+ 
+function saveValue(intId,strValue) {
+  arrInputValue[intId]=strValue;
+}  
+ 
+function createInput(id,value) {
+  return "셀렉트 옵션 : <input type='text' id='option"+ id +"' name='option"+ id +"'  onChange='javascript:saveValue("+ id +",this.value)' value='"+ 
+value +"'><br>";
+}
+ 
+</script>
+
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
@@ -179,13 +214,24 @@ font {
 							path="boardContent" /></td>
 				</tr>
 				
-				
 				<tr>
 					<th><label for="boardPrice">금 액</label></th>
 					<td class="td_right"><input name="boardPrice" type="text"
 						id="boardPrice" required="required" style="height: 25px;"/>  <form:errors
 							path="boardPrice" /></td>
 				</tr>
+				
+				<tr>
+					<th><label for="boardOption">옵 션</label></th>
+					<td class="td_right">
+						메인 옵션    : <input name="boardOption" type="text" id="boardOption" required="required" style="height: 25px;"/>
+						 <input type="button" value="추가하기" id="optionBtn" name="optionBtn" style="height: 25px; width: 100px" onclick="addInput();"/> <br>
+						<input type="hidden" id="inputLength" name="inputLength" value="0"> 
+						<div id="parah" style="font-size: 12px; margin-left: 15px">
+						</div>
+					</td>
+				</tr>
+				
 				
 				<tr>
 					<th><label for="boardFile"> 메인 사진 </label></th>

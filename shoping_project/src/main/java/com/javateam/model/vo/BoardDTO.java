@@ -27,6 +27,7 @@ public class BoardDTO {
     private String boardContent; // 글 내용
     
     private int boardPrice;
+    private String boardOption;
     
     private MultipartFile boardFileContent; 
     private MultipartFile boardFile; // 첨부 파일

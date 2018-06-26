@@ -34,7 +34,7 @@
 	
 	<h2>홈</h2>
 	img
-	<img src="<c:url value='/uploadPath/g903.jpg' />" />
+	<img src="<c:url value='/image/g903.jpg' />" />
 	img up
 	
 </body>

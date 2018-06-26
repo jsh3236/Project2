@@ -68,6 +68,9 @@ public class BoardVO {
 	@Column(name="board_price", nullable=false)
 	private int boardPrice; // 금액
 	
+	@Column(name="board_option", nullable=true)
+	private String boardOption; // 옵션
+	
 	@Column(name="board_file", nullable=true, length=2000)
 	private String boardFile; // 첨부 파일
 	
@@ -104,5 +107,6 @@ public class BoardVO {
         this.boardReSeq = board.getBoardReSeq();
         this.boardReadCount = board.getBoardReadCount();
         this.boardDate = board.getBoardDate();
+        this.boardOption = board.getBoardOption();
     }
 }

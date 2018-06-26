@@ -1,13 +1,14 @@
 package com.javateam.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.PageInfo;
@@ -66,6 +67,24 @@ public class BoardController {
                               Model model) {
         log.info("boardDetail");
         model.addAttribute("nowPage", page);
+        
+        String option = boardSvc.getArticle(boardNum).getBoardOption();
+        System.out.println("option : "+option);
+        StringTokenizer st = new StringTokenizer(option,",");
+        int countTok = st.countTokens();
+        model.addAttribute("optionLength", countTok);
+        System.out.println("countToken : "+countTok);
+        List<String> optionList = new ArrayList<String>();
+        for(int i=0; i<countTok; i++) {
+//        	System.out.println("token , i: "+st.nextToken()+","+i);
+//        	model.addAttribute("option"+i, st.nextToken());
+        	optionList.add(st.nextToken());
+        }
+        
+        model.addAttribute("optionList", optionList);
+        
+        model.addAttribute("test", "spring");
+        
         model.addAttribute("article", boardSvc.getArticle(boardNum));
         // 조회수 업데이트
         boardSvc.updateReadCount(boardNum);

@@ -29,7 +29,7 @@ public class LoginController {
 	public String idCheck(@RequestParam("username") String username,
 						   Model model) {
 		
-		System.out.println(username);
+		System.out.println("id : "+username);
 		
 		boolean flag = authJdbcService.hasUsername(username);
 		System.out.println(flag);

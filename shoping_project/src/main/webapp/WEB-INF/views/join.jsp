@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html lang="ko-kr">
 <head>
@@ -48,7 +49,14 @@ font {
 }
 </style>
 
+<!-- bootstrap JS : 3.3.7 -->
+<script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
 
+
+<!-- bootstrap CSS : 3.3.7 -->
+<link rel="stylesheet"
+	href="<c:url value='/js/bootstrap/3.3.7/css/bootstrap.min.css' />">
+	
 <!-- jQuery UI CSS : 캘린더(datePicker) -->
 <link rel="stylesheet"
 	href="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.css' />">
@@ -228,11 +236,36 @@ font {
 						   ng-model="username"
 						   ng-pattern="/^[a-zA-Z]{1}\w{5,19}$/" 
 						   ng-required="true"> &nbsp;
-
-					<input type="button" value="중복 확인" onclick="${pageContext.request.contextPath}/login/idCheck"><br> 
+						   
+					<!-- 아이디 중복 체크 -->
+					<input type="button" value="중복 확인" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal"><br> 
+					
+						<div class="modal fade" id="myModal" role="dialog">
+						  <div class="modal-dialog">
+						  
+						    <!-- Modal content-->
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <button type="button" class="close" data-dismiss="modal">&times;</button>
+						        <h4 class="modal-title">Modal Header</h4>
+						      </div>
+						      <div class="modal-body">
+						        <p>Some text in the modal.</p>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+						    
+						  </div>
+						</div>
+						
 					<font size="2">
 						[아이디 중복 확인 결과 표기]
 					</font>
+					
+					<!-- 아이디 중복 확인 끝 -->
+					
 				</td>
 
 				<td style="border-left: hidden">

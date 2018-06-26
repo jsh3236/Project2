@@ -2,7 +2,10 @@ package com.javateam.controller;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +19,13 @@ public class HomeController {
 	
 	@Autowired
 	AuthJdbcService authJdbcService;
+	
+	@Autowired
+	private FileSystemResource uploadDirResource;
 
 	@RequestMapping("/")
-	public String home() {
-		
+	public String home(HttpServletRequest request) {
+		System.out.println("실 파일 경로 : " + request.getRealPath(uploadDirResource.getPath()));
 		return "home";
 	}
 	

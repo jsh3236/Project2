@@ -17,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.web.context.support.ServletContextParameterFactoryBean;
 
 import com.javateam.model.vo.BoardVO;
+import com.javateam.model.vo.OrderListVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,7 +101,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 		log.info("select All");
 
-		return (List<BoardVO>) entityManager.createNativeQuery("SELECT * FROM board_tbl", BoardVO.class)
+		return (List<BoardVO>) entityManager.createNativeQuery("SELECT * FROM board_tbl ORDER BY board_num", BoardVO.class)
 				.getResultList();
 	} //
 
@@ -110,14 +112,28 @@ public class JpaDAOImpl implements JpaDAO {
 	public void update(BoardVO board) {
 
 		log.info("update");
+		System.out.println("update !!!");
 
 		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		System.out.println("board.getBoardNum() : "+board.getBoardNum());
 
 		try {
-			entityManager.merge(board);
+            entityManager.createNativeQuery("UPDATE board_tbl SET board_subject=?, board_price=?,board_file=?,board_filecontent=?,"
+            		+ "board_content=? WHERE board_num=?")
+            .setParameter(1, board.getBoardSubject())
+            .setParameter(2, board.getBoardPrice())
+            .setParameter(3, board.getBoardFile())
+            .setParameter(4, board.getBoardFileContent())
+            .setParameter(5, board.getBoardContent())
+            .setParameter(6, board.getBoardNum())
+            .executeUpdate(); 
+            
 			transactionManager.commit(status);
+			
+			System.out.println("update complete");
 		} catch (Exception e) {
 			log.info("error");
 			transactionManager.rollback(status);
@@ -195,11 +211,12 @@ public class JpaDAOImpl implements JpaDAO {
 
 		TransactionStatus status = transactionManager.getTransaction(def);
 
-		String board_list_sql = "SELECT * FROM (" + "                SELECT " + "                       m.*,"
-				+ "                       FLOOR((ROWNUM - 1)/? + 1) page " + "                FROM ("
-				+ "                         SELECT * FROM board_tbl "
-				+ "                ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC " + "                     ) m"
-				+ "              )" + "      WHERE page = ?";
+		String board_list_sql = "SELECT * FROM (" + "                SELECT "  
+								+ "                       m.*,"
+								+ "                       FLOOR((ROWNUM - 1)/? + 1) page " + "                FROM ("
+								+ "                         SELECT * FROM board_tbl "
+								+ "                ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC " + "                     ) m"
+								+ "              )" + "      WHERE page = ?";
 
 		try {
 			list = entityManager.createNativeQuery(board_list_sql, BoardVO.class).setParameter(1, limit)
@@ -239,6 +256,28 @@ public class JpaDAOImpl implements JpaDAO {
         } // try
        
     } //
+
+	@Override
+	public void insert(OrderListVO orderlist) {
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+				try {
+
+					entityManager.merge(orderlist);
+
+				} catch (Exception e) {
+
+					log.debug("insert error : {}", e);
+					status.setRollbackOnly();
+
+				}
+			}
+		});
+		
+	}
 
 
 }
