@@ -54,9 +54,9 @@ font {
 
 
 <!-- bootstrap CSS : 3.3.7 -->
-<link rel="stylesheet"
+<%-- <link rel="stylesheet"
 	href="<c:url value='/js/bootstrap/3.3.7/css/bootstrap.min.css' />">
-	
+	 --%>
 <!-- jQuery UI CSS : 캘린더(datePicker) -->
 <link rel="stylesheet"
 	href="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.css' />">

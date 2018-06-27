@@ -21,6 +21,8 @@ public interface JpaDAO {
 	void update(BoardVO board);
 	boolean delete(int boardNum);
 	BoardVO get(int boardNum);
+	OrderListVO get(int boardNum,String username);
 	List<BoardVO> getListByPageAndLimit(int page, int limit);
+	List<OrderListVO> getListByPageAndLimit(int page,int limit,String username);
 	void updateReadCount(int boardNum);
 }

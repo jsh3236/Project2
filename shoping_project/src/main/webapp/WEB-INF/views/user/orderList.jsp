@@ -36,6 +36,7 @@ function deleteBtn(boardNum) {
 </script>
 
 
+
 <style type="text/css">
 
 /* 등록된 글이 없을 경우, 페이징 처리 */
@@ -61,6 +62,7 @@ li {
 a {
 	text-decoration: none;
 }
+
 
 
  .but {
@@ -171,39 +173,6 @@ fieldset[disabled] .btn-info.focus {
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<!-- 인자들 -->
-	<sec:authorize access="hasRole('ROLE_ADMIN')">
-		<div style="padding-left: 30px">
-			총 게시글 수 : ${pageInfo.listCount}<br> 현재 페이지 : ${pageInfo.page}<br>
-			총 페이지 : ${pageInfo.maxPage}<br> 시작 페이지 : ${pageInfo.startPage}<br>
-			끝 페이지 : ${pageInfo.endPage}
-		</div>
-		<!-- 상품 올리기 -->
-		<button type="button" class="btn btn-info btn-lg" style="padding-left: 30px"
-			onclick="location.href='${pageContext.request.contextPath}/admin/mouseBoardwrite'">상품
-			올리기</button>
-
-		<!-- 		<div class="modal fade" id="myModal" role="dialog">
-			<div class="modal-dialog">
-
-				Modal content
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Modal Header</h4>
-					</div>
-					<div class="modal-body">
-						<p>Some text in the modal.</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div>
- -->
-	</sec:authorize>
-	<!-- 게시글정보 보기(팝업) 끝 -->
-
-
 	<br>
 
 	<!-- 게시판 리스트 시작 -->

@@ -6,6 +6,7 @@ package com.javateam.service;
 import java.util.List;
 
 import com.javateam.model.vo.BoardVO;
+import com.javateam.model.vo.OrderListVO;
 
 /**
  * @author ss
@@ -23,7 +24,11 @@ public interface BoardService {
 	void updateReadCount(int boardNum);
 	
 	 public BoardVO getArticle(int boardNum);
-
+	 
+	 public OrderListVO getArticle(int boardNum,String username);
+	 
+	 List<OrderListVO> getArticleList(int page, int limit,String username);
+	 
 	List<BoardVO> getArticleList(int page, int limit);
 
 	boolean deleteBoard(int boardNum);

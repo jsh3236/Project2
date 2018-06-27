@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.javateam.model.vo.BoardVO;
+import com.javateam.model.vo.OrderListVO;
 import com.javateam.service.deprecated.JpaDAO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,18 @@ public class BoardServiceImpl implements BoardService {
 		log.info("updateBoard");
 		
         dao.update(board);
+	}
+
+	@Override
+	public OrderListVO getArticle(int boardNum, String username) {
+		log.info("getArticle");
+        return dao.get(boardNum,username);
+	}
+
+	@Override
+	public List<OrderListVO> getArticleList(int page, int limit,String username) {
+		log.info("getArticleList");
+		return dao.getListByPageAndLimit(page, limit, username);
 	}
 
 }

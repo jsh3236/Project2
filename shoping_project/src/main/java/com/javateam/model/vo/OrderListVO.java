@@ -8,10 +8,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
-
+@SequenceGenerator(
+	    name = "ORDERLIST_SEQ_GENERATOR",
+	    sequenceName = "ORDERLIST_SEQ",
+	    initialValue = 1,
+	    allocationSize = 1)
 /**
  * @author ss
  *
@@ -19,11 +24,11 @@ import lombok.Data;
 @Entity
 @Table(name="orderlist_tbl")
 @Data
-public class OrderListVO {
+public class OrderListVO{
 	
 	@Id
 	@Column(name="order_num")
-	@GeneratedValue(strategy = GenerationType.AUTO) 
+	@GeneratedValue(generator="ORDERLIST_SEQ_GENERATOR", strategy = GenerationType.AUTO) 
 	private int orderNum; // 장바구니 주문번호
 	
 	@Column(name="order_option", nullable=false)
@@ -36,7 +41,7 @@ public class OrderListVO {
 	private int boardNum; // board_tbl의 외래키 
 	
 	@Column(name="username", nullable=false)
-	private int userName; // users의 외래키
+	private String username; // users의 외래키
 	
 	
 	// BoardDTO -> BoardVO
@@ -44,7 +49,7 @@ public class OrderListVO {
         this.boardNum = orderlist.getBoardNum();
         this.orderOption = orderlist.getOrderOption();
         this.orderCount = orderlist.getOrderCount();
-        this.userName = orderlist.getUserName();
+        this.username = orderlist.getUsername();
     }
 	
 }

@@ -279,5 +279,44 @@ public class JpaDAOImpl implements JpaDAO {
 		
 	}
 
+	@Override
+	public OrderListVO get(int boardNum, String username) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<OrderListVO> getListByPageAndLimit(int page, int limit,String username) {
+		String list_sql = "SELECT * "
+				+ "FROM ( SELECT  obu.*, FLOOR((ROWNUM - 1)/? + 1) page "
+				+ "			FROM ( select * "
+				+ "					from board_tbl b,orderlist_tbl o,users u "
+				+ "					where o.BOARD_NUM=b.BOARD_NUM and o.USERNAME=u.USERNAME and o.USERNAME=? "
+				+ "					order by o.ORDER_NUM) obu ) "
+				+ "where page = ?";
+		
+		
+		List<OrderListVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			list = entityManager.createNativeQuery(list_sql, OrderListVO.class)
+					.setParameter(1, limit)
+					.setParameter(2, username)
+					.setParameter(3, page)
+					.getResultList();
+
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.debug("Orderlist getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
+
 
 }

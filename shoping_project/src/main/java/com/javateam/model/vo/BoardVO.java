@@ -11,10 +11,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.Data;
-
+@SequenceGenerator(
+	    name = "BOARD_SEQ_GENERATOR",
+	    sequenceName = "BOARD_SEQ",
+	    initialValue = 1,
+	    allocationSize = 1)
 /**
  * @author oracle
  *
@@ -23,37 +28,11 @@ import lombok.Data;
 @Table(name="board_tbl")
 @Data
 
-/*@SqlResultSetMapping(name="insertOrUpdateResult", 
-					 columns = { @ColumnResult(name = "count")})
-	@NamedNativeQueries({
-		@NamedNativeQuery(
-			name = "updateBoard",
-			query = "UPDATE board_tbl SET "
-					  + "board_subject=?,"
-					  + "board_pass=?,"
-					  + "board_file=?,"
-					  + "board_date=?,"
-					  + "board_content=? "
-					  + "WHERE board_num=?"
-			,resultSetMapping = "insertOrUpdateResult"
-		),
-		
-		@NamedNativeQuery(
-				name = "insertBoard",
-				query = "INSERT INTO board_tbl VALUES "
-				      + "(?,?,?,?,?,?,?,?,?,?,?)"
-				,resultSetMapping = "insertOrUpdateResult"
-			)
-})*/
-/*@SequenceGenerator(
-	    name = "BOARD_SEQ_GENERATOR", 
-	    sequenceName = "BOARD_SEQ", //매핑할데이터베이스 시퀀스 이름
-	    initialValue = 1, allocationSize = 1)*/
 public class BoardVO {
 	
 	@Id
 	@Column(name="board_num")
-	@GeneratedValue(strategy = GenerationType.AUTO) 
+	@GeneratedValue(strategy = GenerationType.AUTO ,generator = "BOARD_SEQ_GENERATOR")
 /*	@GeneratedValue(strategy = GenerationType.SEQUENCE,
     generator = "BOARD_SEQ_GENERATOR") */
 	// hibernate_sequence.nextval

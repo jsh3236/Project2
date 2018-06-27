@@ -2,8 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html lang="ko-kr">
 <head>
@@ -186,7 +185,8 @@ fieldset[disabled] .btn-info.focus {
 </style>
 
 <script>
-function getImageName(opt, size) {
+/*  List 옵션 가져와서 사용하는 함수  */
+function getOption(opt, size) {
     /*
        List<String> : ${images} 파일 출력 형태 : [국화.jpg, 등대.jpg, 펭귄.jpg]
     */
@@ -201,10 +201,29 @@ function getImageName(opt, size) {
 
    	    op.value = optionList[i].trim(); // 값 설정
 	    op.text = optionList[i].trim(); // 텍스트 설정
-   	    if(i==0) document.orderlistform.option.options[0]=(op);
-	    else document.orderlistform.option.options.add(op); 
+   	    if(i==0) document.orderlistform.orderOption.options[0]=(op);
+	    else document.orderlistform.orderOption.options.add(op); 
   	 } // for
 
+ }
+ 
+//$('#inputLength').val(arrInput.length);
+
+ 
+ function orderlist() {
+	 $(document).ready( function() {
+		 var yes = 1;
+		 var no = 0;
+		 if (confirm("현재 상품을 장바구니에 담았습니다. 장바구니로 이동 하시겠습니까?")){ 
+			 $('#flag').val(yes);
+			 document.getElementById('orderlistform').submit();
+			// location.href = "${pageContext.request.contextPath}/user/orderList";
+			}else{ 
+				$('#flag').val(no);
+				document.getElementById('orderlistform').submit();
+				return; 
+			} 
+	 });
  }
 
 
@@ -213,10 +232,9 @@ function getImageName(opt, size) {
 </head>
  
 <body>
-<br><br><br><br><br><br><br>
-인자들 : ${option0} ${option1} ${option2} ${option3} <br>
 <!-- 인클루드 -->
 <div><jsp:include page="../include.jsp" flush="false" /></div>
+username : <sec:authentication property="principal.username" /><br>
     <!-- 게시글 보기-->
    <sec:authorize access="hasRole('ROLE_ADMIN')">
     	<div style="padding-left: 30px; text-align: left;">
@@ -230,60 +248,91 @@ function getImageName(opt, size) {
 	</sec:authorize>
 						
     <br>
-    <!-- 주문 헤드 부분 -->
+    
+    <!-- 주문  form -->
     <form:form modelAttribute="orderlist" id="orderlistform"
-			action="${pageContext.request.contextPath}/user/orderlistAction.do"
+			action="${pageContext.request.contextPath}/user/orderListAction.do"
 			method="post" name="orderlistform">
-			<input type="hidden" id="username" name="username" value=""/>
+			<!-- 게시판번호 유저이름 -->
+			<sec:authorize access="hasAnyRole('ROLE_USER','ROLE_ADMIN')">
+				<input type="hidden" id="username" name="username" value='<sec:authentication property="principal.username" />'/>
+			</sec:authorize>
+			<input type="hidden" id="boardNum" name="boardNum" value="${article.boardNum}"/>
+			<input type="hidden" id="nowPage" name="nowPage" value="${nowPage}"/>
+			<input type="hidden" id="flag" name="flag" value="0"/>
+			
+			<!-- 게시판 디테일 정보 테이블 -->
 	    <table>
+	    
+	    	<!-- 제품 이미지 (왼쪽 칸)-->
 	    	<tr>
 	    		<td rowspan="6">
 	                <img src="<c:url value='/image/${article.boardFile}' />"
 								width=250 height=250 style="padding: 30px" />
 	    		</td>
 	    	</tr>
+	    	<!-- 제품 이미지 (왼쪽 칸) 끝-->
+	    	
+	    <!-- ######## 제품 정보 (오른쪽 칸) ######## -->
+	    
+			<!-- 제품 이름(and 조회수) -->	    	
 	    	<tr class="tr_bg" >
 	    		<td colspan="2" style="text-align: center; font-weight: 700; font-size: 16pt">
 	            	${article.boardSubject} 
 	            	<p style="text-align: right; font-weight: 400; font-size: 12pt">조회수 : ${article.boardReadCount}<p>
 				</td>
 			</tr>
+			<!-- 제품 이름(and 조회수) 끝-->	  
+			
+			<!-- 제품 판매가 -->
 			<tr class="tr_bg">
 				<td colspan="2">
 					판매가 : <fmt:formatNumber type="number" value="${article.boardPrice}" /> 원
 				</td>
 			</tr>          
+			<!-- 제품 판매가 끝-->
+			
+			<!-- 제품 옵션 -->
 			<tr class="tr_bg">
 				<td colspan="1"> 옵션 : </td>
 				<td>
-						<select id=option name=option style="height: 25px; width: 150px">
+						<select id="orderOption" name="orderOption" style="height: 25px; width: 150px">
 	         					  <option value="optionVal">textVal</option>
 						</select>
 					
 				</td>
 			</tr>
+			<!-- 제품 옵션 끝 -->
 			
+			<!-- 제품 주문수량 -->
 			<tr class="tr_bg">
 				<td colspan="1"> 주문수량 : </td>
 				<td>
-						<input type="number" value=1 id=count name=count min=1 style="height: 25px; width: 50px; text-align: center;"/>
+						<input type="number" value=1 id="orderCount" name="orderCount" min=1 style="height: 25px; width: 50px; text-align: center;"/>
 				</td>
 			</tr>
+			<!-- 제품 주문수량 끝-->
 			
-			
-			
+			<!-- 구매하기 장바구니 버튼 -->			
 			<tr class="tr_bg">
 				<td>
 					<a class="but" href="${pageContext.request.contextPath}/board/mouse/${nowPage}"> 구매하기 </a> 
 				</td>
 				<td>
-					<a class="but" href="${pageContext.request.contextPath}/board/mouse/${nowPage}"> 장바구니 </a>
+					<a class="but" href="#" onclick="orderlist();" > 장바구니 </a>
 				</td>
 			</tr>
+			<!-- 구매하기 장바구니 버튼 끝 -->	
+			
+		<!--######## 제품 정보 (오른쪽 칸) 끝 ########-->
+			
 	    </table>
+	    <!-- 게시판 디테일 정보 테이블 끝-->
+	    
     </form:form>
-    <!-- 주문 헤드 부분 끝 -->
+    <!-- 주문 form 끝 -->
     
+    <!-- 제품 상세정보 -->
     <div style="margin-top: 200px">
             ${article.boardContent}
     </div>
@@ -291,13 +340,18 @@ function getImageName(opt, size) {
            <img  src="<c:url value='/image/${article.boardFileContent}' />"
 							 style="padding: 30px" /> 
 	</div>
+	 <!-- 제품 상세정보 끝 -->
+	 
+	 <!-- 미완성 버튼 -->
     <div>
         <a class="a2" href="boardDeleteForm.bo?board_num=${article.boardNum}&page=${nowPage}">삭제 </a> 
         <a class="a2" href="${pageContext.request.contextPath}/board/mouse/${nowPage}"> 목록</a>
     </div>
     
+    <!-- 옵션 추가 스크립트 -->
     <script>
-            getImageName("${optionList}", "${optionList.size()}");
+            getOption("${optionList}", "${optionList.size()}");
     </script>
+    <!-- 옵션 추가 스크립트 끝 -->
 </body>
 </html>
