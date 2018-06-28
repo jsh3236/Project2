@@ -82,16 +82,5 @@ public class BoardServiceImpl implements BoardService {
         dao.update(board);
 	}
 
-	@Override
-	public OrderListVO getArticle(int boardNum, String username) {
-		log.info("getArticle");
-        return dao.get(boardNum,username);
-	}
-
-	@Override
-	public List<OrderListVO> getArticleList(int page, int limit,String username) {
-		log.info("getArticleList");
-		return dao.getListByPageAndLimit(page, limit, username);
-	}
 
 }

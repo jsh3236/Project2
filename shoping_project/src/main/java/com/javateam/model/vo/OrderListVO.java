@@ -43,6 +43,16 @@ public class OrderListVO{
 	@Column(name="username", nullable=false)
 	private String username; // users의 외래키
 	
+	@Column(name="board_price", nullable=false)
+	private int boardPrice; // 주문 가격
+	
+	@Column(name="board_subject", nullable=false)
+	private String boardSubject; // 상품 제목
+	
+	@Column(name="board_file", nullable=false)
+	private String boardFile; // 첨부 파일
+	
+	
 	
 	// BoardDTO -> BoardVO
     public OrderListVO(OrderListDTO orderlist) {
@@ -50,6 +60,9 @@ public class OrderListVO{
         this.orderOption = orderlist.getOrderOption();
         this.orderCount = orderlist.getOrderCount();
         this.username = orderlist.getUsername();
+        this.boardPrice = orderlist.getBoardPrice();
+        this.boardSubject = orderlist.getBoardSubject();
+        this.boardFile = orderlist.getBoardFile();
     }
 	
 }

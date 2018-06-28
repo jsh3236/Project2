@@ -286,7 +286,6 @@ fieldset[disabled] .btn-info.focus {
 				<c:forEach var="article" items="${orderArticleList}" varStatus="st">
 						<c:set var="setNum" value="${article.boardNum}" />
 						setNum : ${setNum}<br>
-						
 						<tr>
 <%-- 						<c:choose>
 
@@ -329,9 +328,7 @@ fieldset[disabled] .btn-info.focus {
 					</c:forEach>
 			</table>
 			<!-- 장바구니 부분 끝 -->
-			<div>
-				setNum 갯수 : <br>
-			</div>
+
 			<!-- 페이징(paging) -->
 			<section id="pageList">
 

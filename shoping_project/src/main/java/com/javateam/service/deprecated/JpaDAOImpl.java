@@ -288,12 +288,12 @@ public class JpaDAOImpl implements JpaDAO {
 	@Override
 	public List<OrderListVO> getListByPageAndLimit(int page, int limit,String username) {
 		String list_sql = "SELECT * "
-				+ "FROM ( SELECT  obu.*, FLOOR((ROWNUM - 1)/? + 1) page "
-				+ "			FROM ( select * "
-				+ "					from board_tbl b,orderlist_tbl o,users u "
-				+ "					where o.BOARD_NUM=b.BOARD_NUM and o.USERNAME=u.USERNAME and o.USERNAME=? "
-				+ "					order by o.ORDER_NUM) obu ) "
-				+ "where page = ?";
+				+ "		   FROM ( SELECT  s.*, FLOOR((ROWNUM - 1)/? + 1) page "
+				+ "				  FROM ( select *"
+				+ "						 from orderlist_tbl"
+				+ "						 where USERNAME=?"
+				+ "						 order by BOARD_NUM desc,ORDER_NUM desc) s ) "
+				+ "		   where page = ?";
 		
 		
 		List<OrderListVO> list = null;
@@ -308,6 +308,7 @@ public class JpaDAOImpl implements JpaDAO {
 					.setParameter(2, username)
 					.setParameter(3, page)
 					.getResultList();
+					
 
 			transactionManager.commit(status);
 		} catch (Exception e) {
@@ -316,6 +317,24 @@ public class JpaDAOImpl implements JpaDAO {
 		} //
 		
 		return list;
+	}
+
+	@Override
+	public void update(OrderListVO orderlist) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OrderListVO> orderlist(String username) {
+
+		log.info("select All");
+		
+		
+
+		return (List<OrderListVO>) entityManager.createNativeQuery("SELECT * FROM orderlist_tbl WHERE username=? ORDER BY order_num", OrderListVO.class)
+				.setParameter(1, username).getResultList();
 	}
 
 

@@ -18,7 +18,9 @@ public interface JpaDAO {
 	void insert(BoardVO board);
 	void insert(OrderListVO orderlist);
 	List<BoardVO> list();
+	List<OrderListVO> orderlist(String username);
 	void update(BoardVO board);
+	void update(OrderListVO orderlist);
 	boolean delete(int boardNum);
 	BoardVO get(int boardNum);
 	OrderListVO get(int boardNum,String username);

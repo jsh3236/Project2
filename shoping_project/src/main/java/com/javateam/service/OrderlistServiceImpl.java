@@ -41,45 +41,47 @@ public class OrderlistServiceImpl implements OrderlistService {
 	}
 
 	@Override
-	public int getListCount() {
+	public int getListCount(String username) {
 
 		log.info("getListCount");
-		return dao.list().size();
+		return dao.orderlist(username).size();
 	} //
 
-	@Override
-	public List<BoardVO> getArticleList(int page, int limit) {
-
-		log.info("getArticleList");
-		return dao.getListByPageAndLimit(page, limit);
-	} //
 
 	@Override
-	public void updateReadCount(int boardNum) {
+	public void updateReadCount(int orderNum) {
 		log.info("updateReadCount");
         // dao.updateReadCount(boardNum);
-       dao.updateReadCount(boardNum);
+       dao.updateReadCount(orderNum);
 
 	}
 
-	@Override
-	public BoardVO getArticle(int boardNum) {
-		log.info("getArticle");
-        return dao.get(boardNum);
-	}
 
 	@Override
-	public boolean deleteBoard(int boardNum) {
+	public boolean deleteBoard(int orderNum) {
 		log.info("deleteBoard");
 		
-        return dao.delete(boardNum);
+        return dao.delete(orderNum);
 	}
 
 	@Override
-	public void updateBoard(BoardVO board) {
+	public void updateBoard(OrderListVO orderlistVO) {
 		log.info("updateBoard");
 		
-        dao.update(board);
+        dao.update(orderlistVO);
 	}
+	
+	@Override
+	public OrderListVO getArticle(int boardNum, String username) {
+		log.info("getArticle");
+        return dao.get(boardNum,username);
+	}
+
+	@Override
+	public List<OrderListVO> getArticleList(int page, int limit,String username) {
+		log.info("getArticleList");
+		return dao.getListByPageAndLimit(page, limit, username);
+	}
+
 
 }

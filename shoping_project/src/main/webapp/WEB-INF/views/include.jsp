@@ -21,7 +21,7 @@
 	
 	/* header */
 	header{height: 75px; border: 1px solid #D3D3D3;
-		   position: fixed; width: 100%; z-index: 9999; top: 0; left: 0; color: white;}
+		   position: fixed; width: 100%; z-index: 9999; top: 0; left: 0; color: white; background-color: white;}
 	header a{display:  block; color: black;}
 	h1{color: black; line-height: 75px; float: left; padding-left: 200px; font-size: 30px;}
 	.menu{float:right;  font-size: 15px;}
@@ -57,7 +57,6 @@
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_ADMIN')">
-<input type="hidden" id="username" name="username" value="<sec:authentication property="principal.username" />" />
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">
@@ -83,7 +82,6 @@
 
 
 <sec:authorize access="hasRole('ROLE_USER')">
-<input type="hidden" id="username" name="username" value="<sec:authentication property="principal.username" />" />
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">

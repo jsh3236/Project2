@@ -25,10 +25,6 @@ public interface BoardService {
 	
 	 public BoardVO getArticle(int boardNum);
 	 
-	 public OrderListVO getArticle(int boardNum,String username);
-	 
-	 List<OrderListVO> getArticleList(int page, int limit,String username);
-	 
 	List<BoardVO> getArticleList(int page, int limit);
 
 	boolean deleteBoard(int boardNum);

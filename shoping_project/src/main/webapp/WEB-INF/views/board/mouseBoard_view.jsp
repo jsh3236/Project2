@@ -234,7 +234,9 @@ function getOption(opt, size) {
 <body>
 <!-- 인클루드 -->
 <div><jsp:include page="../include.jsp" flush="false" /></div>
-username : <sec:authentication property="principal.username" /><br>
+<sec:authorize access="hasAnyRole('ROLE_USER','ROLE_ADMIN')">
+	username : <sec:authentication property="principal.username" /><br>
+</sec:authorize>
     <!-- 게시글 보기-->
    <sec:authorize access="hasRole('ROLE_ADMIN')">
     	<div style="padding-left: 30px; text-align: left;">
@@ -259,6 +261,9 @@ username : <sec:authentication property="principal.username" /><br>
 			</sec:authorize>
 			<input type="hidden" id="boardNum" name="boardNum" value="${article.boardNum}"/>
 			<input type="hidden" id="nowPage" name="nowPage" value="${nowPage}"/>
+			<input type="hidden" id="boardPrice" name="boardPrice" value="${article.boardPrice}"/>
+			<input type="hidden" id="boardSubject" name="boardSubject" value="${article.boardSubject}"/>
+			<input type="hidden" id="boardFile" name="boardFile" value="${article.boardFile}"/>
 			<input type="hidden" id="flag" name="flag" value="0"/>
 			
 			<!-- 게시판 디테일 정보 테이블 -->

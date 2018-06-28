@@ -17,15 +17,15 @@ public interface OrderlistService {
 	void insertBoard(OrderListVO orderlistVO);
 	
 	
-	int getListCount();
+	int getListCount(String username);
 	
-	void updateBoard(BoardVO board);
+	void updateBoard(OrderListVO orderlistVO);
 	
-	void updateReadCount(int boardNum);
+	void updateReadCount(int orderNum);
 	
-	 public BoardVO getArticle(int boardNum);
+	 public OrderListVO getArticle(int orderNum,String username);
+	 
+	 List<OrderListVO> getArticleList(int page, int limit,String username);
 
-	List<BoardVO> getArticleList(int page, int limit);
-
-	boolean deleteBoard(int boardNum);
+	boolean deleteBoard(int orderNum);
 }
