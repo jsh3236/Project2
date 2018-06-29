@@ -265,6 +265,10 @@ fieldset[disabled] .btn-info.focus {
   border-bottom-right-radius: 3px;
 }
 
+.mytable { border-collapse:collapse; width: 1200px; text-align: center; }  
+.mytable td { border: none; }
+.mytable th { border: none; border-bottom: 3px solid #369; border-top: 1px solid #369; }
+
 
 </style>
 
@@ -272,66 +276,87 @@ fieldset[disabled] .btn-info.focus {
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br>
-	<div style="padding-left: 30px">
-			총 게시글 수 : ${pageInfo.listCount}<br> 현재 페이지 : ${pageInfo.page}<br>
-			총 페이지 : ${pageInfo.maxPage}<br> 시작 페이지 : ${pageInfo.startPage}<br>
-			끝 페이지 : ${pageInfo.endPage}
-	</div>
 	<!-- 장바구니 리스트 시작 -->
-	<section id="listForm" style="width: 700px; margin: auto;">
+	<section id="listForm" style="width: 1200px; margin: auto;">
 		<c:if test="${not empty orderArticleList && pageInfo.listCount > 0}">
-
 			<!-- 장바구니 부분 시작 -->
-			<table id="board_tbl">
-				<c:forEach var="article" items="${orderArticleList}" varStatus="st">
-						<c:set var="setNum" value="${article.boardNum}" />
-						setNum : ${setNum}<br>
-						
-						<tr>
-<%-- 						<c:choose>
-
-								<when test="${setNum!=num}">
-									<td>
-										<a href="../boardDetail.do/boardNum/${article.boardNum}/page/${pageInfo.page}">
-											<img src="<c:url value='/image/${article.boardFile}' />" 
-											width=100 height=100 style="padding: 30px" /> 
-										</a>
-									</td>
-									<c:set var="setNum" value="${article.boardNum}" />
-								</when>
-								
-								<otherwise>
-									<td>
-									</td>	
-								</otherwise>
-								
-							</c:choose>
- --%>
-
-							<td>	
-								${article.boardSubject}
-							</td>
-							<td>
-								${article.orderOption}
-							</td>
-							<td>	
-								<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
-							</td>
-							<td>
-								<input type="number" value="${article.orderCount}" id="orderCount" name="orderCount" min=1 style="height: 25px; width: 50px; text-align: center;"/>
-							</td>
-							<td>
-									<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'"
-										style="margin-left: 50px">수정</button>
-									<button type="button" id="deleteBtn" onclick="deleteBtn(${article.boardNum})">삭제</button>
-							</td>
-						</tr>
-					</c:forEach>
-			</table>
+			<table id="board_tbl" class="mytable">
+				<tr style="height: 50px; text-align: center; ">
+					<th style="width: 70px;">
+						선택
+					</th>
+					<th style="width: 200px;">
+					 	이미지
+					</th>
+					<th style="width: 300px;">
+					 	상품명
+					</th>
+					<th  style="width: 100px;">
+						옵션
+					</th>
+					<th style="width: 100px;">
+						수량
+					</th>
+					<th style="width: 150px;">
+						가격
+					</th>
+					<th style="width: 150px;">
+						합계
+					</th>
+					<th style="width: 150px;">
+						<button type="button" id="deleteBtn" onclick="deleteBtn(${article.boardNum})">전체삭제</button>
+					</th>
+				</tr>
+			<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
+		<%-- 		<c:set var="setNum" value="${article.boardNum}" /> <br> --%>
+				<tr style="border-bottom: 1px solid #369;">
+					<td  style="width: 70px;">
+						<input type="checkbox" id="checkBox" name="checkBox" />
+					</td>
+							
+					<%-- <c:if test="${boardNumMap.get(article.boardNum)}" /> --%>
+					<td style="width: 200px;">
+						<c:set var="setNum" value="${(setNum + map.value)}" />
+						<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
+												<img src="<c:url value='/image/${orderArticleList[fn:length(orderArticleList)-setNum].boardFile}' />" 
+												width=100 height=100 style="padding: 30px" /> 
+						</a>
+					</td>
+					<td colspan="5">
+						<table>
+							<c:forEach var="article" items="${orderArticleList}" varStatus="st">
+								<c:if test="${article.boardNum eq map.key}">
+									<tr align="center">
+										<td style="width: 300px;">	
+											${article.boardSubject}
+										</td>
+										<td style="width: 100px;">
+											${article.orderOption}
+										</td>
+										<td style="width: 100px;">	
+											<input type="number" value="${article.orderCount}" id="orderCount" name="orderCount" min=1 style="height: 20px;	 width: 30px;"/>
+											<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'"">수정</button>
+										</td>
+										<td style="width: 150px;">
+											<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
+										</td>
+										<td style="width: 150px;">
+											<fmt:formatNumber type="number" value="125650"/> 원 &nbsp;
+										</td>
+									</tr>
+								</c:if>
+							</c:forEach>
+						</table>
+					</td>
+					<td>
+						<button type="button" id="deleteBtn" onclick="deleteBtn(${article.boardNum})">x</button>
+					</td>
+				</tr>
+			</c:forEach>
+		</table>
 			<!-- 장바구니 부분 끝 -->
-			<div>
-				setNum 갯수 : <br>
-			</div>
+			
+			
 			<!-- 페이징(paging) -->
 			<section id="pageList">
 

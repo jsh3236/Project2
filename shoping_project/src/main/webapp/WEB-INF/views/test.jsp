@@ -6,12 +6,33 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+
+<style>
+
+.mytable { border-collapse:collapse; }  
+.mytable th, .mytable td { border:1px solid black; }
+	
+</style>
+
 </head>
 <body>
-이미지
-<img src="<c:url value='/image/g903.jpg' />" width=500 height=500 />
-<!-- <img src="file:///C:/Users/ss/git/Project/shoping_project/src/main/webapp/WEB-INF/views/image/g903.jpg" width=500 height=500>
-<img src="D:/jsh-work/used-image/1234.gif" width=500 height=500> -->
+
+<table class="mytable">
+	<tr>
+		<td>
+			안녕
+		<td>
+	</tr>
+		
+	<tr>
+		<td>
+			하이
+		</td>
+		<td>
+		 하이루
+		</td>
+	</tr>
+</table>
 
 </body>
 </html>

@@ -26,6 +26,8 @@ public interface OrderlistService {
 	 public OrderListVO getArticle(int orderNum,String username);
 	 
 	 List<OrderListVO> getArticleList(int page, int limit,String username);
+	 
+	 List<OrderListVO> getList(String username);
 
 	boolean deleteBoard(int orderNum);
 }

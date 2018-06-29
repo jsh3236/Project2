@@ -83,5 +83,11 @@ public class OrderlistServiceImpl implements OrderlistService {
 		return dao.getListByPageAndLimit(page, limit, username);
 	}
 
+	@Override
+	public List<OrderListVO> getList(String username) {
+		log.info("getList");
+		return dao.getList(username);
+	}
+
 
 }

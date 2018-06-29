@@ -337,5 +337,33 @@ public class JpaDAOImpl implements JpaDAO {
 				.setParameter(1, username).getResultList();
 	}
 
+	@Override
+	public List<OrderListVO> getList(String username) {
+		String list_sql = "select *"
+				+ "	       from orderlist_tbl"
+				+ "		   where USERNAME=?"
+				+ "		   order by BOARD_NUM desc,ORDER_NUM desc";
+		
+		
+		List<OrderListVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			list = entityManager.createNativeQuery(list_sql,OrderListVO.class)
+					.setParameter(1, username)
+					.getResultList(); 
+					
+
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.debug("Orderlist getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
 
 }
