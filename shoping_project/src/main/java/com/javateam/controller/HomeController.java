@@ -1,31 +1,42 @@
 package com.javateam.controller;
 
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.Users;
 import com.javateam.service.AuthJdbcService;
+import com.javateam.service.BoardService;
 
 @Controller
 public class HomeController {
 	
 	@Autowired
-	AuthJdbcService authJdbcService;
+	private AuthJdbcService authJdbcService;
+	
+	@Autowired
+	private BoardService boardSvc; 
 	
 	@Autowired
 	private FileSystemResource uploadDirResource;
 
 	@RequestMapping("/")
-	public String home(HttpServletRequest request) {
-		System.out.println("실 파일 경로 : " + request.getRealPath(uploadDirResource.getPath()));
+	public String home(Model model) {
+		
+		List<BoardVO> boardlist = boardSvc.getArticleList(1, 10);
+		
+		System.out.println("boardlist : "+boardlist);
+		
+		model.addAttribute("boardlist", boardlist);
+		
 		return "home";
 	}
 	

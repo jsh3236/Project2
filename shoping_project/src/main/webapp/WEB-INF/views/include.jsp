@@ -36,7 +36,7 @@
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">
-			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">Computer</a></h1>
+			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">SuperCom</a></h1>
 			<nav>
 				<ul class="menu">
 					<li><a href="${pageContext.request.contextPath}/board/mouse/1">Mouse</a></li>
@@ -60,7 +60,7 @@
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">
-			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">Computer</a></h1>
+			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">SuperCom</a></h1>
 			<nav>
 				<ul class="menu">
 					<li><a href="${pageContext.request.contextPath}/board/mouse/1">Mouse</a></li>
@@ -85,7 +85,7 @@
 <h1>
 	<header class="myHeader">
 		<div class="wrapper">
-			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">Computer</a></h1>
+			<h1 class="myH1"><a href="${pageContext.request.contextPath}/">SuperCom</a></h1>
 			<nav>
 				<ul class="menu">
 					<li><a href="${pageContext.request.contextPath}/board/mouse/1">Mouse</a></li>

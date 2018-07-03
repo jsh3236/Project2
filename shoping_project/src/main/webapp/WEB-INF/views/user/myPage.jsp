@@ -5,24 +5,33 @@
 <!DOCTYPE html>
 <html lang="ko-kr">
 <head>
+<style>
+
+a.myType {
+	text-decoration: none;
+	font-size: 100px;
+}
+
+a.myType:active,
+a.myType:HOVER,
+a.myType:VISITED,
+a.myType:LINK
+{
+	color: black;
+}
+
+</style>
+
+
 <meta charset="UTF-8">
 <title>myPage</title>
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<div style="margin: auto;">
-		<h1>My Page</h1>
-	</div>
-	<div style="margin: auto;">
-		<a class="but" href="${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />"> 장바구니 </a> 
-	</div>
+	<h1>My Page</h1><br><br>
+	
+	<a class="myType" href="${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />"> 장바구니 </a> 
 	
 	<br><br>
-	<div style="margin: auto;">
-		<input type="button" 
-			   value="뒤로가기"
-			   style="margin-left: 50px"
-			   onclick="history.back()" />
-	</div>
 </body>
 </html>

@@ -35,7 +35,7 @@ public class OrderListVO{
 	private String orderOption; // 주문 옵션
 	
 	@Column(name="order_count", nullable=false)
-	private String orderCount; // 주문 수량
+	private int orderCount; // 주문 수량
 	
 	@Column(name="board_num", nullable=false)
 	private int boardNum; // board_tbl의 외래키 

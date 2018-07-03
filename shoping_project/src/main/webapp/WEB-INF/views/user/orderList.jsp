@@ -21,16 +21,75 @@
 <!-- 성공 팝업창 뜨기 -->
 <script>
 
+// 전체선택 함수
+var check = false;
+function checkAll(){
+	var chk = document.getElementsByName("checkBox");
+	if(check == false){
+		check = true;
+		for(var i=0; i<chk.length;i++){                                                                    
+		chk[i].checked = true;     //모두 체크
+		}
+	}else{
+		check = false;
+		for(var i=0; i<chk.length;i++){                                                                    
+		chk[i].checked = false;     //모두 해제
+		}
+	}
+}
 
-function deleteBtn(boardNum) {
-	 if (confirm("정말 삭제 하시겠습니까?")){ 
-		 location.href='${pageContext.request.contextPath}/admin/deleteAction.do/boardNum/'+orderNum+'/page/${pageInfo.page}';
+
+
+
+//삭제 함수
+function deleteBtn(orderNum) {
+	 if (confirm("정말 삭제 하시겠습니까?")){  //물어보기
+		 location.href='${pageContext.request.contextPath}/user/deleteAction.do/orderNum/'+orderNum+'/page/${pageInfo.page}';
 		}else{ 
 			return; 
 		} 
- 	
 	   
 }; // deleteBtn 
+	
+function updateBtn(orderNum) {
+	$(document).ready( function(){
+		 if (confirm($("#"+orderNum).val()+"개로 수정 하시겠습니까?")){  // 물어보기
+		 	location.href='${pageContext.request.contextPath}/user/update/ordercount/'+orderNum+'/'+$("#"+orderNum).val()+'/${pageInfo.page }';
+		 } else {
+			 location.reload();
+			 return;
+		 }
+	});
+};// updateBtn
+	
+	
+// 전체 상품 구매
+function allOrder() {
+	var chk = document.getElementsByName("checkBox"); // 체크박스객체를 담는다
+	var checkList = new Array(); //체크된 체크박스의 모든 value 값을 담는다
+
+	for(var i=0; i<chk.length;  i++){
+			checkList.push(chk[i].value);
+	}
+
+	location.href='${pageContext.request.contextPath}/user/orderPage/'+checkList+"/${orderArticleList[0].username}";
+	
+}
+// 선택상품 구매
+function selectOrder() {
+	var chk = document.getElementsByName("checkBox"); // 체크박스객체를 담는다
+	var checkList = new Array(); //체크된 체크박스의 모든 value 값을 담는다
+
+
+	for(var i=0; i<chk.length;  i++){
+		if(chk[i].checked == true){  //체크가 되어있는 값 구분
+			checkList.push(chk[i].value);
+		}
+	}
+
+	location.href='${pageContext.request.contextPath}/user/orderPage/'+checkList+"/${orderArticleList[0].username}";
+	
+}
 
 
 </script>
@@ -63,6 +122,13 @@ a {
 	text-decoration: none;
 }
 
+a:active,
+a:HOVER,
+a:VISITED,
+a:LINK
+{
+	color: black;
+}
 
 
  .but {
@@ -269,11 +335,58 @@ fieldset[disabled] .btn-info.focus {
 .mytable td { border: none; }
 .mytable th { border: none; border-bottom: 3px solid #369; border-top: 1px solid #369; }
 
+.redfont {
+	font-size: 18px;
+	color: red;
+}
+
+.whiteBtn {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #51A4CC;
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  font-weight:800;
+  padding: 20px;
+  width: 180px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.whiteBtn span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.whiteBtn span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.whiteBtn:hover span {
+  padding-right: 25px;
+}
+
+.whiteBtn:hover span:after {
+  opacity: 1;
+  right: 0;
+}
 
 </style>
 
 </head>
 <body>
+	<c:set var="total" value="0" />
+	<c:set var="totalstotal" value="0" />
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br>
 	<!-- 장바구니 리스트 시작 -->
@@ -283,12 +396,12 @@ fieldset[disabled] .btn-info.focus {
 			<table id="board_tbl" class="mytable">
 				<tr style="height: 50px; text-align: center; ">
 					<th style="width: 70px;">
-						선택
+						<a style="text-decoration: none;" href="javascript:checkAll();">전체선택</a>
 					</th>
 					<th style="width: 200px;">
 					 	이미지
 					</th>
-					<th style="width: 300px;">
+					<th style="width: 310px;">
 					 	상품명
 					</th>
 					<th  style="width: 100px;">
@@ -301,17 +414,17 @@ fieldset[disabled] .btn-info.focus {
 						가격
 					</th>
 					<th style="width: 150px;">
-						합계
+						<button type="button" id="deleteBtn" >전체삭제</button>
 					</th>
 					<th style="width: 150px;">
-						<button type="button" id="deleteBtn" onclick="deleteBtn(${article.boardNum})">전체삭제</button>
+						합계
 					</th>
 				</tr>
 			<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 		<%-- 		<c:set var="setNum" value="${article.boardNum}" /> <br> --%>
 				<tr style="border-bottom: 1px solid #369;">
 					<td  style="width: 70px;">
-						<input type="checkbox" id="checkBox" name="checkBox" />
+						<input type="checkbox" id="checkBox" name="checkBox" value="${map.key}" />
 					</td>
 							
 					<%-- <c:if test="${boardNumMap.get(article.boardNum)}" /> --%>
@@ -326,6 +439,8 @@ fieldset[disabled] .btn-info.focus {
 						<table>
 							<c:forEach var="article" items="${orderArticleList}" varStatus="st">
 								<c:if test="${article.boardNum eq map.key}">
+								 	<c:set var="boardTotal" value="${(article.boardPrice*article.orderCount)}" />
+									<c:set var="total" value="${total+boardTotal}" /> 
 									<tr align="center">
 										<td style="width: 300px;">	
 											${article.boardSubject}
@@ -334,27 +449,49 @@ fieldset[disabled] .btn-info.focus {
 											${article.orderOption}
 										</td>
 										<td style="width: 100px;">	
-											<input type="number" value="${article.orderCount}" id="orderCount" name="orderCount" min=1 style="height: 20px;	 width: 30px;"/>
-											<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'"">수정</button>
+											<input type="number" value="${article.orderCount}" id="${article.orderNum}" name="${article.orderNum}" min=1 style="height: 20px;	 width: 40px;"/>
+											<%-- <button type="button" onclick="location.href='${pageContext.request.contextPath}/user/update/ordercount/${article.orderNum}/${orderCount}/${pageInfo.page }'"">수정</button> --%>
+												<button type="button" onclick="updateBtn(${article.orderNum});">수정</button>
 										</td>
 										<td style="width: 150px;">
 											<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
 										</td>
 										<td style="width: 150px;">
-											<fmt:formatNumber type="number" value="125650"/> 원 &nbsp;
-										</td>
+											<button type="button" id="deleteBtn" onclick="deleteBtn(${article.orderNum});">x</button>
+										</td>			
 									</tr>
 								</c:if>
 							</c:forEach>
 						</table>
 					</td>
-					<td>
-						<button type="button" id="deleteBtn" onclick="deleteBtn(${article.boardNum})">x</button>
+					<td style="width: 150px;">
+						<fmt:formatNumber type="number" value="${total}" /> 원 
+						<c:set var="totalstotal" value="${totalstotal+total}" />
+						<c:set var="total" value="0" />
 					</td>
+
 				</tr>
 			</c:forEach>
+			
+			<tr align="center" style="border-bottom: 1px solid #369; height: 50px;">
+				<td colspan="7" style="text-align: right;padding-right: 65px;">
+					합계
+				</td>
+				<td style="text-align: center; margin-right: ">
+					<strong class="redfont"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원 
+				</td>
+				<td>
+				</td>
+			</tr>
+			
 		</table>
 			<!-- 장바구니 부분 끝 -->
+			
+			<div align="right">
+				<button class="whiteBtn" type="button" onclick="allOrder();"><span>전체상품구매</span></button>
+				<button class="whiteBtn" type="button" onclick="selectOrder();"><span>선택상품구매</span></button>
+				<button class="whiteBtn" type="button" onclick="history.go(-1);"><span>쇼핑계속하기</span></button>
+			</div>
 			
 			
 			<!-- 페이징(paging) -->

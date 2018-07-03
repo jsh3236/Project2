@@ -19,15 +19,17 @@ public interface OrderlistService {
 	
 	int getListCount(String username);
 	
-	void updateBoard(OrderListVO orderlistVO);
+	void updateOrderlist(OrderListVO orderlistVO);
 	
 	void updateReadCount(int orderNum);
 	
-	 public OrderListVO getArticle(int orderNum,String username);
+	 public OrderListVO getArticle(int orderNum);
 	 
 	 List<OrderListVO> getArticleList(int page, int limit,String username);
 	 
-	 List<OrderListVO> getList(String username);
+	 List<OrderListVO> getList(String username,String sc);
+	 
+	 List<List<OrderListVO>> getList(String username,int[] boardNumList,String sc);
 
-	boolean deleteBoard(int orderNum);
+	boolean deleteOrderlist(int orderNum);
 }

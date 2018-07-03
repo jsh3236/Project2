@@ -53,16 +53,16 @@ h2 {
 	text-align: center;
  }
  
- table {
+ .tt {
  	width: 500px;
     height: 500px;
     margin: auto;
     text-align: center;
-    bordercolor: #EDEDED;
-    border: 3px;
+    border: 1px solid #EDEDED;
     border-collapse: collapse;
-	text-align: left;
  }
+ 
+ 
  .tr_bg {
  	width: 400px;
  	background-color: #FAFAFA;
@@ -71,6 +71,7 @@ h2 {
  	text-align: left;
  	padding-left: 20px;
  	padding-right: 20px;
+ 	
  	
  }
  div {
@@ -214,16 +215,22 @@ function getOption(opt, size) {
 	 $(document).ready( function() {
 		 var yes = 1;
 		 var no = 0;
-		 if (confirm("현재 상품을 장바구니에 담았습니다. 장바구니로 이동 하시겠습니까?")){ 
-			 $('#flag').val(yes);
-			 document.getElementById('orderlistform').submit();
-			// location.href = "${pageContext.request.contextPath}/user/orderList";
-			}else{ 
-				$('#flag').val(no);
-				document.getElementById('orderlistform').submit();
-				return; 
-			} 
+ 		 if($("#orderOption option").index($("#orderOption option:selected"))!='0') {
+
+			 if (confirm("현재 상품을 장바구니에 담았습니다. 장바구니로 이동 하시겠습니까?")){ 
+				 $('#flag').val(yes);
+				 document.getElementById('orderlistform').submit();
+				// location.href = "${pageContext.request.contextPath}/user/orderList";
+				}else{ 
+					$('#flag').val(no);
+					document.getElementById('orderlistform').submit();
+					return; 
+				} 
+		 } else {
+			 alert('옵션을 선택해 주세요.');
+		 }
 	 });
+		 
  }
 
 
@@ -235,7 +242,6 @@ function getOption(opt, size) {
 <!-- 인클루드 -->
 <div><jsp:include page="../include.jsp" flush="false" /></div>
 <sec:authorize access="hasAnyRole('ROLE_USER','ROLE_ADMIN')">
-	username : <sec:authentication property="principal.username" /><br>
 </sec:authorize>
     <!-- 게시글 보기-->
    <sec:authorize access="hasRole('ROLE_ADMIN')">
@@ -267,11 +273,11 @@ function getOption(opt, size) {
 			<input type="hidden" id="flag" name="flag" value="0"/>
 			
 			<!-- 게시판 디테일 정보 테이블 -->
-	    <table>
+	    <table class="tt">
 	    
 	    	<!-- 제품 이미지 (왼쪽 칸)-->
-	    	<tr>
-	    		<td rowspan="6">
+	    	<tr style="height: 0px">
+	    		<td rowspan="6" style="border-right: 1px solid #EDEDED;">
 	                <img src="<c:url value='/image/${article.boardFile}' />"
 								width=250 height=250 style="padding: 30px" />
 	    		</td>
@@ -281,7 +287,7 @@ function getOption(opt, size) {
 	    <!-- ######## 제품 정보 (오른쪽 칸) ######## -->
 	    
 			<!-- 제품 이름(and 조회수) -->	    	
-	    	<tr class="tr_bg" >
+	    	<tr class="tr_bg" style="border-top: 1px solid #EDEDED;">
 	    		<td colspan="2" style="text-align: center; font-weight: 700; font-size: 16pt">
 	            	${article.boardSubject} 
 	            	<p style="text-align: right; font-weight: 400; font-size: 12pt">조회수 : ${article.boardReadCount}<p>

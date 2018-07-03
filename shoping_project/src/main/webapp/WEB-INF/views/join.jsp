@@ -414,11 +414,12 @@ font {
 						   maxlength="300"
 						   style="height: 20px; margin-top: 5px;"
 						   ng-required = "true" /> &nbsp;
-				
+					
+					<div id="address_msg" ng-model="address_msg" ng-show="join.address2.$error.pattern">
 							<font id="address_msg" size="2" style="display: none"> 
 								상세 주소를 입력해주세요.
 							</font>
-
+					</div>
 				</td>
 			</tr>
 			<!------------------ 주소 끝 ------------------->

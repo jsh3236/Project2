@@ -3,6 +3,7 @@
  */
 package com.javateam.service.deprecated;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -280,9 +281,11 @@ public class JpaDAOImpl implements JpaDAO {
 	}
 
 	@Override
-	public OrderListVO get(int boardNum, String username) {
-		// TODO Auto-generated method stub
-		return null;
+	public OrderListVO getorder(int orderNum) {
+
+		log.info("get");
+
+		return entityManager.find(OrderListVO.class, orderNum);
 	}
 
 	@Override
@@ -321,7 +324,30 @@ public class JpaDAOImpl implements JpaDAO {
 
 	@Override
 	public void update(OrderListVO orderlist) {
-		// TODO Auto-generated method stub
+
+		log.info("order count update");
+		System.out.println("order count update !!!");
+
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		System.out.println("orderlist.getOrderNum() : "+orderlist.getOrderNum());
+		System.out.println("orderlist.getOrderCount() : "+orderlist.getOrderCount());
+		
+		try {
+            entityManager.createNativeQuery("UPDATE orderlist_tbl SET order_count=? WHERE order_num=?")
+            .setParameter(1, orderlist.getOrderCount())
+            .setParameter(2, orderlist.getOrderNum())
+            .executeUpdate(); 
+            
+			transactionManager.commit(status);
+			
+			System.out.println("orderCount update complete");
+		} catch (Exception e) {
+			log.info("error");
+			transactionManager.rollback(status);
+		} // try
 		
 	}
 
@@ -338,11 +364,11 @@ public class JpaDAOImpl implements JpaDAO {
 	}
 
 	@Override
-	public List<OrderListVO> getList(String username) {
+	public List<OrderListVO> getList(String username,String sc) {
 		String list_sql = "select *"
 				+ "	       from orderlist_tbl"
 				+ "		   where USERNAME=?"
-				+ "		   order by BOARD_NUM desc,ORDER_NUM desc";
+				+ "		   order by BOARD_NUM "+sc+",ORDER_NUM desc";
 		
 		
 		List<OrderListVO> list = null;
@@ -356,7 +382,7 @@ public class JpaDAOImpl implements JpaDAO {
 					.setParameter(1, username)
 					.getResultList(); 
 					
-
+			System.out.println("JpaDAOIMpl list : "+list);
 			transactionManager.commit(status);
 		} catch (Exception e) {
 			log.debug("Orderlist getListByPageAndLimit error");
@@ -364,6 +390,76 @@ public class JpaDAOImpl implements JpaDAO {
 		} //
 		
 		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<OrderListVO>> getList(String username,int[] boardNumList,String sc) {
+		String list_sql = "select *"
+				+ "	       from orderlist_tbl"
+				+ "		   where USERNAME=? and board_num=?"
+				+ "		   order by BOARD_NUM "+sc+",ORDER_NUM desc";
+		
+		
+		List<List<OrderListVO>> allList = new ArrayList<>();
+		List<OrderListVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		for(int i=0; i<boardNumList.length; i++){
+			System.out.println("boardNumList["+i+"] : "+boardNumList[i]);
+		}
+		try {
+			for(int i=0; i<boardNumList.length; i++){
+				System.out.println("i : " + i);
+				list = entityManager.createNativeQuery(list_sql,OrderListVO.class)
+						.setParameter(1, username)
+						.setParameter(2, boardNumList[i])
+						.getResultList(); 
+				System.out.println("list : "+list);
+				allList.add(list);
+			}
+			System.out.println("JpaDAOIMpl list : "+list);
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.debug("Orderlist getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return allList;
+	}
+
+	@Override
+	public boolean deleteOrderList(int orderNum) {
+
+		log.info("delete");
+
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+		TransactionStatus status = transactionManager.getTransaction(def);
+
+		OrderListVO orderlist = entityManager.find(OrderListVO.class, orderNum);
+		// PK만으로는 삭제안됨.
+
+		log.info("Delete board {}", orderlist);
+		
+		System.out.println("JpaDAOImpl.boardNum : "+orderNum);
+        try {
+            entityManager.createNativeQuery("DELETE FROM orderlist_tbl "
+                                       + "WHERE order_num=?")
+                         .setParameter(1, orderNum)
+                         .executeUpdate(); 
+ 
+            transactionManager.commit(status); 
+           
+        } catch (Exception e) {
+            log.info("error");
+            transactionManager.rollback(status);
+            return false;
+        } // try
+        
+		return true;
 	}
 
 }

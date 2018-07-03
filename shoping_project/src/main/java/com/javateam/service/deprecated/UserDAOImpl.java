@@ -12,11 +12,6 @@ import com.javateam.model.vo.Role;
 public class UserDAOImpl implements UserDAO {
 	
 	@Override
-	public void demo() {
-		System.out.println("demo");
-	}
-    
-	@Override
     public CustomUser loadUserByUsername(String username) {
          //Write your DB call code to get the user details from DB,But I am just hard coding the user
     	 

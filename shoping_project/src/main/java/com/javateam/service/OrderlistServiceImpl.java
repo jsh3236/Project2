@@ -58,23 +58,23 @@ public class OrderlistServiceImpl implements OrderlistService {
 
 
 	@Override
-	public boolean deleteBoard(int orderNum) {
+	public boolean deleteOrderlist(int orderNum) {
 		log.info("deleteBoard");
 		
-        return dao.delete(orderNum);
+        return dao.deleteOrderList(orderNum);
 	}
 
 	@Override
-	public void updateBoard(OrderListVO orderlistVO) {
+	public void updateOrderlist(OrderListVO orderlistVO) {
 		log.info("updateBoard");
 		
         dao.update(orderlistVO);
 	}
 	
 	@Override
-	public OrderListVO getArticle(int boardNum, String username) {
+	public OrderListVO getArticle(int orderNum) {
 		log.info("getArticle");
-        return dao.get(boardNum,username);
+        return dao.getorder(orderNum);
 	}
 
 	@Override
@@ -84,9 +84,15 @@ public class OrderlistServiceImpl implements OrderlistService {
 	}
 
 	@Override
-	public List<OrderListVO> getList(String username) {
+	public List<OrderListVO> getList(String username,String sc) {
 		log.info("getList");
-		return dao.getList(username);
+		return dao.getList(username,sc);
+	}
+
+	@Override
+	public List<List<OrderListVO>> getList(String username,int[] boardNumList,String sc) {
+		log.info("getList");
+		return dao.getList(username,boardNumList,sc);
 	}
 
 

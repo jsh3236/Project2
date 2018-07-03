@@ -13,6 +13,8 @@ public class VOCountCalC {
 	
 	public Map<Integer, Integer> toMap(List<OrderListVO> list) {
 		
+		System.out.println("list :"+list);
+		
 		Map<Integer,Integer> map = new TreeMap<>();
 		
 		list.forEach(x->map.put(x.getBoardNum(), getCountNum(list, x.getBoardNum())));	

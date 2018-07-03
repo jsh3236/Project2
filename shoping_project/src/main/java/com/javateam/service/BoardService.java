@@ -23,7 +23,7 @@ public interface BoardService {
 	
 	void updateReadCount(int boardNum);
 	
-	 public BoardVO getArticle(int boardNum);
+	public BoardVO getArticle(int boardNum);
 	 
 	List<BoardVO> getArticleList(int page, int limit);
 

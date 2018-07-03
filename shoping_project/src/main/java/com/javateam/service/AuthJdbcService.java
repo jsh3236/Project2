@@ -1,5 +1,6 @@
 package com.javateam.service;
 
+import java.sql.ResultSet;
 import java.util.Date;
 
 import javax.sql.DataSource;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.javateam.model.vo.Users;
@@ -73,6 +75,19 @@ public class AuthJdbcService {
     							 new Object[] { users.getUsername(),
 											    role });
     	
+    } //
+    
+ public String getUsers(String username) {
+    	
+    	String sql  = "SELECT * FROM users WHERE username=?";
+ //   	Users user = new Users();
+    	
+ //   	user = this.jdbcTemplate.queryForObject(sql, new Object[] { username}, user );	
+ //   	user = jdbcTemplate.query(sql,new RowMapper<Users>(Users.class));
+    	
+    	String user = this.jdbcTemplate.queryForObject(sql, new Object[]{username}, String.class);
+    	
+    	return user;
     } //
 
 }

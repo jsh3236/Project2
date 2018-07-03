@@ -6,6 +6,10 @@
 <head>
 	<title>Home</title>
 	
+<!-- jQuery : 3.2.1 -->
+<script src="<c:url value='/js/jQuery/3.2.1/jquery-3.2.1.min.js' />"></script>
+
+	
 <style type="text/css">
 
 	/* reset */
@@ -31,11 +35,20 @@
 </head>
 <body>
 	<jsp:include page="include.jsp" flush="false" />
-	
-	<h2>홈</h2>
-	img
-	<img src="<c:url value='/image/g903.jpg' />" />
-	img up
-	
+	<table style="width: 1300px;">
+		<tr>
+			<td>
+				<h2>New 마우스</h2>
+				<c:forEach var="board" items="${boardlist}" varStatus="st">
+					<img src="<c:url value='/image/${board.boardFile}' />" width=300 height=300 />
+				</c:forEach>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h2>New 키보드</h2>
+			</td>
+		</tr>
+	</table>
 </body>
 </html>

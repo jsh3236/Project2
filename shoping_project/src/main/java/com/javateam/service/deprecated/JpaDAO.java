@@ -22,10 +22,13 @@ public interface JpaDAO {
 	void update(BoardVO board);
 	void update(OrderListVO orderlist);
 	boolean delete(int boardNum);
+	boolean deleteOrderList(int orderNum);
 	BoardVO get(int boardNum);
-	OrderListVO get(int boardNum,String username);
+	OrderListVO getorder(int orderNum);
 	List<BoardVO> getListByPageAndLimit(int page, int limit);
 	List<OrderListVO> getListByPageAndLimit(int page,int limit,String username);
-	List<OrderListVO> getList(String username);
+	List<OrderListVO> getList(String username,String sc);
+	public List<List<OrderListVO>> getList(String username,int[] boardNumList,String sc);
 	void updateReadCount(int boardNum);
+	
 }
