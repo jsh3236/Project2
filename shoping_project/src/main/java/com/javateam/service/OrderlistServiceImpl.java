@@ -95,5 +95,12 @@ public class OrderlistServiceImpl implements OrderlistService {
 		return dao.getList(username,boardNumList,sc);
 	}
 
+	@Override
+	public boolean allDeleteOrderlist(String username) {
+		log.info("alldelete Orderlist");
+		
+        return dao.allDeleteOrderlist(username);
+	}
+
 
 }

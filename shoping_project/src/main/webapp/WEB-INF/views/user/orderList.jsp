@@ -41,7 +41,7 @@ function checkAll(){
 
 
 
-//삭제 함수
+// 삭제 함수
 function deleteBtn(orderNum) {
 	 if (confirm("정말 삭제 하시겠습니까?")){  //물어보기
 		 location.href='${pageContext.request.contextPath}/user/deleteAction.do/orderNum/'+orderNum+'/page/${pageInfo.page}';
@@ -49,7 +49,18 @@ function deleteBtn(orderNum) {
 			return; 
 		} 
 	   
-}; // deleteBtn 
+}; // deleteBtn
+
+// 전체 orderlist 잔체 함수
+function allDelete() {
+	 if (confirm("정말 다 삭제 하시겠습니까?")){  //물어보기
+		 location.href='${pageContext.request.contextPath}/user/allDeleteAction.do/${orderArticleList[0].username}';
+		}else{ 
+			return; 
+		} 
+	
+} // allDelete
+
 	
 function updateBtn(orderNum) {
 	$(document).ready( function(){
@@ -67,20 +78,35 @@ function updateBtn(orderNum) {
 function allOrder() {
 	var chk = document.getElementsByName("checkBox"); // 체크박스객체를 담는다
 	var checkList = new Array(); //체크된 체크박스의 모든 value 값을 담는다
-
-	for(var i=0; i<chk.length;  i++){
-			checkList.push(chk[i].value);
-	}
-
-	location.href='${pageContext.request.contextPath}/user/orderPage/'+checkList+"/${orderArticleList[0].username}";
+	if(${not empty orderArticleList}) {
 	
+		for(var i=0; i<chk.length;  i++){
+				checkList.push(chk[i].value);
+		}
+	
+		location.href='${pageContext.request.contextPath}/user/orderPage/'+checkList+"/${orderArticleList[0].username}";
+		
+	} else {
+		alert('장바구니가 비었습니다.');
+	}
 }
 // 선택상품 구매
 function selectOrder() {
 	var chk = document.getElementsByName("checkBox"); // 체크박스객체를 담는다
 	var checkList = new Array(); //체크된 체크박스의 모든 value 값을 담는다
 
-
+	if(${empty orderArticleList}) {
+		
+		alert('장바구니가 비었습니다.');
+		return;
+		
+	} 
+	
+	if($("input:checkbox[name=checkBox]:checked").length==0) {
+		alert('상품을 선택해주세요.');
+		return;
+	} 
+	
 	for(var i=0; i<chk.length;  i++){
 		if(chk[i].checked == true){  //체크가 되어있는 값 구분
 			checkList.push(chk[i].value);
@@ -414,7 +440,7 @@ fieldset[disabled] .btn-info.focus {
 						가격
 					</th>
 					<th style="width: 150px;">
-						<button type="button" id="deleteBtn" >전체삭제</button>
+						<button type="button" id="deleteBtn" onclick="allDelete();">전체삭제</button>
 					</th>
 					<th style="width: 150px;">
 						합계
@@ -486,6 +512,11 @@ fieldset[disabled] .btn-info.focus {
 			
 		</table>
 			<!-- 장바구니 부분 끝 -->
+			</c:if>
+		<!-- 상품이 없을 경우 -->
+		<c:if test="${empty orderArticleList || pageInfo.listCount==0}">
+			<section id="emptyArea">장바구니 목록이 없습니다.</section>
+		</c:if>
 			
 			<div align="right">
 				<button class="whiteBtn" type="button" onclick="allOrder();"><span>전체상품구매</span></button>
@@ -539,14 +570,6 @@ fieldset[disabled] .btn-info.focus {
 
 			</section>
 			<!-- 페이징 끝 -->
-
-		</c:if>
-
-		<!-- 상품이 없을 경우 -->
-		<c:if test="${empty orderArticleList || pageInfo.listCount==0}">
-			<section id="emptyArea">등록된 글이 없습니다.</section>
-		</c:if>
-
 
 	</section>
 	<!-- 장바구니 리스트 끝 -->

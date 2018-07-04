@@ -1,17 +1,13 @@
 package com.javateam.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.eclipse.jdt.internal.compiler.parser.ParserBasicInformation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.javateam.model.vo.BoardDTO;
 import com.javateam.model.vo.BoardVO;
 import com.javateam.service.BoardService;
+import com.javateam.service.PaymentService;
 import com.javateam.util.FileUploadUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +39,9 @@ public class AdminController {
 
 	@Autowired
 	private BoardService boardSvc;
+	
+	@Autowired
+	private PaymentService paymentSvc;
 	
 	@RequestMapping("/mouseBoardwrite")
 	public String mouseBoard(Model model) {
@@ -166,8 +167,7 @@ public class AdminController {
         return "/admin/update";
     } //
 	
-
-	@RequestMapping(value="/updateAction.do")
+	@RequestMapping(value="/updateAction.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public String updateAction(@Valid @ModelAttribute("board") BoardDTO boardDTO, BindingResult result,
 			Model model, RedirectAttributes ra, HttpServletRequest request) {
 		
@@ -195,5 +195,18 @@ public class AdminController {
 		
 		return "redirect:/board/mouse/1";
 	} //
+	
+	
+/*	@RequestMapping(value="/paymentAction.do",method=RequestMethod.POST, produces="applcation/json; charset=UTF-8")
+	@ResponseBody
+	public String paymentAction(@Valid @ModelAttribute("payment") PaymentDTO payment) {
+		
+		System.out.println("payment : "+payment);
+		
+		
+		return payment.toString();
+		return "/user/orderComplete";
+	}*/
+
 
 }

@@ -2,9 +2,9 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
-	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html>
 <html lang="ko-kr">
@@ -26,7 +26,7 @@
 
 <script>
 
-//배송지 선택 함수
+ //배송지 선택 함수
 function display(num){
 	if(num=='1') {
 		user.style.display = 'block';
@@ -45,7 +45,7 @@ app.controller('orderAngularController', [ '$scope', function($scope) {
 
 } ]);
 
-
+/*
 // 전체선택 함수
 var check = false;
 function checkAll(){
@@ -154,6 +154,12 @@ function selectOrder() {
     }).open();
 }
 
+function paymentSubmit(){
+	
+	document.getElementById("paymentform").submit();
+	
+}
+ */
 </script>
 
 
@@ -490,274 +496,284 @@ input.ng-invalid.ng-not-empty {
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br>
 	
-	<section id="listForm" style="width: 700px; margin: auto;">
-		<h2>1. 주문상품 확인</h2><br>
-		<table id="board_tbl" class="mytable">
-			<tr style="height: 35px; text-align: center; ">
-				<th style="width: 200px;">
-				 	이미지	
-				</th>
-				<th style="width: 300px;">
-				 	상품명
-				</th>
-				<th  style="width: 100px;">
-					옵션
-				</th>
-				<th style="width: 100px;">
-					수량
-				</th>
-				<th style="width: 150px;">
-					가격
-				</th>
-				<th style="width: 150px;">
-					합계
-				</th>
-			</tr>
-			<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-	<%-- 		<c:set var="setNum" value="${article.boardNum}" /> <br> --%>
-				<tr style="border-bottom: 1px solid #369;">
-							
-					<%-- <c:if test="${boardNumMap.get(article.boardNum)}" /> --%>
-					<td style="width: 200px;">
-						<c:set var="setNum" value="${(setNum + map.value)}" />
-						<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
-												<img src="<c:url value='/image/${orderArticleList[fn:length(orderArticleList)-setNum].boardFile}' />" 
-												width=50 height=50 style="padding: 30px" /> 
-						</a>
-					</td>
-					<td colspan="4">
-						<table>
-							<c:forEach var="article" items="${orderArticleList}" varStatus="st">
-								<c:if test="${article.boardNum eq map.key}">
-								 	<c:set var="boardTotal" value="${(article.boardPrice*article.orderCount)}" />
-									<c:set var="total" value="${total+boardTotal}" /> 
-									<tr align="center">
-										<td style="width: 310px;">	
-											${article.boardSubject}
-										</td>
-										<td style="width: 90px;">
-											${article.orderOption}
-										</td>
-										<td style="width: 90px;">	
-											${article.orderCount}개
-										</td>
-										<td style="width: 150px;" >
-											<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
-										</td>
-									</tr>
-								</c:if>
-							</c:forEach>
-						</table>
-					</td>
-					<td style="width: 150px;">
-						<fmt:formatNumber type="number" value="${total}" /> 원 
-						<c:set var="totalstotal" value="${totalstotal+total}" />
-						<c:set var="total" value="0" />
-					</td>
+
 	
+		<section id="listForm" style="width: 700px; margin: auto;">
+			<h2>1. 주문상품 확인</h2><br>
+			<table id="payment_tbl" class="mytable">
+				<tr style="height: 35px; text-align: center; ">
+					<th style="width: 200px;">
+					 	이미지	
+					</th>
+					<th style="width: 300px;">
+					 	상품명
+					</th>
+					<th  style="width: 100px;">
+						옵션
+					</th>
+					<th style="width: 100px;">
+						수량
+					</th>
+					<th style="width: 150px;">
+						가격
+					</th>
+					<th style="width: 150px;">
+						합계
+					</th>
 				</tr>
-			</c:forEach>
-			
-			<tr align="center" style="border-bottom: 1px solid #369; height: 50px;">
-				<td colspan="5" style="text-align: right; padding-right: 20px; font-size: 15px;">
-					최종결제금액
-				</td>
-				<td style="text-align: center;">
-					<strong class="redfont"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원 
-				</td>
-			</tr>
-			
-		</table>
+				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
+		<%-- 		<c:set var="setNum" value="${article.boardNum}" /> <br> --%>
+					<tr style="border-bottom: 1px solid #369;">
+								
+						<%-- <c:if test="${boardNumMap.get(article.boardNum)}" /> --%>
+						<td style="width: 200px;">
+							<c:set var="setNum" value="${(setNum + map.value)}" />
+							<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
+													<img src="<c:url value='/image/${orderArticleList[fn:length(orderArticleList)-setNum].boardFile}' />" 
+													width=50 height=50 style="padding: 30px" /> 
+							</a>
+						</td>
+						<td colspan="4">
+							<table>
+								<c:forEach var="article" items="${orderArticleList}" varStatus="st">
+									<c:if test="${article.boardNum eq map.key}">
+									 	<c:set var="boardTotal" value="${(article.boardPrice*article.orderCount)}" />
+										<c:set var="total" value="${total+boardTotal}" /> 
+										<tr align="center">
+											<td style="width: 310px;">	
+												${article.boardSubject}
+											</td>
+											<td style="width: 90px;">
+												${article.orderOption}
+											</td>
+											<td style="width: 90px;">	
+												${article.orderCount}개
+											</td>
+											<td style="width: 150px;" >
+												<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
+											</td>
+										</tr>
+									</c:if>
+								</c:forEach>
+							</table>
+						</td>
+						<td style="width: 150px;">
+							<fmt:formatNumber type="number" value="${total}" /> 원 
+							<c:set var="totalstotal" value="${totalstotal+total}" />
+							<c:set var="total" value="0" />
+						</td>
 		
-		
-		
-		<br><br>
-		<h2>2. 배송지 정보 입력</h2>
-		<form id="order" 
-		  name="order" 
-		  action="admin/orderAction" 
-		  method="post">
-		<table class="type03" align="center">
-		
-		<!------------------ 배송지 선택 ------------------->
-			<tr>
-				<th scope="row" align="center">배송지 선택</th>
-				<td>
-					<input type="radio" name="dst" value="1" onclick="display(this.value);" checked="checked" />${user.name} &nbsp;&nbsp;
-					<input type="radio" name="dst" value="2" onclick="display(this.value);"  />직접 입력
-				</td>
-			</tr>
-		<!------------------ 배송지 선택 끝 ------------------->
-		<!-- 유저를 골랐을 경우 -->
-		<table id="user" class="type03" align="center">
-			<tr style="border-bottom: hidden; border-right: hidden;">
-				<th scope="row" align="center">이름</th>
-				<td colspan="2">
-					${user.name}
-				</td>
-			</tr>
-			<tr style="border-bottom: hidden; border-right: hidden;">
-				<th scope="row" align="center">주소</th>
-				<td colspan="2">
-					${user.address}
-				</td>
-			</tr>
-			<tr style="border-right: hidden;">
-				<th scope="row" align="center">연락처</th>
-				<td colspan="2">
-					${user.phone}
-				</td>
-			</tr>
-		</table>
-		<!-- 직접 입력을 눌렀을 경우 -->
-		<table id="direct" class="type03" align="center">
-			<tr style="border-right: hidden; border-bottom: hidden">
-				<th scope="row" align="center">이름</th>
-				<td>
-					<input type="text" 
-						   id="name" 
-						   name="name"
-						   size=15 
-						   maxlength="10" 
-						   style="height: 20px" 
-						   ng-model="name"
-					       ng-pattern="/^[가-힣]{2,4}$/" 
-						   ng-required="true" />
-				</td>
-				<div id="username_msg" 
-						ng-model="username_msg"
-						ng-show="order.username.$error.pattern">
-						<font size="2"> 
-							영문 숫자를 조합하여 6~20자 이내로 입력 <br> 
-							(대소문자 구별. 한글/특수문자 사용 불가)
-						</font>
-				</div>
-			</tr>
-			<tr style="border-bottom: hidden; border-right: hidden;">
-				<th scope="row" align="center">주소</th>
-				<td>
-					<input type="text"
-						   id="postcode"
-						   name="postcode"
-						   size=20
-						   style="height: 20px" 
-						   readonly /><br>
-						   
-					<input type="text"
-						   id="address"
-						   name="address"
-						   size=50 
-						   maxlength="300" 
-						   style="height: 20px"
-						   ng-required = "true" 
-						   readonly />
-						   
-					<input type="button" 
-						   value="주소 찾기" 
-						   onClick="getPostcodeAddress()" />
-					<input type="text"
-						   id="address2"
-						   name="address2"
-						   size=50 
-						   maxlength="300"
-						   style="height: 20px; margin-top: 5px;"
-						   ng-required = "true" /> &nbsp;
+					</tr>
+				</c:forEach>
 				
-					<div id="phone_msg" ng-model="phone_msg" ng-show="order.address2.$error.pattern">
-							<font id="address_msg" size="2" style="display: none"> 
-								상세 주소를 입력해주세요.
+				<tr align="center" style="border-bottom: 1px solid #369; height: 50px;">
+					<td colspan="5" style="text-align: right; padding-right: 20px; font-size: 15px;">
+						최종결제금액
+					</td>
+					<td style="text-align: center;">
+						<strong class="redfont"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원 
+					</td>
+				</tr>
+				
+			</table>
+			
+			
+			
+			<br><br>
+			<h2>2. 배송지 정보 입력</h2>
+<%-- 			<form:form modelAttribute="payment"
+				action="${pageContext.request.contextPath}/admin/paymentAction.do"
+				method="post" name="paymentform" id="paymentform"> --%>
+				
+			<form action="${pageContext.request.contextPath}/user/paymentAction.do"
+				method="post" name="paymentform" id="paymentform">
+			<input type="text" name="paymentName" value="11" />
+			<table class="type03" align="center">
+			
+			<!------------------ 배송지 선택 ------------------->
+				<tr>
+					<th scope="row" align="center">배송지 선택</th>
+					<td>
+						<input type="radio" name="dst" value="1" onclick="display(this.value);" checked="checked" />${user.name} &nbsp;&nbsp;
+						<input type="radio" name="dst" value="2" onclick="display(this.value);"  />직접 입력
+					</td>
+				</tr>
+			<!------------------ 배송지 선택 끝 ------------------->
+			
+			<!-- 유저를 골랐을 경우 -->
+			<table id="user" class="type03" style="border-bottom: 1px solid #ccc;">
+				<tr style="border-bottom: hidden; border-right: hidden;">
+					<th scope="row" align="center">이름</th>
+					<td colspan="2">
+						<p style="text-align: left" id="paymentName">${user.name}</p>
+					</td>
+				</tr>
+				<tr style="border-bottom: hidden; border-right: hidden;">
+					<th scope="row" align="center">주소</th>
+					<td colspan="2">
+						<p style="text-align: left" id="paymentAddress">${user.address}</p>
+					</td>
+				</tr>
+				<tr style="border-right: hidden; border-bottom: hidden;">
+					<th scope="row" align="center">연락처</th>
+					<td colspan="2">
+						<p style="text-align: left" id="paymentPhone">${user.phone}</p>
+					</td>
+				</tr>
+			</table>
+			
+			<!-- 직접 입력을 눌렀을 경우 -->
+			<table id="direct" class="type03" align="center">
+				<tr style="border-right: hidden; border-bottom: hidden">
+					<th scope="row" align="center">이름</th>
+					<td>
+						<input type="text" 
+							   id="paymentName" 
+							   name="paymentName"
+							   size=15 
+							   maxlength="10" 
+							   style="height: 20px" 
+							   ng-model="name"
+						       ng-pattern="/^[가-힣]{2,4}$/" 
+							   ng-required="true" />
+					</td>
+					<div id="username_msg" 
+							ng-model="username_msg"
+							ng-show="order.paymentName.$error.pattern">
+							<font size="2"> 
+								영문 숫자를 조합하여 6~20자 이내로 입력 <br> 
+								(대소문자 구별. 한글/특수문자 사용 불가)
 							</font>
 					</div>
-				</td>
-			</tr>
-			<tr style="border-top: hidden; border-right: hidden;">
-				<th scope="row" align="center">연락처</th>
-				<td>
-				
-					<input type="text" 
-						   id="phone" 
-						   name="phone"
-						   size=3 
-						   maxlength="3" 
-						   style="height: 20px"
-						   ng-model="phone"
-                    	   ng-required = "true"
-                     	   ng-pattern="/^\d{3}$/"> - 
+				</tr>
+				<tr style="border-bottom: hidden; border-right: hidden;">
+					<th scope="row" align="center">주소</th>
+					<td>
+						<!-- <input type="hidden" id="paymentAddress" name="paymentAddress" value="$('#postcode'),$('#address'),$('#address2')" /> -->
+						<input type="text"
+							   id="postcode"
+							   name="postcode"
+							   size=20
+							   style="height: 20px" 
+							   readonly /><br>
+							   
+						<input type="text"
+							   id="address"
+							   name="address"
+							   size=50 
+							   maxlength="300" 
+							   style="height: 20px"
+							   ng-required = "true" 
+							   readonly />
+							   
+						<input type="button" 
+							   value="주소 찾기" 
+							   onClick="getPostcodeAddress()" />
+						<input type="text"
+							   id="address2"
+							   name="address2"
+							   size=50 
+							   maxlength="300"
+							   style="height: 20px; margin-top: 5px;"
+							   ng-required = "true" /> &nbsp;
 					
-					<input type="text" 
-						   id="phone2" 
-						   name="phone2" 
-						   size=4 
-						   maxlength="4"
-						   style="height: 20px"
-						   ng-model="phone2"
-              			   ng-required = "true"
-                 	       ng-pattern="/^\d{3,4}$/"> - 
+						<div id="phone_msg" ng-model="phone_msg" ng-show="order.address2.$error.pattern">
+								<font id="address_msg" size="2" style="display: none"> 
+									상세 주소를 입력해주세요.
+								</font>
+						</div>
+					</td>
+				</tr>
+				<tr style="border-top: hidden; border-right: hidden;">
+				<!-- <input type="hidden" id="paymentPhone" name="paymentPhone" value="$('#phone')-$('#phone2')-$('#phone3')" /> -->
+					<th scope="row" align="center">연락처</th>
+					<td>
 					
-					<input type="text" 
-						   id="phone3"
-						   name="phone3"
-						   size=4 
-						   maxlength="4" 
-						   style="height: 20px;"
-						   ng-model="phone3"
-              			   ng-required = "true"
-                 	       ng-pattern="/^\d{4}$/">
-                 	      
-					<div id="phone_msg" ng-model="phone_msg" ng-show="order.phone.$error.pattern||order.phone2.$error.pattern||order.phone3.$error.pattern">
-						<font size="2"> 
-							핸드폰 번호를 제대로 입력하세요.
-						</font>
-					</div>
-				</td>
-			</tr>
+						<input type="text" 
+							   id="phone" 
+							   name="phone"
+							   size=3 
+							   maxlength="3" 
+							   style="height: 20px"
+							   ng-model="phone"
+	                    	   ng-required = "true"
+	                     	   ng-pattern="/^\d{3}$/"> - 
+						
+						<input type="text" 
+							   id="phone2" 
+							   name="phone2" 
+							   size=4 
+							   maxlength="4"
+							   style="height: 20px"
+							   ng-model="phone2"
+	              			   ng-required = "true"
+	                 	       ng-pattern="/^\d{3,4}$/"> - 
+						
+						<input type="text" 
+							   id="phone3"
+							   name="phone3"
+							   size=4 
+							   maxlength="4" 
+							   style="height: 20px;"
+							   ng-model="phone3"
+	              			   ng-required = "true"
+	                 	       ng-pattern="/^\d{4}$/">
+	                 	      
+						<div id="phone_msg" ng-model="phone_msg" ng-show="order.phone.$error.pattern||order.phone2.$error.pattern||order.phone3.$error.pattern">
+							<font size="2"> 
+								핸드폰 번호를 제대로 입력하세요.
+							</font>
+						</div>
+					</td>
+				</tr>
+				</table>
+				<!-- 직접 입력을 눌렀을 경우 끝-->
+			
 			</table>
-			<!-- 직접 입력을 눌렀을 경우 끝-->
-		
-		</table>
-		
-		<br><br>
-		<h2>3. 결제 정보 입력</h2><br>
-		
-		<table id="board_tbl" class="mytable" style="width: 700px">
-		<!------------------ 결제 방법 선택 ------------------->
-			<tr style="height: 35px; text-align: left; width: 700px;">
-				<th scope="row" align="center">결제방법 선택</th>
-			</tr>
-			<tr style="height: 60px; text-align: left;" >
-				<td style="padding-left: 150px;">
-					<input type="radio" name="dst" value="card"  checked="checked" />신용/체크카드 <br>
-				</td>
-			</tr>
-			<tr style="height: 60px; text-align: left;" >
-				<td style="padding-left: 150px;">
-					<input type="radio" name="dst" value="mutong" /> 무통장입금
-					<input style="padding-left: 100px" type="radio" name="dst" value="iche" /> 실시간계좌이체
-					<input style="padding-left: 100px" type="radio" name="dst" value="cmaiche" /> CMA계좌이체
-				</td>
-			</tr>
-			<tr style="border-bottom: 1px solid #369; height: 60px; text-align: left;">
-				<td style="padding-left: 150px;">
-					<input type="radio" name="dst" value="phone"  />휴대폰결제
-				</td>
-			</tr>
-		</table>
-		
-		<br><br>
-		<h2>4. 결제 하기</h2><br>		
-		<table class="mytable" style="width: 700px">
-			<tr style="border-top: 1px solid #369; border-bottom: 1px solid #369; height: 300px">
-				<td>
-					<strong class="redfont" style="font-weight: 1300; font-size: 34px"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원
-				</td>
-				<td style="padding-left: 100px">
-					<button class="whiteBtn" type="button" onclick=""><span>결제하기</span></button>
-				</td>
-			</tr>
-		</table>
-		</form>
-	</section>
-
+			
+			<br><br>
+			<h2>3. 결제 정보 입력</h2><br>
+			
+			<table id="board_tbl" class="mytable" style="width: 700px">
+			<!------------------ 결제 방법 선택 ------------------->
+				<tr style="height: 35px; text-align: left; width: 700px;">
+					<th scope="row" align="center">결제방법 선택</th>
+				</tr>
+				<tr style="height: 60px; text-align: left;" >
+					<td style="padding-left: 150px;">
+						<input type="radio" name="mth" value="card"  checked="checked" />신용/체크카드 <br>
+					</td>
+				</tr>
+				<tr style="height: 60px; text-align: left;" >
+					<td style="padding-left: 150px;">
+						<input type="radio" name="mth" value="mutong" /> 무통장입금
+						<input style="margin-left: 30px;" type="radio" name="mth" value="iche" /> 실시간계좌이체
+						<input style="margin-left: 30px;" type="radio" name="mth" value="cmaiche" /> CMA계좌이체
+					</td>
+				</tr>
+				<tr style="border-bottom: 1px solid #369; height: 60px; text-align: left;">
+					<td style="padding-left: 150px;">
+						<input type="radio" name="mth" value="phone"  />휴대폰결제
+					</td>
+				</tr>
+			</table>
+			
+			<br><br>
+			<h2>4. 결제 하기</h2><br>		
+			<table class="mytable" style="width: 700px">
+				<tr style="border-top: 1px solid #369; border-bottom: 1px solid #369; height: 300px">
+					<td>
+						<strong id="paymentAmount" class="redfont" style="font-weight: 1300; font-size: 34px"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원
+					</td>
+					<td style="padding-left: 100px">
+						<!-- <button class="whiteBtn" type="button" onclick="paymentSubmit();"><span>결제하기</span></button> -->
+						<input type="submit" value="전송" />
+					</td>
+				</tr>
+			</table>
+			
+		</section>
+	
 	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </body>
 </html>

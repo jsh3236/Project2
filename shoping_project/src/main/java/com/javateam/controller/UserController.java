@@ -18,6 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.javateam.model.vo.CustomUser;
@@ -170,8 +173,8 @@ public class UserController {
 	public String deleteAction(@PathVariable("orderNum") int orderNum, @PathVariable("page") int page,
 			RedirectAttributes ra) {
 
-		System.out.println("게시판 삭제 처리");
-		System.out.println("게시글 번호 : " + orderNum);
+		System.out.println("장바구니 삭제 처리");
+		System.out.println("장바구니 번호 : " + orderNum);
 		log.info("현재 페이지 : {}", page);
 
 		OrderListVO orderlist = orderlistSvc.getArticle(orderNum);
@@ -188,6 +191,25 @@ public class UserController {
 
 		return "redirect:/user/orderList/" + page;
 	} //
+	
+	@RequestMapping(value = "/allDeleteAction.do/{username}")
+	public String allDeleteAction(@PathVariable("username") String username,RedirectAttributes ra) {
+
+		System.out.println("모든 장바구니 삭제 처리");
+
+		ra.addAttribute("username", username);
+		
+		// 게시글 삭제
+		if (orderlistSvc.allDeleteOrderlist(username)) {
+
+			log.info("orderlist all delete fail!");
+
+			return "redirect:/user/orderList/1";
+		} //
+
+		return "redirect:/user/orderList/1";
+	} //
+
 
 	/**
 	 * @param boardNum
@@ -239,4 +261,26 @@ public class UserController {
 
 		return "user/orderPage";
 	}
+	
+	
+	@RequestMapping("/orderComplete")
+	public String orderComplete() {
+		
+		return "/user/orderComplete";
+	}
+	
+	@RequestMapping(value="/paymentAction.do",method=RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+//	public String paymentAction(@Valid @ModelAttribute("payment") PaymentDTO payment) {
+/*	public String paymentAction(PaymentDTO payment) {*/
+	public String paymentAction(@RequestParam Map<String,Object> map) {
+	/*	System.out.println("payment : "+payment);*/
+		System.out.println("=============================================######");
+		map.keySet().forEach(x->System.out.println(x+","+map.get(x)));
+		
+		return "";
+		/*return payment.toString();*/
+		/*return "/user/orderComplete";*/
+	}
+	
 }

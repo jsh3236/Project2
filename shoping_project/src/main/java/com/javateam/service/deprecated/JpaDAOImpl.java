@@ -22,6 +22,7 @@ import org.springframework.web.context.support.ServletContextParameterFactoryBea
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.OrderListVO;
+import com.javateam.model.vo.PaymentVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -442,9 +443,9 @@ public class JpaDAOImpl implements JpaDAO {
 		OrderListVO orderlist = entityManager.find(OrderListVO.class, orderNum);
 		// PK만으로는 삭제안됨.
 
-		log.info("Delete board {}", orderlist);
+		log.info("Delete orderlist {}", orderlist);
 		
-		System.out.println("JpaDAOImpl.boardNum : "+orderNum);
+		System.out.println("JpaDAOImpl.orderNum : "+orderNum);
         try {
             entityManager.createNativeQuery("DELETE FROM orderlist_tbl "
                                        + "WHERE order_num=?")
@@ -462,4 +463,52 @@ public class JpaDAOImpl implements JpaDAO {
 		return true;
 	}
 
+	@Override
+	public boolean allDeleteOrderlist(String username) {
+		log.info("all delete");
+
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+		TransactionStatus status = transactionManager.getTransaction(def);
+
+		System.out.println("JpaDAOImpl.username : "+username);
+        try {
+            entityManager.createNativeQuery("DELETE FROM orderlist_tbl "
+                                       + "WHERE username=?")
+                         .setParameter(1, username)
+                         .executeUpdate(); 
+ 
+            transactionManager.commit(status); 
+           
+        } catch (Exception e) {
+            log.info("error");
+            transactionManager.rollback(status);
+            return false;
+        } // try
+        
+		return true;
+	}
+
+	
+	@Override
+	public void insert(PaymentVO payment) {
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+				try {
+
+					entityManager.merge(payment);
+
+				} catch (Exception e) {
+
+					log.debug("insert error : {}", e);
+					status.setRollbackOnly();
+
+				}
+			}
+		});
+		
+	}
 }
