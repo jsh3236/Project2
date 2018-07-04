@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin")
 public class AdminController {
 
+	//주석 추가됐음
 
 	@Autowired
 	private BoardService boardSvc;
