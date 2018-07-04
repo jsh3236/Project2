@@ -45,62 +45,8 @@ app.controller('orderAngularController', [ '$scope', function($scope) {
 
 } ]);
 
-/*
-// 전체선택 함수
-var check = false;
-function checkAll(){
-	var chk = document.getElementsByName("checkBox");
-	if(check == false){
-		check = true;
-		for(var i=0; i<chk.length;i++){                                                                    
-		chk[i].checked = true;     //모두 체크
-		}
-	}else{
-		check = false;
-		for(var i=0; i<chk.length;i++){                                                                    
-		chk[i].checked = false;     //모두 해제
-		}
-	}
-}
 
-
-//삭제 함수
-function deleteBtn(orderNum) {
-	 if (confirm("정말 삭제 하시겠습니까?")){  //물어보기
-		 location.href='${pageContext.request.contextPath}/user/deleteAction.do/orderNum/'+orderNum+'/page/${pageInfo.page}';
-		}else{ 
-			return; 
-		} 
-	   
-}; // deleteBtn 
 	
-function updateBtn(orderNum) {
-	$(document).ready( function(){
-		 if (confirm($("#"+orderNum).val()+"개로 수정 하시겠습니까?")){  // 물어보기
-		 	location.href='${pageContext.request.contextPath}/user/update/ordercount/'+orderNum+'/'+$("#"+orderNum).val()+'/${pageInfo.page }';
-		 } else {
-			 location.reload();
-			 return;
-		 }
-	});
-};// updateBtn
-	
-	
-// 선택상품 구매
-function selectOrder() {
-	var chk = document.getElementsByName("checkBox"); // 체크박스객체를 담는다
-	var checkList = new Array(); //체크된 체크박스의 모든 value 값을 담는다
-
-
-	for(var i=0; i<chk.length;  i++){
-		if(chk[i].checked == true){  //체크가 되어있는 값 구분
-			checkList.push(chk[i].value);
-		}
-	}
-
-	location.href='${pageContext.request.contextPath}/user/orderPage/'+checkList+"/${orderArticleList[0].username}";
-	
-}
 
 
 //도로명 주소 검색
@@ -154,12 +100,52 @@ function selectOrder() {
     }).open();
 }
 
+ // submit
 function paymentSubmit(){
+	$(document).ready( function(){
+		var user = 1;
+		var direct = 2;
+		var cv = $("input[type=radio][name=mth]:checked").val();
+		var articleList = new Array();
+		
+		 <c:forEach var="article" items="${orderArticleList}">
+		 	articleList.push(${article.orderNum});
+		 </c:forEach>
+		 
+		$("input[type=hidden][name=order]").val(articleList);
+		$("input[type=hidden][name=order2]").val(articleList);
+		$("input[type=hidden][name=paymentMethod]").val(cv);
+		$("input[type=hidden][name=paymentMethod2]").val(cv);
+		
+		if($("input[type=radio][name=dst]:checked").val()==user) {
+			$("input[type=hidden][name=flag]").val(user);
+			document.getElementById("paymentform").submit();
+		} else {
+			$("input[type=hidden][name=flag2]").val(direct);
+			document.getElementById("paymentform2").submit();
+		}
 	
-	document.getElementById("paymentform").submit();
-	
+	});
 }
- */
+
+ 
+ function test() {
+	 alert('1');
+	 var articleList = new Array();
+	 
+	 <c:forEach var="article" items="${orderArticleList}">
+	 	articleList.push(${article.orderNum});
+	 </c:forEach>
+	 
+	 alert(articleList);
+	 
+/* 	 for(var i =0; i<'${fn:length(orderArticleList)}'; i++) {
+			alert('${orderArticleList[i]}');
+	 	} */
+ }
+ 
+ 
+
 </script>
 
 
@@ -522,10 +508,9 @@ input.ng-invalid.ng-not-empty {
 					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-		<%-- 		<c:set var="setNum" value="${article.boardNum}" /> <br> --%>
+				
 					<tr style="border-bottom: 1px solid #369;">
 								
-						<%-- <c:if test="${boardNumMap.get(article.boardNum)}" /> --%>
 						<td style="width: 200px;">
 							<c:set var="setNum" value="${(setNum + map.value)}" />
 							<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
@@ -584,44 +569,61 @@ input.ng-invalid.ng-not-empty {
 <%-- 			<form:form modelAttribute="payment"
 				action="${pageContext.request.contextPath}/admin/paymentAction.do"
 				method="post" name="paymentform" id="paymentform"> --%>
-				
-			<form action="${pageContext.request.contextPath}/user/paymentAction.do"
-				method="post" name="paymentform" id="paymentform">
-			<input type="text" name="paymentName" value="11" />
+
 			<table class="type03" align="center">
 			
 			<!------------------ 배송지 선택 ------------------->
 				<tr>
 					<th scope="row" align="center">배송지 선택</th>
 					<td>
-						<input type="radio" name="dst" value="1" onclick="display(this.value);" checked="checked" />${user.name} &nbsp;&nbsp;
-						<input type="radio" name="dst" value="2" onclick="display(this.value);"  />직접 입력
+						<input type="radio" id="dst" name="dst" value="1" onclick="display(this.value);" checked="checked" />${user.name} &nbsp;&nbsp;
+						<input type="radio" id="dst" name="dst" value="2" onclick="display(this.value);"  />직접 입력
 					</td>
 				</tr>
 			<!------------------ 배송지 선택 끝 ------------------->
+		<form action="${pageContext.request.contextPath}/user/paymentAction.do"
+			method="post" name="paymentform" id="paymentform">
 			
-			<!-- 유저를 골랐을 경우 -->
+			<input type="hidden" name="order" value="" />
+			<input type="hidden" name="username" value="${orderArticleList[0].username}" />
+			<input type="hidden" name="paymentAmount" value="${totalstotal}" />
+			<input type="hidden" name="paymentMethod" value="0" />
+			<input type="hidden" name="flag" value="0" />
+			
+		<!-- 유저를 골랐을 경우 -->
 			<table id="user" class="type03" style="border-bottom: 1px solid #ccc;">
 				<tr style="border-bottom: hidden; border-right: hidden;">
 					<th scope="row" align="center">이름</th>
 					<td colspan="2">
-						<p style="text-align: left" id="paymentName">${user.name}</p>
+						<input type="hidden" name="paymentName" value="${user.name}" />
+						${user.name}
 					</td>
 				</tr>
 				<tr style="border-bottom: hidden; border-right: hidden;">
 					<th scope="row" align="center">주소</th>
 					<td colspan="2">
-						<p style="text-align: left" id="paymentAddress">${user.address}</p>
+						<input type="hidden" name="paymentAddress" value="${user.address}" />
+						${user.address}
 					</td>
 				</tr>
 				<tr style="border-right: hidden; border-bottom: hidden;">
 					<th scope="row" align="center">연락처</th>
 					<td colspan="2">
-						<p style="text-align: left" id="paymentPhone">${user.phone}</p>
+						<input type="hidden" name="paymentPhone" value="${user.phone}" />
+						${user.phone}
 					</td>
 				</tr>
 			</table>
+		</form>
 			
+		<form action="${pageContext.request.contextPath}/user/paymentAction.do"
+			method="post" name="paymentform2" id="paymentform2">
+			
+			<input type="hidden" name="order2" value="" />
+			<input type="hidden" name="username" value="${orderArticleList[0].username}" />
+			<input type="hidden" name="paymentAmount" value="${totalstotal}" />
+			<input type="hidden" name="paymentMethod2" value="1" /> 
+			<input type="hidden" name="flag2" value="0" />
 			<!-- 직접 입력을 눌렀을 경우 -->
 			<table id="direct" class="type03" align="center">
 				<tr style="border-right: hidden; border-bottom: hidden">
@@ -649,14 +651,12 @@ input.ng-invalid.ng-not-empty {
 				<tr style="border-bottom: hidden; border-right: hidden;">
 					<th scope="row" align="center">주소</th>
 					<td>
-						<!-- <input type="hidden" id="paymentAddress" name="paymentAddress" value="$('#postcode'),$('#address'),$('#address2')" /> -->
 						<input type="text"
 							   id="postcode"
 							   name="postcode"
 							   size=20
 							   style="height: 20px" 
 							   readonly /><br>
-							   
 						<input type="text"
 							   id="address"
 							   name="address"
@@ -728,8 +728,9 @@ input.ng-invalid.ng-not-empty {
 				</tr>
 				</table>
 				<!-- 직접 입력을 눌렀을 경우 끝-->
-			
+				</form>
 			</table>
+			
 			
 			<br><br>
 			<h2>3. 결제 정보 입력</h2><br>
@@ -741,19 +742,19 @@ input.ng-invalid.ng-not-empty {
 				</tr>
 				<tr style="height: 60px; text-align: left;" >
 					<td style="padding-left: 150px;">
-						<input type="radio" name="mth" value="card"  checked="checked" />신용/체크카드 <br>
+						<input type="radio" name="mth" value="신용/체크카드"  checked="checked" />신용/체크카드 <br>
 					</td>
 				</tr>
 				<tr style="height: 60px; text-align: left;" >
 					<td style="padding-left: 150px;">
-						<input type="radio" name="mth" value="mutong" /> 무통장입금
-						<input style="margin-left: 30px;" type="radio" name="mth" value="iche" /> 실시간계좌이체
-						<input style="margin-left: 30px;" type="radio" name="mth" value="cmaiche" /> CMA계좌이체
+						<input type="radio" name="mth" value="무통장입금" /> 무통장입금
+						<input style="margin-left: 30px;" type="radio" name="mth" value="실시간계좌이체" /> 실시간계좌이체
+						<input style="margin-left: 30px;" type="radio" name="mth" value="CMA계좌이체" /> CMA계좌이체
 					</td>
 				</tr>
 				<tr style="border-bottom: 1px solid #369; height: 60px; text-align: left;">
 					<td style="padding-left: 150px;">
-						<input type="radio" name="mth" value="phone"  />휴대폰결제
+						<input type="radio" name="mth" value="휴대폰결제"  />휴대폰결제
 					</td>
 				</tr>
 			</table>
@@ -766,14 +767,18 @@ input.ng-invalid.ng-not-empty {
 						<strong id="paymentAmount" class="redfont" style="font-weight: 1300; font-size: 34px"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원
 					</td>
 					<td style="padding-left: 100px">
-						<!-- <button class="whiteBtn" type="button" onclick="paymentSubmit();"><span>결제하기</span></button> -->
-						<input type="submit" value="전송" />
+						<button class="whiteBtn" type="button" onclick="paymentSubmit();"><span>결제하기</span></button>
 					</td>
 				</tr>
 			</table>
 			
+			<br><br><br><br><br><br><br><br><br><br><br>
+			<button class="whiteBtn" type="button" onclick="test();"><span>TEST</span></button>
+			
 		</section>
+		
+		
 	
-	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br>
 </body>
 </html>

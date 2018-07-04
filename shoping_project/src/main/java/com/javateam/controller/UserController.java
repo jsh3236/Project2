@@ -20,17 +20,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.javateam.model.vo.CustomUser;
 import com.javateam.model.vo.OrderListDTO;
 import com.javateam.model.vo.OrderListVO;
 import com.javateam.model.vo.PageInfo;
-import com.javateam.model.vo.Users;
-import com.javateam.service.AuthJdbcService;
+import com.javateam.model.vo.PaymentDTO;
 import com.javateam.service.CustomProvider;
 import com.javateam.service.OrderlistService;
+import com.javateam.service.PaymentService;
 import com.javateam.util.VOCountCalC;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +42,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequestMapping("/user")
 public class UserController {
+	
+	@Autowired
+	private PaymentService paymentSvc;
 
 	@Autowired
 	private OrderlistService orderlistSvc;
@@ -270,17 +272,36 @@ public class UserController {
 	}
 	
 	@RequestMapping(value="/paymentAction.do",method=RequestMethod.POST, produces="application/json; charset=UTF-8")
-	@ResponseBody
-//	public String paymentAction(@Valid @ModelAttribute("payment") PaymentDTO payment) {
-/*	public String paymentAction(PaymentDTO payment) {*/
-	public String paymentAction(@RequestParam Map<String,Object> map) {
-	/*	System.out.println("payment : "+payment);*/
-		System.out.println("=============================================######");
-		map.keySet().forEach(x->System.out.println(x+","+map.get(x)));
+	public String paymentAction(@RequestParam Map<String,String> map) {
 		
-		return "";
-		/*return payment.toString();*/
-		/*return "/user/orderComplete";*/
+		System.out.println("=============================================");
+		map.keySet().forEach(x->System.out.println(x+","+map.get(x)));
+		System.out.println("=============================================");
+		
+		Iterator<String> keys = map.keySet().iterator();
+		
+		PaymentDTO payment = new PaymentDTO();
+		
+		
+		
+		if(map.get("flag")!=null) {
+			System.out.println("### flag = 1 ###");
+			payment.setPaymentAddress(map.get("paymentAddress"));
+			payment.setPaymentMethod(map.get("paymentMethod"));
+			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
+			payment.setPaymentName(map.get("paymentName"));
+			payment.setPaymentPhone(map.get("paymentPhone"));
+			
+			System.out.println("!!!!!!!!payment :"+payment);
+		} 
+		
+		if(map.get("flag2")!=null){
+			System.out.println("### flag2 = 2 ###");
+		}
+	
+	
+		
+		return "/user/orderComplete";
 	}
 	
 }

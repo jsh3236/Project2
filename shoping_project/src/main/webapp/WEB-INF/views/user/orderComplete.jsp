@@ -4,9 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>order complete</title>
 </head>
 <body>
-
+	구매 완료!!!!
 </body>
 </html>

@@ -33,15 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/admin")
 public class AdminController {
 
-	//주석 추가됐음
-	//ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
-	//22222222222222222222222222
-
 	@Autowired
 	private BoardService boardSvc;
-	
-	@Autowired
-	private PaymentService paymentSvc;
 	
 	@RequestMapping("/mouseBoardwrite")
 	public String mouseBoard(Model model) {
