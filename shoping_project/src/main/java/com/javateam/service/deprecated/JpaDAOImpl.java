@@ -22,16 +22,18 @@ import org.springframework.web.context.support.ServletContextParameterFactoryBea
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.OrderListVO;
+import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentVO;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
+
 
 /**
  * @author oracle
  *
  */
 @Repository
-@Slf4j
+@Log
 @Transactional
 public class JpaDAOImpl implements JpaDAO {
 	@PersistenceContext
@@ -86,7 +88,8 @@ public class JpaDAOImpl implements JpaDAO {
 
 				} catch (Exception e) {
 
-					log.debug("insert error : {}", e);
+					log.info("insert error : "+e);
+					
 					status.setRollbackOnly();
 
 				}
@@ -158,7 +161,7 @@ public class JpaDAOImpl implements JpaDAO {
 		BoardVO board = entityManager.find(BoardVO.class, boardNum);
 		// PK만으로는 삭제안됨.
 
-		log.info("Delete board {}", board);
+		log.info("Delete board "+board);
 		
 		System.out.println("JpaDAOImpl.boardNum : "+boardNum);
         try {
@@ -226,7 +229,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.debug("getListByPageAndLimit error");
+			log.info("getListByPageAndLimit error");
 			transactionManager.rollback(status);
 		} //
 
@@ -237,7 +240,7 @@ public class JpaDAOImpl implements JpaDAO {
 	public void updateReadCount(int boardNum) {
 
         log.info("updateReadCount");
-        log.info("boardNum : {}", boardNum);
+        log.info("boardNum : "+boardNum);
        
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -272,7 +275,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 				} catch (Exception e) {
 
-					log.debug("insert error : {}", e);
+					log.info("insert error : "+ e);
 					status.setRollbackOnly();
 
 				}
@@ -316,7 +319,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.debug("Orderlist getListByPageAndLimit error");
+			log.info("Orderlist getListByPageAndLimit error");
 			transactionManager.rollback(status);
 		} //
 		
@@ -363,6 +366,7 @@ public class JpaDAOImpl implements JpaDAO {
 		return (List<OrderListVO>) entityManager.createNativeQuery("SELECT * FROM orderlist_tbl WHERE username=? ORDER BY order_num", OrderListVO.class)
 				.setParameter(1, username).getResultList();
 	}
+	
 
 	@Override
 	public List<OrderListVO> getList(String username,String sc) {
@@ -386,7 +390,7 @@ public class JpaDAOImpl implements JpaDAO {
 			System.out.println("JpaDAOIMpl list : "+list);
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.debug("Orderlist getListByPageAndLimit error");
+			log.info("Orderlist getListByPageAndLimit error");
 			transactionManager.rollback(status);
 		} //
 		
@@ -424,13 +428,13 @@ public class JpaDAOImpl implements JpaDAO {
 			System.out.println("JpaDAOIMpl list : "+list);
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.debug("Orderlist getListByPageAndLimit error");
+			log.info("Orderlist getListByPageAndLimit error");
 			transactionManager.rollback(status);
 		} //
 		
 		return allList;
 	}
-
+	
 	@Override
 	public boolean deleteOrderList(int orderNum) {
 
@@ -443,7 +447,7 @@ public class JpaDAOImpl implements JpaDAO {
 		OrderListVO orderlist = entityManager.find(OrderListVO.class, orderNum);
 		// PK만으로는 삭제안됨.
 
-		log.info("Delete orderlist {}", orderlist);
+		log.info("Delete orderlist "+ orderlist);
 		
 		System.out.println("JpaDAOImpl.orderNum : "+orderNum);
         try {
@@ -503,7 +507,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 				} catch (Exception e) {
 
-					log.debug("insert error : {}", e);
+					log.info("insert error : "+ e);
 					status.setRollbackOnly();
 
 				}
@@ -511,4 +515,211 @@ public class JpaDAOImpl implements JpaDAO {
 		});
 		
 	}
+
+	@Override
+	public void insert(PaymentComplVO payment) {
+		
+		System.out.println("insert : payment : " +payment);
+
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+				try {
+
+					entityManager.merge(payment);
+
+				} catch (Exception e) {
+
+					log.info("insert error : "+ e);
+					status.setRollbackOnly();
+
+				}
+			}
+		});
+	}
+
+	@Override
+	public PaymentVO getNew() {
+		
+		String sql = "select *"
+				+ "		   from (select * from payment_tbl order by payment_num desc) "
+				+ "		   where rownum=1";
+		
+		log.info("getNew() run!");
+		PaymentVO payment= null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			payment = (PaymentVO) entityManager.createNativeQuery(sql,PaymentVO.class).getSingleResult();
+					
+			System.out.println("JpaDAOIMpl : "+payment);
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("payhment getNew error");
+			transactionManager.rollback(status);
+		} //
+		
+		return payment;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<PaymentComplVO>> getComplList(int paymentNum,int[] boardNumList,String sc) {
+		log.info("getComplList!!");
+		
+		String list_sql = "select * "
+				+ "			from paymentcompl_tbl "
+				+ "			where board_num = ? and payment_num=? "
+				+ "			order by BOARD_NUM "+sc+",compl_NUM desc";
+		
+		System.out.println(paymentNum);
+		
+		for(int i=0; i<boardNumList.length; i++){
+			System.out.println("boardNumList["+i+"] : "+boardNumList[i]);
+		}
+		
+		List<List<PaymentComplVO>> allList = new ArrayList<>();
+		
+		List<PaymentComplVO> list = null;
+		
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+
+		try {
+			for(int i=0; i<boardNumList.length; i++){
+				
+				System.out.println("i : " + i);
+				
+				list = entityManager.createNativeQuery(list_sql,PaymentComplVO.class)
+						.setParameter(1, boardNumList[i])
+						.setParameter(2, paymentNum)
+						.getResultList(); 
+				
+				System.out.println("list : "+list);
+				
+				allList.add(list);
+			}
+			System.out.println("JpaDAOIMpl list : "+allList);
+			
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("Orderlist getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return allList;
+	}
+
+	@Override
+	public PaymentComplVO getComplNew() {
+
+		String sql = "select *"
+				+ "   from (select * from paymentcompl_tbl order by compl_num desc) "
+				+ "	  where rownum=1";
+		
+		log.info("getComplNew() run!");
+		PaymentComplVO payment= null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			payment = (PaymentComplVO) entityManager.createNativeQuery(sql,PaymentComplVO.class).getSingleResult();
+					
+			log.info("JpaDAOIMpl getnewCompl : "+payment);
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("payhment getComplNew error");
+			transactionManager.rollback(status);
+		} //
+		
+		return payment;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentComplVO> getList2(String username, String sc) {
+		String list_sql = "select * "
+				+ "			from paymentcompl_tbl"
+				+"			where username=? "
+				+ "			order by compl_NUM "+sc;
+		
+		
+		List<PaymentComplVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			list = entityManager.createNativeQuery(list_sql,PaymentComplVO.class)
+					.setParameter(1, username)
+					.getResultList(); 
+					
+			System.out.println("JpaDAOIMpl getlist2 : "+list);
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("PaymentComplVO getlist error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentComplVO> complList(String username) {
+
+		log.info("select All");
+
+		return (List<PaymentComplVO>) entityManager.createNativeQuery("SELECT * FROM paymentcompl_tbl WHERE username=?", PaymentComplVO.class)
+				.setParameter(1, username).getResultList();
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentComplVO> getListByPageAndLimit2(int page, int limit,String username) {
+		String list_sql = "SELECT * "
+				+ "		   FROM ( SELECT  s.*, FLOOR((ROWNUM - 1)/? + 1) page "
+				+ "				  FROM ( select *"
+				+ "						 from paymentcompl_tbl"
+				+ "						 where USERNAME=?"
+				+ "						 order by compl_num desc) s ) "
+				+ "		   where page = ?";
+		
+		
+		List<PaymentComplVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			
+			list = entityManager.createNativeQuery(list_sql, PaymentComplVO.class)
+					.setParameter(1, limit)
+					.setParameter(2, username)
+					.setParameter(3, page)
+					.getResultList();
+
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("PaymentComplVO getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
+	
+	
 }

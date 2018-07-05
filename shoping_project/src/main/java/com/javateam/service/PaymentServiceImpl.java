@@ -32,4 +32,12 @@ public class PaymentServiceImpl implements PaymentService {
 		dao.insert(payment);
 	}
 
+	@Override
+	public PaymentVO getNew() {
+		
+		log.info("최신 값 리턴");
+		
+		return dao.getNew();
+	}
+
 }

@@ -24,6 +24,9 @@
 <!-- bootstrap JS : 3.3.7 -->
 <script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
 
+<!-- myCss -->
+<link rel="stylesheet" href="<c:url value='/js/custom/myCss.css' />">
+
 <script>
 
  //배송지 선택 함수
@@ -106,14 +109,18 @@ function paymentSubmit(){
 		var user = 1;
 		var direct = 2;
 		var cv = $("input[type=radio][name=mth]:checked").val();
-		var articleList = new Array();
+		var orderList = new Array();
+		var boardList = new Array();
 		
 		 <c:forEach var="article" items="${orderArticleList}">
-		 	articleList.push(${article.orderNum});
+			 orderList.push(${article.orderNum});
+			 boardList.push(${article.boardNum});
 		 </c:forEach>
 		 
-		$("input[type=hidden][name=order]").val(articleList);
-		$("input[type=hidden][name=order2]").val(articleList);
+		$("input[type=hidden][name=boardNum]").val(boardList);
+		$("input[type=hidden][name=boardNum2]").val(boardList);
+		$("input[type=hidden][name=order]").val(orderList);
+		$("input[type=hidden][name=order2]").val(orderList);
 		$("input[type=hidden][name=paymentMethod]").val(cv);
 		$("input[type=hidden][name=paymentMethod2]").val(cv);
 		
@@ -144,336 +151,8 @@ function paymentSubmit(){
 	 	} */
  }
  
- 
-
 </script>
 
-
-
-<style type="text/css">
-
-/* 등록된 글이 없을 경우, 페이징 처리 */
-#emptyArea, #pageList {
-	margin: auto;
-	text-align: center;
-}
-
-/* reset */
-* {
-	margin: 0;
-	padding: 0;
-}
-
-p {
-	text-align: center;
-}
-
-li {
-	list-style: none;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:active,
-a:HOVER,
-a:VISITED,
-a:LINK
-{
-	color: black;
-}
-
-
- .but {
- 	 background-color: #B1B6BD; 
- 	 color: white;
- 	 font-weight: 700;
- 	 width : 110px;
-	display:  block;
-	line-height: 50px; padding: 0 15px;  display:  block;
- }
- 
- .btn {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-      touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-}
-
-.btn-info {
-  color: #fff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
-}
-.btn-info:focus,
-.btn-info.focus {
-  color: #fff;
-  background-color: #31b0d5;
-  border-color: #1b6d85;
-}
-.btn-info:hover {
-  color: #fff;
-  background-color: #31b0d5;
-  border-color: #269abc;
-}
-.btn-info:active,
-.btn-info.active,
-.open > .dropdown-toggle.btn-info {
-  color: #fff;
-  background-color: #31b0d5;
-  border-color: #269abc;
-}
-.btn-info:active:hover,
-.btn-info.active:hover,
-.open > .dropdown-toggle.btn-info:hover,
-.btn-info:active:focus,
-.btn-info.active:focus,
-.open > .dropdown-toggle.btn-info:focus,
-.btn-info:active.focus,
-.btn-info.active.focus,
-.open > .dropdown-toggle.btn-info.focus {
-  color: #fff;
-  background-color: #269abc;
-  border-color: #1b6d85;
-}
-.btn-info:active,
-.btn-info.active,
-.open > .dropdown-toggle.btn-info {
-  background-image: none;
-}
-.btn-info.disabled:hover,
-.btn-info[disabled]:hover,
-fieldset[disabled] .btn-info:hover,
-.btn-info.disabled:focus,
-.btn-info[disabled]:focus,
-fieldset[disabled] .btn-info:focus,
-.btn-info.disabled.focus,
-.btn-info[disabled].focus,
-fieldset[disabled] .btn-info.focus {
-  background-color: #5bc0de;
-  border-color: #46b8da;
-}
-.btn-info .badge {
-  color: #5bc0de;
-  background-color: #fff;
-}
-
-.btn-lg,
-.btn-group-lg > .btn {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-  border-radius: 6px;
-}
-
-.btn-lg .caret {
-  border-width: 5px 5px 0;
-  border-bottom-width: 0;
-}
-
-
-.pagination {
-  display: inline-block;
-  padding-left: 0;
-  margin: 20px 0;
-  border-radius: 4px;
-}
-.pagination > li {
-  display: inline;
-}
-.pagination > li > a,
-.pagination > li > span {
-  position: relative;
-  float: left;
-  padding: 6px 12px;
-  margin-left: -1px;
-  line-height: 1.42857143;
-  color: #337ab7;
-  text-decoration: none;
-  background-color: #fff;
-  border: 1px solid #ddd;
-}
-.pagination > li:first-child > a,
-.pagination > li:first-child > span {
-  margin-left: 0;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
-.pagination > li:last-child > a,
-.pagination > li:last-child > span {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-.pagination > li > a:hover,
-.pagination > li > span:hover,
-.pagination > li > a:focus,
-.pagination > li > span:focus {
-  z-index: 2;
-  color: #23527c;
-  background-color: #eee;
-  border-color: #ddd;
-}
-.pagination > .active > a,
-.pagination > .active > span,
-.pagination > .active > a:hover,
-.pagination > .active > span:hover,
-.pagination > .active > a:focus,
-.pagination > .active > span:focus {
-  z-index: 3;
-  color: #fff;
-  cursor: default;
-  background-color: #337ab7;
-  border-color: #337ab7;
-}
-.pagination > .disabled > span,
-.pagination > .disabled > span:hover,
-.pagination > .disabled > span:focus,
-.pagination > .disabled > a,
-.pagination > .disabled > a:hover,
-.pagination > .disabled > a:focus {
-  color: #777;
-  cursor: not-allowed;
-  background-color: #fff;
-  border-color: #ddd;
-}
-.pagination-lg > li > a,
-.pagination-lg > li > span {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-}
-.pagination-lg > li:first-child > a,
-.pagination-lg > li:first-child > span {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-}
-.pagination-lg > li:last-child > a,
-.pagination-lg > li:last-child > span {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-.pagination-sm > li > a,
-.pagination-sm > li > span {
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-}
-.pagination-sm > li:first-child > a,
-.pagination-sm > li:first-child > span {
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-}
-.pagination-sm > li:last-child > a,
-.pagination-sm > li:last-child > span {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-}
-
-.mytable { border-collapse:collapse; text-align: center; font-size: 12px;}  
-.mytable td { border: none; }
-.mytable th { border: none; border-bottom: 3px solid #369; border-top: 1px solid #369; }
-
-.redfont {
-	font-size: 21px;
-	font-weight:800;
-	color: red;
-}
-
-.whiteBtn {
-  display: inline-block;
-  border-radius: 4px;
-  background-color: #f4511e;
-  border: none;
-  color: white;
-  text-align: center;
-  font-size: 15px;
-  font-weight:800;
-  padding: 20px;
-  width: 180px;
-  transition: all 0.5s;
-  cursor: pointer;
-  margin: 5px;
-}
-
-.whiteBtn span {
-  cursor: pointer;
-  display: inline-block;
-  position: relative;
-  transition: 0.5s;
-}
-
-.whiteBtn span:after {
-  content: '\00bb';
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: -20px;
-  transition: 0.5s;
-}
-
-.whiteBtn:hover span {
-  padding-right: 25px;
-}
-
-.whiteBtn:hover span:after {
-  opacity: 1;
-  right: 0;
-}
-
-/* 테이블 모양  */
-table.type03 {
-	width: 700px;
-	border-collapse: collapse;
-	text-align: left;
-	line-height: 1.5;
-	border-top: 1px solid #ccc;
-	border-left: 3px solid #369;
-	border-right: hidden;
-	margin: 20px 10px;
-	font-size: 12px;
-}
-
-table.type03 th {
-	width: 147px;
-	padding: 10px;
-	font-weight: bold;
-	vertical-align: middle;
-	color: #153d73;
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-}
-
-table.type03 td {
-	padding: 10px;
-	vertical-align: middle;
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
-}
-
-/* 에러 출력시.값이 있을 때 필드 외곽선(적색) 표시  */
-input.ng-invalid.ng-not-empty {
-	border: 2px solid red;
-}
-
-
-
-</style>
 
 </head>
 <body ng-app="orderBody" ng-controller="orderAngularController" onload="display(1)">
@@ -584,6 +263,7 @@ input.ng-invalid.ng-not-empty {
 		<form action="${pageContext.request.contextPath}/user/paymentAction.do"
 			method="post" name="paymentform" id="paymentform">
 			
+			<input type="hidden" name="boardNum" value="" />
 			<input type="hidden" name="order" value="" />
 			<input type="hidden" name="username" value="${orderArticleList[0].username}" />
 			<input type="hidden" name="paymentAmount" value="${totalstotal}" />
@@ -619,6 +299,7 @@ input.ng-invalid.ng-not-empty {
 		<form action="${pageContext.request.contextPath}/user/paymentAction.do"
 			method="post" name="paymentform2" id="paymentform2">
 			
+			<input type="hidden" name="boardNum2" value="" />
 			<input type="hidden" name="order2" value="" />
 			<input type="hidden" name="username" value="${orderArticleList[0].username}" />
 			<input type="hidden" name="paymentAmount" value="${totalstotal}" />
@@ -772,13 +453,12 @@ input.ng-invalid.ng-not-empty {
 				</tr>
 			</table>
 			
-			<br><br><br><br><br><br><br><br><br><br><br>
-			<button class="whiteBtn" type="button" onclick="test();"><span>TEST</span></button>
+			
 			
 		</section>
 		
 		
 	
-	<br><br><br><br><br><br><br><br>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 </body>
 </html>

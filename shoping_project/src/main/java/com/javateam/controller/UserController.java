@@ -26,25 +26,34 @@ import com.javateam.model.vo.CustomUser;
 import com.javateam.model.vo.OrderListDTO;
 import com.javateam.model.vo.OrderListVO;
 import com.javateam.model.vo.PageInfo;
+import com.javateam.model.vo.PaymentComplDTO;
+import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentDTO;
+import com.javateam.model.vo.PaymentVO;
 import com.javateam.service.CustomProvider;
 import com.javateam.service.OrderlistService;
+import com.javateam.service.PaymentComplService;
 import com.javateam.service.PaymentService;
 import com.javateam.util.VOCountCalC;
 
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+import oracle.net.aso.s;
 
 /**
  * @author ss
  *
  */
 @Controller
-@Slf4j
+@Log
 @RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
 	private PaymentService paymentSvc;
+	
+	@Autowired
+	private PaymentComplService complSvc;
 
 	@Autowired
 	private OrderlistService orderlistSvc;
@@ -61,10 +70,18 @@ public class UserController {
 		int temp = 0;
 		String username = request.getParameter("username");
 		List<OrderListVO> orderArticleList = orderlistSvc.getList(username, "asc");
+		
 		VOCountCalC calc = new VOCountCalC();
+		
 		// Map에 역순 입력
 		Map<Integer, Integer> map = calc.toMap(orderlistSvc.getList(username, "desc"));
-
+		
+		System.out.println("##########################################################################");
+		System.out.println("orderlistSvc.getList(username, desc) : "+ orderlistSvc.getList(username, "desc"));
+		System.out.println("orderlistSvc.getList(username, asc) : "+orderlistSvc.getList(username, "asc"));
+		System.out.println("map : "+map);
+		System.out.println("##########################################################################");
+		
 		Iterator<Integer> keys = map.keySet().iterator();
 		System.out.println("map.size() :" + map.size());
 
@@ -74,20 +91,12 @@ public class UserController {
 			temp++;
 		}
 
-		System.out.println("allcalc size: " + calc.toMap(orderArticleList).size());
-		System.out.println("allcalc : " + calc.toMap(orderArticleList));
-
 		page = page != 0 ? page : 1; // page 설정
 
 		int listCount = orderlistSvc.getListCount(username);
-		System.out.println("orderlistcount : " + listCount);
-		System.out.println("limit : " + limit);
+		
+		limit = 10000;
 		orderArticleList = orderlistSvc.getArticleList(page, limit, username);
-		System.out.println("장바구니 게시판 :  " + orderArticleList);
-		System.out.println("username  :  " + username);
-
-		System.out.println("calc size: " + calc.toMap(orderArticleList).size());
-		System.out.println("calc : " + calc.toMap(orderArticleList));
 
 		// 총 페이지 수.
 		int maxPage = (int) ((double) listCount / limit + 0.95); // 0.95를 더해서 올림
@@ -177,7 +186,7 @@ public class UserController {
 
 		System.out.println("장바구니 삭제 처리");
 		System.out.println("장바구니 번호 : " + orderNum);
-		log.info("현재 페이지 : {}", page);
+		log.info("현재 페이지 : "+ page);
 
 		OrderListVO orderlist = orderlistSvc.getArticle(orderNum);
 
@@ -216,6 +225,7 @@ public class UserController {
 	/**
 	 * @param boardNum
 	 */
+	//orderPage
 	@RequestMapping("/orderPage/{boardNum}/{username}")
 	public String orderPage(@PathVariable("boardNum") String boardNum, @PathVariable("username") String username,
 			Model model) {
@@ -233,26 +243,15 @@ public class UserController {
 
 		List<OrderListVO> orderArticleList = new ArrayList<>();
 
-		//List<List<>> 를 List<>에 다시 넣음
+		//List<List<>> 를 List<>에 다시 넣음 ( * 역순 * )
 		for (int i = 0; i < orderArticleListD.size(); i++) {
 			for (int j = 0; j < orderArticleListD.get(i).size(); j++) {
 				orderArticleList.add(orderArticleListD.get(i).get(j));
 			}
 		}
 
-		int temp = 0;
 		VOCountCalC calc = new VOCountCalC();
 		
-		// Map에 역순 입력
-		Map<Integer, Integer> map = calc.toMap(orderArticleList);
-
-		Iterator<Integer> keys = map.keySet().iterator();
-		System.out.println("map.size() :" + map.size());
-
-		while (keys.hasNext() && temp < 3) {
-			int key = map.get(keys.next());
-			temp++;
-		}
 		
 		CustomUser user = customSvc.loadUserByUsername(username);
 		System.out.println("user : "+user);
@@ -265,27 +264,22 @@ public class UserController {
 	}
 	
 	
-	@RequestMapping("/orderComplete")
-	public String orderComplete() {
-		
-		return "/user/orderComplete";
-	}
-	
+	//orderComplete
 	@RequestMapping(value="/paymentAction.do",method=RequestMethod.POST, produces="application/json; charset=UTF-8")
-	public String paymentAction(@RequestParam Map<String,String> map) {
+	public String paymentAction(@RequestParam Map<String,String> map,Model model) {
 		
 		System.out.println("=============================================");
 		map.keySet().forEach(x->System.out.println(x+","+map.get(x)));
 		System.out.println("=============================================");
 		
-		Iterator<String> keys = map.keySet().iterator();
-		
 		PaymentDTO payment = new PaymentDTO();
 		
+		StringTokenizer st = null;
+		StringTokenizer st2 = null;
 		
-		
+		// payment insert()
 		if(map.get("flag")!=null) {
-			System.out.println("### flag = 1 ###");
+			log.info("### flag = 1 ###");
 			payment.setPaymentAddress(map.get("paymentAddress"));
 			payment.setPaymentMethod(map.get("paymentMethod"));
 			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
@@ -293,15 +287,178 @@ public class UserController {
 			payment.setPaymentPhone(map.get("paymentPhone"));
 			
 			System.out.println("!!!!!!!!payment :"+payment);
+			
+			PaymentVO paymentVO = new PaymentVO(payment);
+			
+			paymentSvc.insertPayment(paymentVO);
+			
+			st = new StringTokenizer(map.get("order"), ",");
+			st2 = new StringTokenizer(map.get("boardNum"), ",");
 		} 
 		
 		if(map.get("flag2")!=null){
-			System.out.println("### flag2 = 2 ###");
+			log.info("### flag2 = 2 ###");
+			
+			String address = map.get("postcode")+", "+map.get("address")+", "+map.get("address2");
+			String phone = map.get("phone")+"-"+map.get("phone2")+"-"+map.get("phone3");
+			
+			payment.setPaymentAddress(address);
+			payment.setPaymentMethod(map.get("paymentMethod2"));
+			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
+			payment.setPaymentName(map.get("paymentName"));
+			payment.setPaymentPhone(phone);
+			
+			System.out.println("!!!!!!!!payment :"+payment);
+			
+			PaymentVO paymentVO = new PaymentVO(payment);
+			
+			paymentSvc.insertPayment(paymentVO);
+			
+			st = new StringTokenizer(map.get("order2"), ",");
+			st2 = new StringTokenizer(map.get("boardNum2"), ",");
 		}
-	
-	
+		
+		
+		// paymentCopl insert()
+		int paymentNum = paymentSvc.getNew().getPaymentNum();
+		String complName = paymentSvc.getNew().getPaymentName();
+		
+		while(st.hasMoreTokens()) {
+			
+			int num = Integer.parseInt(st.nextToken());
+			
+			OrderListVO orderlist = orderlistSvc.getArticle(num);
+			
+			PaymentComplDTO compl = new PaymentComplDTO();
+			
+			compl.setPaymentNum(paymentNum);
+			compl.setBoardFile(orderlist.getBoardFile());
+			compl.setBoardPrice(orderlist.getBoardPrice());
+			compl.setBoardSubject(orderlist.getBoardSubject());
+			compl.setOrderCount(orderlist.getOrderCount());
+			compl.setOrderOption(orderlist.getOrderOption());
+			compl.setUsername(orderlist.getUsername());
+			compl.setComplName(complName);
+			compl.setBoardNum(orderlist.getBoardNum());
+			
+			complSvc.insertPaymentCompl(new PaymentComplVO(compl));
+			
+		}
+		
+		// compl list addAttrribute
+		log.info("#################compl list attrribute#####################");
+		
+		List<String> num = new ArrayList<>();
+		
+//		int i=0;
+		while(st2.hasMoreTokens()) {
+/*			if(i>0 && num.get(i-1)!=num.get(i)){
+				num.add(st2.nextToken());
+			} else if(i==0){
+				num.add(st2.nextToken());
+			} else {
+				st2.nextToken();
+			}*/
+			num.add(st2.nextToken());
+//			i++;
+		}
+		
+		for(int i=0; i<num.size(); i++){
+			System.out.println("num.get("+i+") : "+num.get(i));
+		}
+		System.out.println("num.get(0)==num.get(1) : "+num.get(0).equals(num.get(1)));
+		System.out.println("num.get(1)==num.get(2) :" +num.get(1).equals(num.get(2)));
+		System.out.println("num.get(3)==num.get(4) : "+num.get(3).equals(num.get(4)));
+		System.out.println("num.get(4)==num.get(5) : "+num.get(4).equals(num.get(5)));
+		System.out.println("num : "+num);
+			
+		System.out.println("==getComplList==");
+		
+		
+/*		List<List<PaymentComplVO>> complListD = complSvc.getComplList(complSvc.getComplNew().getPaymentNum(), boardNumList, "asc");
+		System.out.println("##############################");
+		System.out.println("complListD : "+complListD);
+		System.out.println("##############################");
+		
+		List<PaymentComplVO> complList = new ArrayList<>();
+		
+
+		//List<List<>> 를 List<>에 다시 넣음 ( * 역순 * )
+		for (int i = 0; i < complListD.size(); i++) {
+			for (int j = 0; j < complListD.get(i).size(); j++) {
+				complList.add(complListD.get(i).get(j));
+			}
+		}
+		
+		VOCountCalC calc = new VOCountCalC();
+		
+		model.addAttribute("boardNumMap", calc.toMap2(complList));
+		model.addAttribute("complArticleList", complList);*/
 		
 		return "/user/orderComplete";
+	}
+	
+	
+	//myPageComplete
+	@RequestMapping("/paymentComplete/{username}/{page}")
+	public String paymentAction(@PathVariable("username") String username,@PathVariable("page") int page, Model model) {
+		
+		int limit = 0; // 쿼리문 뽑아오는 리미트 (상품 4개의 주문들의 총 갯수)
+		int temp = 0;
+		
+		log.info("마이페이지 -> 구매목록");
+		
+		List<PaymentComplVO> paymentArticleList = complSvc.getList(username, "asc");
+		
+		// Map에 역순 입력
+		VOCountCalC calc = new VOCountCalC();
+		
+		Map<Integer, Integer> map = calc.toMap3(complSvc.getList(username, "desc"));
+		
+		System.out.println("##########################################################################");
+		System.out.println("complSvc.getList(username, asc) : "+ paymentArticleList);
+		System.out.println("complSvc.getList(username, desc) : "+ complSvc.getList(username, "desc"));
+		System.out.println("map : "+map);
+		System.out.println("##########################################################################");
+		
+		Iterator<Integer> keys = map.keySet().iterator();
+		
+		while (keys.hasNext() && temp < 4) {
+			int key = map.get(keys.next());
+			limit += key;
+			temp++;
+		}
+
+		int listCount = complSvc.getListCount(username);
+		System.out.println("listCount : "+listCount);
+		System.out.println("limit : "+limit);
+		
+		
+		paymentArticleList = complSvc.getArticleList(page, limit, username);
+
+		// 총 페이지 수.
+		int maxPage = (int) ((double) listCount / limit + 0.95); // 0.95를 더해서 올림
+																	// 처리.
+		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
+		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
+		// 현재 페이지에 보여줄 마지막 페이지 수(10, 20, 30, ...)
+		int endPage = startPage + 10 - 1;
+
+		if (endPage > maxPage)
+			endPage = maxPage;
+
+		PageInfo pageInfo = new PageInfo();
+		pageInfo.setEndPage(endPage);
+		pageInfo.setListCount(listCount);
+		pageInfo.setMaxPage(maxPage);
+		pageInfo.setPage(page);
+		pageInfo.setStartPage(startPage);
+		
+		model.addAttribute("boardNumMap", calc.toMap3(paymentArticleList));
+		model.addAttribute("complArticleList", paymentArticleList);
+		model.addAttribute("pageInfo", pageInfo);
+		
+		return "/user/myPageComplete";
 	}
 	
 }

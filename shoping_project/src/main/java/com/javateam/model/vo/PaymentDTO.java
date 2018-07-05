@@ -19,5 +19,4 @@ public class PaymentDTO {
 	private String paymentPhone;
 	private String paymentMethod;
 	private int paymentAmount;
-	private int orderNum;
 }

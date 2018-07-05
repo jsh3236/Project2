@@ -23,7 +23,7 @@ public interface OrderlistService {
 	
 	void updateReadCount(int orderNum);
 	
-	public OrderListVO getArticle(int orderNum);
+	OrderListVO getArticle(int orderNum);
 	 
 	List<OrderListVO> getArticleList(int page, int limit,String username);
 	

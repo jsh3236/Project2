@@ -28,10 +28,18 @@ a.myType:LINK
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<h1>My Page</h1><br><br>
+	<div style="text-align: center;">
+	<h1>My Page</h1>
+	
+	<br><br>
 	
 	<a class="myType" href="${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />"> 장바구니 </a> 
 	
-	<br><br>
+	<br>
+	
+	<a class="myType" href="${pageContext.request.contextPath}/user/paymentComplete/<sec:authentication property='principal.username' />/1"> 구매 목록 </a> 
+	</div>
+	
+	<br>
 </body>
 </html>

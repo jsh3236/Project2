@@ -24,12 +24,9 @@
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br><br>
-	complArticleList : ${complArticleList}
-	
-	
 	<section id="listForm" style="width: 700px; margin: auto;">
 		<div align="center">
-			<h2>구매 완료하셨습니다.</h2>
+			<h2>구매 목록</h2>
 		</div>
 		<br>
 			<table id="payment_tbl" class="mytable">
@@ -54,27 +51,20 @@
 					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-				map.key : ${map.key}
+					map.key : ${map.key}
 					<tr style="border-bottom: 1px solid #369;">
 								
 						<td style="width: 200px;">
 							<c:set var="setNum" value="${(setNum + map.value)}" />
-							setNum : ${setNum }
-							fn:length(complArticleList)-setNum : ${fn:length(complArticleList)-setNum}
-							boardNum : ${complArticleList[fn:length(complArticleList)-setNum].boardNum} 
 							<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
-													<img src="<c:url value='/image/${complArticleList[setNum-1].boardFile}' />" 
+													<img src="<c:url value='/image/${complArticleList[fn:length(complArticleList)-setNum].boardFile}' />" 
 													width=50 height=50 style="padding: 30px" /> 
 							</a>
 						</td>
 						<td colspan="4">
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">
-									<tr>
-										<td style="border-bottom: 2px solid red">
-											${article.boardNum}, ${article.paymentNum }
-									
-									<c:if test="${article.boardNum eq map.key}">
+									<c:if test="${article.paymentNum eq map.key}">
 									 	<c:set var="boardTotal" value="${(article.boardPrice*article.orderCount)}" />
 										<c:set var="total" value="${total+boardTotal}" /> 
 										<tr align="center">
@@ -92,8 +82,6 @@
 											</td>
 										</tr>
 									</c:if>
-										</td>
-									</tr>
 								</c:forEach>
 							</table>
 						</td>
@@ -116,12 +104,57 @@
 				</tr>
 				
 			</table>
+			
+			<!-- 페이징(paging) -->
+			<section id="pageList">
+
+				<ul class="pagination">
+
+					<c:choose>
+						<c:when test="${pageInfo.page <= 1}">
+							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
+							<li><a href="../orderList/1?username=${orderArticleList[0].username}">이전</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a href="../orderList/${pageInfo.page - 1}?username=${orderArticleList[0].username}">이전</a></li>
+						</c:otherwise>
+					</c:choose>
+
+					<c:forEach var="a" begin="${pageInfo.startPage}"
+						end="${pageInfo.endPage}">
+
+						<c:choose>
+							<c:when test="${a == pageInfo.page}">
+								<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
+								<li class="active"><a href="../orderList/${a}?username=${orderArticleList[0].username}">${a}</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="../orderList/${a}?username=${orderArticleList[0].username}">${a}</a></li>
+							</c:otherwise>
+						</c:choose>
+
+					</c:forEach>
+
+					<c:choose>
+						<c:when test="${pageInfo.page >= pageInfo.maxPage}">
+							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨.
+                                                  링크 교정 => page=${pageInfo.page} -->
+							<li><a href="../orderList/${pageInfo.page}?username=${orderArticleList[0].username}">다음</a></li>
+						</c:when>
+						<c:otherwise>
+							<li><a href="../orderList/${pageInfo.page + 1}?username=${orderArticleList[0].username}">다음</a></li>
+						</c:otherwise>
+					</c:choose>
+
+				</ul>
+
+			</section>
+			<!-- 페이징 끝 -->
+			
 			<br>
 			<div align="center">
 				<button class="whiteBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/'"><span>돌아가기</span></button>
 			</div>
-			
-
 			
 		</section>
 	

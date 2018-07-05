@@ -46,8 +46,6 @@ public class PaymentVO{
 	@Column(name="payment_amount", nullable=false)
 	private int paymentAmount; // 주문 가격
 	
-	@Column(name="order_num", nullable=false)
-	private int orderNum; // 상품 제목
 	
 	
     // PaymentDTO -> PaymentVO
@@ -59,7 +57,6 @@ public class PaymentVO{
 		this.paymentPhone = payment.getPaymentPhone();
 		this.paymentMethod = payment.getPaymentMethod();
 		this.paymentAmount = payment.getPaymentAmount();
-		this.orderNum = payment.getOrderNum();
 	}
 	
 }
