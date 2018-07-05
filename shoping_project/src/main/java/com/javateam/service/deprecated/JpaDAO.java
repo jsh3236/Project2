@@ -34,6 +34,7 @@ public interface JpaDAO {
 	boolean allDeleteOrderlist(String username);
 	
 	BoardVO get(int boardNum);
+	PaymentVO getPay(int paymentNum);
 	PaymentVO getNew();
 	PaymentComplVO getComplNew();
 	OrderListVO getorder(int orderNum);

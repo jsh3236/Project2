@@ -15,6 +15,6 @@ public interface PaymentService {
 	void insertPayment(PaymentVO payment);
 	
 	PaymentVO getNew();
-	
+	PaymentVO get(int paymentNum);
 	
 }

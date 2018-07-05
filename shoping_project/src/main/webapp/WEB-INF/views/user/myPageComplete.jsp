@@ -19,12 +19,19 @@
 
 <!-- bootstrap JS : 3.3.7 -->
 <script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
+<script>
+
+function openDetail(){  
+    window.open("detail", "detailWindow", "width=600, height=600, toolbar=no, menubar=no, scrollbars=no,titlebar = no, resizable=no" );
+    document.getElementById("detailform").submit();
+}
+</script>
 
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br><br>
-	<section id="listForm" style="width: 700px; margin: auto;">
+	<section id="listForm" style="width: 900px; margin: auto;">
 		<div align="center">
 			<h2>구매 목록</h2>
 		</div>
@@ -49,9 +56,15 @@
 					<th style="width: 150px;">
 						합계
 					</th>
+					<th style="width: 150px;">
+						수령인
+					</th>
+					<th style="width: 150px;">
+						진행상태
+					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-					map.key : ${map.key}
+					key: ${map.key} value: ${map.value} ||
 					<tr style="border-bottom: 1px solid #369;">
 								
 						<td style="width: 200px;">
@@ -90,18 +103,25 @@
 							<c:set var="totalstotal" value="${totalstotal+total}" />
 							<c:set var="total" value="0" />
 						</td>
+						
+						<td style="width: 150px;">
+							${complArticleList[mapSt.index].complName}<br>
+							<form action="${pageContext.request.contextPath}/user/complDetail"
+								method="post" name="detailform" id="detailform" target="detailWindow">
+								
+								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail();" value="상세정보" /> 
+								
+								<input type="hidden" name="paymentNum" value="${complArticleList[mapSt.index].paymentNum}" />
+							</form>
+						</td>
+						
+						<td style="width: 150px;">
+							배송중
+						</td>
 		
 					</tr>
 				</c:forEach>
 				
-				<tr align="center" style="border-bottom: 1px solid #369; height: 50px;">
-					<td colspan="5" style="text-align: right; padding-right: 20px; font-size: 15px;">
-						최종결제금액
-					</td>
-					<td style="text-align: center;">
-						<strong class="redfont"><fmt:formatNumber type="number" value="${totalstotal}"/></strong> 원 
-					</td>
-				</tr>
 				
 			</table>
 			
@@ -109,14 +129,13 @@
 			<section id="pageList">
 
 				<ul class="pagination">
-
 					<c:choose>
 						<c:when test="${pageInfo.page <= 1}">
 							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
-							<li><a href="../orderList/1?username=${orderArticleList[0].username}">이전</a></li>
+							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/1">이전</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="../orderList/${pageInfo.page - 1}?username=${orderArticleList[0].username}">이전</a></li>
+							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${pageInfo.page - 1}">이전</a></li>
 						</c:otherwise>
 					</c:choose>
 
@@ -126,10 +145,10 @@
 						<c:choose>
 							<c:when test="${a == pageInfo.page}">
 								<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
-								<li class="active"><a href="../orderList/${a}?username=${orderArticleList[0].username}">${a}</a></li>
+								<li class="active"><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${a}">${a}</a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="../orderList/${a}?username=${orderArticleList[0].username}">${a}</a></li>
+								<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${a}">${a}</a></li>
 							</c:otherwise>
 						</c:choose>
 
@@ -139,10 +158,10 @@
 						<c:when test="${pageInfo.page >= pageInfo.maxPage}">
 							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨.
                                                   링크 교정 => page=${pageInfo.page} -->
-							<li><a href="../orderList/${pageInfo.page}?username=${orderArticleList[0].username}">다음</a></li>
+							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${pageInfo.page}">다음</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="../orderList/${pageInfo.page + 1}?username=${orderArticleList[0].username}">다음</a></li>
+							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${pageInfo.page + 1}">다음</a></li>
 						</c:otherwise>
 					</c:choose>
 

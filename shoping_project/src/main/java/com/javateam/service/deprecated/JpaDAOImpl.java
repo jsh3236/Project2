@@ -720,6 +720,14 @@ public class JpaDAOImpl implements JpaDAO {
 		
 		return list;
 	}
+
+	@Override
+	public PaymentVO getPay(int paymentNum) {
+		
+		log.info("get");
+
+		return entityManager.find(PaymentVO.class, paymentNum);
+	}
 	
 	
 }

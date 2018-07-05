@@ -40,4 +40,12 @@ public class PaymentServiceImpl implements PaymentService {
 		return dao.getNew();
 	}
 
+	@Override
+	public PaymentVO get(int paymentNum) {
+		
+		log.info("PaymentVO get");
+		
+		return dao.getPay(paymentNum);
+	}
+
 }

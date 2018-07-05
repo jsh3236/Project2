@@ -348,34 +348,29 @@ public class UserController {
 		// compl list addAttrribute
 		log.info("#################compl list attrribute#####################");
 		
+		// 중복 값 빼기
+		List<String> data = new ArrayList<>();
+		while(st2.hasMoreTokens()){
+			data.add(st2.nextToken());
+		}
 		List<String> num = new ArrayList<>();
 		
-//		int i=0;
-		while(st2.hasMoreTokens()) {
-/*			if(i>0 && num.get(i-1)!=num.get(i)){
-				num.add(st2.nextToken());
-			} else if(i==0){
-				num.add(st2.nextToken());
-			} else {
-				st2.nextToken();
-			}*/
-			num.add(st2.nextToken());
-//			i++;
+		for(int i=0; i<data.size(); i++) {
+            if (!num.contains(data.get(i))) {
+            	num.add(data.get(i));
+            }
+        }
+		System.out.println("num : "+num);
+		
+		int[] boardNumList = new int[num.size()];
+		for(int i=0; i<boardNumList.length; i++) {
+			boardNumList[i]=Integer.parseInt(num.get(i));
 		}
 		
-		for(int i=0; i<num.size(); i++){
-			System.out.println("num.get("+i+") : "+num.get(i));
-		}
-		System.out.println("num.get(0)==num.get(1) : "+num.get(0).equals(num.get(1)));
-		System.out.println("num.get(1)==num.get(2) :" +num.get(1).equals(num.get(2)));
-		System.out.println("num.get(3)==num.get(4) : "+num.get(3).equals(num.get(4)));
-		System.out.println("num.get(4)==num.get(5) : "+num.get(4).equals(num.get(5)));
-		System.out.println("num : "+num);
-			
 		System.out.println("==getComplList==");
 		
 		
-/*		List<List<PaymentComplVO>> complListD = complSvc.getComplList(complSvc.getComplNew().getPaymentNum(), boardNumList, "asc");
+		List<List<PaymentComplVO>> complListD = complSvc.getComplList(complSvc.getComplNew().getPaymentNum(), boardNumList, "asc");
 		System.out.println("##############################");
 		System.out.println("complListD : "+complListD);
 		System.out.println("##############################");
@@ -393,7 +388,7 @@ public class UserController {
 		VOCountCalC calc = new VOCountCalC();
 		
 		model.addAttribute("boardNumMap", calc.toMap2(complList));
-		model.addAttribute("complArticleList", complList);*/
+		model.addAttribute("complArticleList", complList);
 		
 		return "/user/orderComplete";
 	}
@@ -405,6 +400,8 @@ public class UserController {
 		
 		int limit = 0; // 쿼리문 뽑아오는 리미트 (상품 4개의 주문들의 총 갯수)
 		int temp = 0;
+		
+		page = page!=0 ? page : 1; // page 설정
 		
 		log.info("마이페이지 -> 구매목록");
 		
@@ -459,6 +456,18 @@ public class UserController {
 		model.addAttribute("pageInfo", pageInfo);
 		
 		return "/user/myPageComplete";
+	}
+	
+	@RequestMapping("/complDetail")
+	public void complDetail(HttpServletRequest request,Model model) {
+		
+		int paymentNum = Integer.parseInt(request.getParameter("paymentNum"));
+		
+		PaymentVO payment = paymentSvc.get(paymentNum);
+		
+		model.addAttribute("payment", payment);
+		
+		
 	}
 	
 }
