@@ -13,7 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.javateam.model.vo.CustomUser;
 import com.javateam.service.AuthJdbcService;
@@ -36,6 +36,17 @@ public class LoginController {
 		model.addAttribute("flag", flag);
 		
 		return "idCheck";
+	}
+	
+	@RequestMapping("/idCheck2")
+	@ResponseBody
+	public boolean idCheck2(@RequestParam("username") String username) {
+		
+		System.out.println("id : "+username);
+		
+		boolean flag = authJdbcService.hasUsername(username);
+		
+		return !flag;
 	}
 
 	

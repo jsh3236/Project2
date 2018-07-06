@@ -4,8 +4,8 @@
 package com.javateam.service;
 
 import java.util.List;
+import java.util.Map;
 
-import com.javateam.model.vo.OrderListVO;
 import com.javateam.model.vo.PaymentComplVO;
 
 
@@ -19,9 +19,15 @@ public interface PaymentComplService {
 	
 	PaymentComplVO getComplNew();
 	
+	List<PaymentComplVO> getCompl(String sc);
+	
 	int getListCount(String username);
 	
 	List<PaymentComplVO> getArticleList(int page, int limit,String username);
+	
+	List<List<PaymentComplVO>> getArticleList(int page, Map paging,String username);
+	
+	List<List<PaymentComplVO>> getArticleList(int page, Map paging);
 	
 	List<PaymentComplVO> getList(String username,String sc);
 	

@@ -2,6 +2,9 @@ package com.javateam.controller;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +25,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.javateam.model.vo.BoardDTO;
 import com.javateam.model.vo.BoardVO;
+import com.javateam.model.vo.PageInfo;
+import com.javateam.model.vo.PaymentComplVO;
+import com.javateam.model.vo.PaymentVO;
 import com.javateam.service.BoardService;
+import com.javateam.service.CustomProvider;
+import com.javateam.service.OrderlistService;
+import com.javateam.service.PaymentComplService;
 import com.javateam.service.PaymentService;
 import com.javateam.util.FileUploadUtil;
+import com.javateam.util.VOCountCalC;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,6 +45,12 @@ public class AdminController {
 
 	@Autowired
 	private BoardService boardSvc;
+	
+	@Autowired
+	private PaymentService paymentSvc;
+	
+	@Autowired
+	private PaymentComplService complSvc;
 	
 	@RequestMapping("/mouseBoardwrite")
 	public String mouseBoard(Model model) {
@@ -190,16 +206,82 @@ public class AdminController {
 	} //
 	
 	
-/*	@RequestMapping(value="/paymentAction.do",method=RequestMethod.POST, produces="applcation/json; charset=UTF-8")
-	@ResponseBody
-	public String paymentAction(@Valid @ModelAttribute("payment") PaymentDTO payment) {
+	//myPageComplete
+	@RequestMapping("/paymentComplete/{username}/{page}")
+	public String paymentAction(@PathVariable("username") String username,@PathVariable("page") int page, Model model) {
 		
-		System.out.println("payment : "+payment);
+		page = page!=0 ? page : 1; // page 설정
 		
+		log.info("마이페이지 -> 구매목록");
 		
-		return payment.toString();
-		return "/user/orderComplete";
-	}*/
+		List<PaymentComplVO> complArticleList = complSvc.getCompl("asc");
+		
+		// Map에 역순 입력
+		VOCountCalC calc = new VOCountCalC();
+		
+		Map<Integer, Integer> map = calc.toMap3(complArticleList);
+		
+		Iterator<Integer> keys = map.keySet().iterator();
+		
+		int[] key = new int[map.size()];
+		
+		for(int i=0; i<key.length; i++) {
+			key[i] = keys.next();
+		}
+		
+		Map<Integer, Integer> pageMap = calc.paging(key);
 
+		List<List<PaymentComplVO>> allList = complSvc.getArticleList(page, pageMap);
+		
+		complArticleList.clear(); // List<PaymentComplVO> 초기화 후 재사용
+		
+		//List<List<>> 를 List<>에 다시 넣음 ( * 역순 * )
+		for (int i = 0; i < allList.size(); i++) {
+			for (int j = 0; j < allList.get(i).size(); j++) {
+				complArticleList.add(allList.get(i).get(j));
+			}
+		}
+		
+		//compl에 맞는 payment 불러오기
+		List<PaymentVO> paymentlist = new ArrayList<>();
+		for(int i=0; i<key.length; i++){
+			paymentlist.add(paymentSvc.get(key[i]));
+		}
+		
+		// 총 구매 갯수
+		int listCount = complSvc.getListCount(username);
+		
+		// 총 페이지 수.
+		int maxPage = (int) Math.ceil(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
+																	
+		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
+		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
+		// 현재 페이지에 보여줄 마지막 페이지 수(10, 20, 30, ...)
+		int endPage = startPage + 10 - 1;
 
+		if (endPage > maxPage)
+			endPage = maxPage;
+
+		PageInfo pageInfo = new PageInfo();
+		pageInfo.setEndPage(endPage);
+		pageInfo.setListCount(listCount);
+		pageInfo.setMaxPage(maxPage);
+		pageInfo.setPage(page);
+		pageInfo.setStartPage(startPage);
+		
+		model.addAttribute("paymentlist",paymentlist);
+		model.addAttribute("boardNumMap", calc.toMap3(complArticleList));
+		model.addAttribute("complArticleList", complArticleList);
+		model.addAttribute("pageInfo", pageInfo);
+		
+		return "/admin/orderComplView";
+	}
+
+	@RequestMapping("/progressAction.do/{paymentNum}")
+	public String progress(@PathVariable("paymentNum") int paymentNum) {
+		
+		paymentSvc.get(paymentNum);
+		
+		return "/admin/orderComplView";
+	}
 }

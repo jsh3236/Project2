@@ -19,4 +19,5 @@ public class PaymentDTO {
 	private String paymentPhone;
 	private String paymentMethod;
 	private int paymentAmount;
+	private String paymentProgress; //진행상태
 }

@@ -40,7 +40,9 @@
 			<td>
 				<h2>New 마우스</h2>
 				<c:forEach var="board" items="${boardlist}" varStatus="st">
-					<img src="<c:url value='/image/${board.boardFile}' />" width=300 height=300 />
+					<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${board.boardNum}">
+						<img src="<c:url value='/image/${board.boardFile}' />" width=300 height=300 />
+					</a>
 				</c:forEach>
 			</td>
 		</tr>

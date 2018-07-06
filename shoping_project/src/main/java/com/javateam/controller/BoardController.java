@@ -61,29 +61,25 @@ public class BoardController {
       return "board/mouseBoard";
   } // 
     
-    @RequestMapping("boardDetail.do/boardNum/{boardNum}/page/{page}")
-    public String boardDetail(@PathVariable("boardNum") int boardNum,
-                              @PathVariable("page") int page,
-                              Model model) {
+    @RequestMapping("boardDetail.do/boardNum/{boardNum}")
+    public String boardDetail(@PathVariable("boardNum") int boardNum, Model model) {
+    	
         log.info("boardDetail");
-        model.addAttribute("nowPage", page);
         
         String option = boardSvc.getArticle(boardNum).getBoardOption();
-        System.out.println("option : "+option);
+        
         StringTokenizer st = new StringTokenizer(option,",");
+        
         int countTok = st.countTokens();
         model.addAttribute("optionLength", countTok);
-        System.out.println("countToken : "+countTok);
+        
         List<String> optionList = new ArrayList<String>();
+        
         for(int i=0; i<countTok; i++) {
-//        	System.out.println("token , i: "+st.nextToken()+","+i);
-//        	model.addAttribute("option"+i, st.nextToken());
         	optionList.add(st.nextToken());
         }
         
         model.addAttribute("optionList", optionList);
-        
-        model.addAttribute("test", "spring");
         
         model.addAttribute("article", boardSvc.getArticle(boardNum));
         // 조회수 업데이트

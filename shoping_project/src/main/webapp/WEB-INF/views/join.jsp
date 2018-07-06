@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html>
 <html lang="ko-kr">
@@ -45,7 +49,8 @@ input.ng-invalid.ng-not-empty {
 
 /* 전체 font 컬러 지정 */
 font {
-	color: #8BBDFF;
+	color: #FF3636;
+	font-weight: 900;
 }
 </style>
 
@@ -114,10 +119,13 @@ font {
 		$("#email2").change(function() {
 			if($("#email2").val()=="0"){
 				$("#email3").show();	
+				$("#flag").val("1");
 			}
 			else {
 				document.getElementById("email3").value = '';
 				$("#email3").hide();
+				$("#email3").val("");
+				$("#flag").val("0");
 			}
 		});
 		
@@ -182,6 +190,84 @@ font {
 	        }).open();
 	    }
  
+$(function() {
+	
+	$("input#idcheck").click(function(e) {
+		    
+		    $.ajax ({
+		    	
+		    	url: '${pageContext.request.contextPath}/idCheck2',
+		    	type :'post',
+		    	dataType:'text',
+		    	data : {
+		    		username : $('#username').val()
+		    	},
+		    	success : function(data) {
+		    		
+		    		if(data.trim()=='true') { //서버 리턴 전송값 true
+		    		
+		    			// 메세지 팝업 처리
+		    			$('#username_err').text("사용할 수 있는 ID 입니다.");
+		    			$('#username_err').css('color', 'black');
+		    			$('#username').focus();
+		    			
+		    		} else { // 서버 리턴 값 false
+		    			
+		    			// 메세지 팝업 처리
+		    			$('#username_err').text("중복된  ID가 존재합니다.");
+		    			$('#username_err').css('color', '#FF3636');
+		    			$('#username_err').val("");
+		    			$('#username').val("");
+		    			$('#username').focus();
+		    		}
+		    		
+		    	}
+		    	
+		    	
+		    	
+		    }); // $.ajax
+		    
+		}); // #idcheck
+	
+}); // function
+
+ 	   
+function checkPwd(){
+	var pw1 = $('#pw').val();
+	var pw2 = $('#rpw').val();
+	 
+	if(pw1!=pw2){
+		
+		$('#pw_err').text("* 암호가 동일하지 않습니다.");
+		$('#pw_err').css('color', '#FF3636');
+		
+	}else{
+		
+		$('#pw_err').text("암호가 동일합니다.");
+		$('#pw_err').css('color', 'black');
+		
+	}
+	  
+}
+
+function joinUp() {
+	var pw1 = $('#pw').val();
+	var pw2 = $('#rpw').val();
+	
+	if(pw1==pw2) {
+		$("#join").submit();
+	} else {
+		alert('비밀번호가 동일하지 않습니다.');
+		$('#pw').val("");
+		$('#rpw').val("");
+		$('#pw').focus();
+	}
+	
+}
+
+
+
+	
 </script>
 
 </head>
@@ -215,7 +301,7 @@ font {
 						ng-model="name_msg"
 						ng-show="join.name.$error.pattern">
 						<font size="2">
-							한글로 4글자 이내로 입력해 주세요. 
+							* 한글로 4글자 이내로 입력해 주세요. 
 						</font>
 					</div>
 				</td>
@@ -227,54 +313,33 @@ font {
 			<tr>
 				<th scope="row" align="center">아이디</th>
 				<td>
-					<input type="text" 
-						   id="username" 
-						   name="username" 
-						   size=15 
-						   maxlength="20"
-						   style="height: 20px" 
-						   ng-model="username"
-						   ng-pattern="/^[a-zA-Z]{1}\w{5,19}$/" 
-						   ng-required="true"> &nbsp;
-						   
-					<!-- 아이디 중복 체크 -->
-					<input type="button" value="중복 확인" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal"><br> 
 					
-						<div class="modal fade" id="myModal" role="dialog">
-						  <div class="modal-dialog">
-						  
-						    <!-- Modal content-->
-						    <div class="modal-content">
-						      <div class="modal-header">
-						        <button type="button" class="close" data-dismiss="modal">&times;</button>
-						        <h4 class="modal-title">Modal Header</h4>
-						      </div>
-						      <div class="modal-body">
-						        <p>Some text in the modal.</p>
-						      </div>
-						      <div class="modal-footer">
-						        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						      </div>
-						    </div>
-						    
-						  </div>
-						</div>
-						
-					<font size="2">
-						[아이디 중복 확인 결과 표기]
-					</font>
-					
-					<!-- 아이디 중복 확인 끝 -->
+						<input type="text" 
+							   id="username" 
+							   name="username" 
+							   size=15 
+							   maxlength="20"
+							   style="height: 20px" 
+							   ng-model="username"
+							   ng-pattern="/^[a-zA-Z]{1}\w{5,19}$/" 
+							   ng-required="true"> &nbsp;
+							  
+						<!-- 아이디 중복 체크 -->
+						<input type="button" value="중복 확인" id="idcheck" class="btn btn-info btn-lg""><br> 
 					
 				</td>
 
 				<td style="border-left: hidden">
+					<div>
+						<font id="username_err" size="2">
+						</font>
+					</div>
 					<div id="username_msg" 
 						ng-model="username_msg"
 						ng-show="join.username.$error.pattern">
 						<font size="2"> 
-							영문 숫자를 조합하여 6~20자 이내로 입력 <br> 
-							(대소문자 구별. 한글/특수문자 사용 불가)
+							* 영문 숫자를 조합하여 6~20자 이내로 입력 <br> 
+							  (대소문자 구별. 한글/특수문자 사용 불가)
 						</font>
 					</div>
 				</td>
@@ -297,14 +362,18 @@ font {
 					value="비밀번호 확인" placeholder="비밀번호 확인"
 					ng-model="rpw"
 					ng-pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,20}$/"
-					ng-required="true">
+					ng-required="true" onkeyup="checkPwd();">
 				</td>
 
 				<td valign="top" style="border-left: hidden">
+					<div>
+						<font id="pw_err" size="2">
+						</font>
+					</div>
 					<div id="pw_msg" ng-model="pw_msg" ng-show="join.pw.$error.pattern||join.rpw.$error.pattern">
 						<font size="2"> 
-							영문, 숫자, 특수문자를 조합하여<br> 
-							(8~20자 이내로 입력)
+							* 영문, 숫자, 특수문자를 조합하여<br> 
+							  (8~20자 이내로 입력)
 						</font>
 					</div>
 				</td>
@@ -363,7 +432,7 @@ font {
 				<td valign="top" style="border-left: hidden">
 					<div id="phone_msg" ng-model="phone_msg" ng-show="join.phone.$error.pattern||join.phone2.$error.pattern||join.phone3.$error.pattern">
 						<font size="2"> 
-							핸드폰 번호를 제대로 입력하세요.
+							* 핸드폰 번호를 제대로 입력하세요.
 						</font>
 					</div>
 				</td>
@@ -417,7 +486,7 @@ font {
 					
 					<div id="address_msg" ng-model="address_msg" ng-show="join.address2.$error.pattern">
 							<font id="address_msg" size="2" style="display: none"> 
-								상세 주소를 입력해주세요.
+								* 상세 주소를 입력해주세요.
 							</font>
 					</div>
 				</td>
@@ -468,9 +537,10 @@ font {
                 		 ng-model="email_msg" 
                 		 ng-show="join.email3.$error.pattern">
 						<font size="2"> 
-							이메일 형식을 제대로 입력하세요.
+							* 이메일 형식을 제대로 입력하세요.
 						</font>
 					</div>
+					<input type="hidden" id="flag" name="flag" value="0" />
 					
 				</td>
 				
@@ -484,9 +554,9 @@ font {
 
 		<!------------------ 버튼 ------------------->
 		<br><br>
-		<input type="submit" 
-					value="회원가입" 
-					style="margin-left: 350px" /> &nbsp;&nbsp; 
+			<input type="submit" id="sub"
+			value="회원가입" 
+			style="margin-left: 350px"  ng-disabled="join.$invalid"/> &nbsp;&nbsp; 
 			
 		<input type="button" 
 				   value="취소"

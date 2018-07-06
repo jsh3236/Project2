@@ -33,8 +33,6 @@ public class HomeController {
 		
 		List<BoardVO> boardlist = boardSvc.getArticleList(1, 10);
 		
-		System.out.println("boardlist : "+boardlist);
-		
 		model.addAttribute("boardlist", boardlist);
 		
 		return "home";
@@ -70,7 +68,9 @@ public class HomeController {
 					 @RequestParam("address") String address,
 					 @RequestParam("address2") String address2,
 					 @RequestParam("email") String email,
-					 @RequestParam("email2") String email2) {
+					 @RequestParam("email2") String email2,
+					 @RequestParam("email3") String email3,
+					 @RequestParam("flag") String flag) {
 		
 		System.out.println("join !");
 		
@@ -81,7 +81,12 @@ public class HomeController {
 
 		System.out.println(hashedPassword);
 		
-		email = email + email2;
+		// 이메일 설정
+		if(flag.equals("0")) {
+			email = email + email2;
+		} else {
+			email = email + email3;
+		}
 		address = postcode+ ", " + address+ ", " + address2;
 		phone = phone+"-"+phone2+"-"+phone3;
 		Users users = new Users(username,

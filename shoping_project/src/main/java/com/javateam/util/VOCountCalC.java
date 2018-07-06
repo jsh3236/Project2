@@ -67,6 +67,19 @@ public class VOCountCalC {
 		
 	}
 	
+	public Map<Integer, Integer> paging(int[] key) {
+		
+		System.out.println("key :"+key);
+		
+		Map<Integer,Integer> map = new TreeMap<>();
+		System.out.println("key.length :"+key.length);
+		for(int i=0; i<key.length; i++) {
+			map.put(key[i], (int) Math.ceil((key.length-i+3)/4));
+		}
+		
+		return map;
+	}
+	
 	
 	
 }

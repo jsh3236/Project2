@@ -4,7 +4,9 @@
 package com.javateam.service.deprecated;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.web.context.support.ServletContextParameterFactoryBean;
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.OrderListVO;
@@ -720,6 +721,39 @@ public class JpaDAOImpl implements JpaDAO {
 		
 		return list;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentComplVO> getListByPageAndLimit2(int page, int limit) {
+		String list_sql = "SELECT * "
+				+ "		   FROM ( SELECT  s.*, FLOOR((ROWNUM - 1)/? + 1) page "
+				+ "				  FROM ( select *"
+				+ "						 from paymentcompl_tbl "
+				+ "						 order by compl_num desc) s ) "
+				+ "		   where page = ?";
+		
+		
+		List<PaymentComplVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			
+			list = entityManager.createNativeQuery(list_sql, PaymentComplVO.class)
+					.setParameter(1, limit)
+					.setParameter(2, page)
+					.getResultList();
+
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("PaymentComplVO getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
 
 	@Override
 	public PaymentVO getPay(int paymentNum) {
@@ -727,6 +761,130 @@ public class JpaDAOImpl implements JpaDAO {
 		log.info("get");
 
 		return entityManager.find(PaymentVO.class, paymentNum);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<PaymentComplVO>> getListByPageAndpaymentNum(int page, Map paging, String username) {
+		String list_sql = "SELECT * "
+				+ "		   FROM paymentcompl_tbl "
+				+ "		   where USERNAME=? and PAYMENT_NUM=?	"
+				+ "		   order by compl_num desc";		   
+		
+		Iterator<Integer> keys = paging.keySet().iterator();
+		
+		List<List<PaymentComplVO>> allList = new ArrayList<>();
+		
+		List<PaymentComplVO> list = null;
+				
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+
+		try {
+			while(keys.hasNext()) {
+				int k = keys.next();
+				if(paging.get(k).equals(page)) {
+					System.out.println("paging.get(k):"+paging.get(k)+", k:"+k);
+					list = entityManager.createNativeQuery(list_sql,PaymentComplVO.class)
+							.setParameter(1, username)
+							.setParameter(2, k)
+							.getResultList(); 
+					
+					System.out.println("list : "+list);
+					
+					allList.add(list);
+					
+				}
+			}
+			
+			System.out.println("JpaDAOIMpl allList : "+allList);
+			
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("Orderlist getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return allList;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<List<PaymentComplVO>> getListByPageAndpaymentNum(int page, Map paging) {
+		String list_sql = "SELECT * "
+				+ "		   FROM paymentcompl_tbl "
+				+ "		   where PAYMENT_NUM=?	"
+				+ "		   order by compl_num desc";		   
+		
+		Iterator<Integer> keys = paging.keySet().iterator();
+		
+		List<List<PaymentComplVO>> allList = new ArrayList<>();
+		
+		List<PaymentComplVO> list = null;
+				
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+
+		try {
+			while(keys.hasNext()) {
+				int k = keys.next();
+				if(paging.get(k).equals(page)) {
+					System.out.println("paging.get(k):"+paging.get(k)+", k:"+k);
+					list = entityManager.createNativeQuery(list_sql,PaymentComplVO.class)
+							.setParameter(1, k)
+							.getResultList(); 
+					
+					System.out.println("list : "+list);
+					
+					allList.add(list);
+					
+				}
+			}
+			
+			System.out.println("JpaDAOIMpl allList : "+allList);
+			
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("Orderlist getListByPageAndLimit error");
+			transactionManager.rollback(status);
+		} //
+		
+		return allList;
+	}
+
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentComplVO> getCompl(String sc) {
+		String list_sql = "select * "
+				+ "			from paymentcompl_tbl "
+				+ "			order by compl_NUM " +sc;
+		
+		
+		List<PaymentComplVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			list = entityManager.createNativeQuery(list_sql,PaymentComplVO.class)
+					.getResultList(); 
+					
+			System.out.println("JpaDAOIMpl getlist2 : "+list);
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("PaymentComplVO getlist error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
 	}
 	
 	

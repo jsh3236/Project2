@@ -192,7 +192,7 @@ function paymentSubmit(){
 								
 						<td style="width: 200px;">
 							<c:set var="setNum" value="${(setNum + map.value)}" />
-							<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
+							<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${orderArticleList[mapSt.index].boardNum}">
 													<img src="<c:url value='/image/${orderArticleList[fn:length(orderArticleList)-setNum].boardFile}' />" 
 													width=50 height=50 style="padding: 30px" /> 
 							</a>

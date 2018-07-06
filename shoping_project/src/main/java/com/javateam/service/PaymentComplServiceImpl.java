@@ -4,11 +4,11 @@
 package com.javateam.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.javateam.model.vo.OrderListVO;
 import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.service.deprecated.JpaDAO;
 
@@ -71,6 +71,30 @@ public class PaymentComplServiceImpl implements PaymentComplService{
 		log.info("PaymentComplVO getArticleList");
 		
 		return dao.getListByPageAndLimit2(page, limit, username);
+	}
+
+	@Override
+	public List<List<PaymentComplVO>> getArticleList(int page, Map paging, String username) {
+		
+		log.info("PaymentComplVO getArticleList2");
+		
+		return dao.getListByPageAndpaymentNum(page, paging, username);
+	}
+	
+	@Override
+	public List<List<PaymentComplVO>> getArticleList(int page, Map paging) {
+		
+		log.info("PaymentComplVO getArticleList2");
+		
+		return dao.getListByPageAndpaymentNum(page, paging);
+	}
+
+	@Override
+	public List<PaymentComplVO> getCompl(String sc) {
+		
+		log.info("PaymentComplVO getArticleList2");
+		
+		return dao.getCompl(sc);
 	}
 
 

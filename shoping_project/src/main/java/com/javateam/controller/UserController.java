@@ -285,6 +285,7 @@ public class UserController {
 			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
 			payment.setPaymentName(map.get("paymentName"));
 			payment.setPaymentPhone(map.get("paymentPhone"));
+			payment.setPaymentProgress("결제완료");
 			
 			System.out.println("!!!!!!!!payment :"+payment);
 			
@@ -307,6 +308,7 @@ public class UserController {
 			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
 			payment.setPaymentName(map.get("paymentName"));
 			payment.setPaymentPhone(phone);
+			payment.setPaymentProgress("결제완료");
 			
 			System.out.println("!!!!!!!!payment :"+payment);
 			
@@ -398,9 +400,6 @@ public class UserController {
 	@RequestMapping("/paymentComplete/{username}/{page}")
 	public String paymentAction(@PathVariable("username") String username,@PathVariable("page") int page, Model model) {
 		
-		int limit = 0; // 쿼리문 뽑아오는 리미트 (상품 4개의 주문들의 총 갯수)
-		int temp = 0;
-		
 		page = page!=0 ? page : 1; // page 설정
 		
 		log.info("마이페이지 -> 구매목록");
@@ -410,32 +409,35 @@ public class UserController {
 		// Map에 역순 입력
 		VOCountCalC calc = new VOCountCalC();
 		
-		Map<Integer, Integer> map = calc.toMap3(complSvc.getList(username, "desc"));
-		
-		System.out.println("##########################################################################");
-		System.out.println("complSvc.getList(username, asc) : "+ paymentArticleList);
-		System.out.println("complSvc.getList(username, desc) : "+ complSvc.getList(username, "desc"));
-		System.out.println("map : "+map);
-		System.out.println("##########################################################################");
+		Map<Integer, Integer> map = calc.toMap3(paymentArticleList);
 		
 		Iterator<Integer> keys = map.keySet().iterator();
 		
-		while (keys.hasNext() && temp < 4) {
-			int key = map.get(keys.next());
-			limit += key;
-			temp++;
+		int[] key = new int[map.size()];
+		
+		for(int i=0; i<key.length; i++) {
+			key[i] = keys.next();
+		}
+		
+		Map<Integer, Integer> pageMap = calc.paging(key);
+
+		List<List<PaymentComplVO>> allList = complSvc.getArticleList(page, pageMap, username);
+		
+		paymentArticleList.clear(); // List<PaymentComplVO> 초기화 후 재사용
+		
+		//List<List<>> 를 List<>에 다시 넣음 ( * 역순 * )
+		for (int i = 0; i < allList.size(); i++) {
+			for (int j = 0; j < allList.get(i).size(); j++) {
+				paymentArticleList.add(allList.get(i).get(j));
+			}
 		}
 
+		
 		int listCount = complSvc.getListCount(username);
-		System.out.println("listCount : "+listCount);
-		System.out.println("limit : "+limit);
 		
-		
-		paymentArticleList = complSvc.getArticleList(page, limit, username);
-
 		// 총 페이지 수.
-		int maxPage = (int) ((double) listCount / limit + 0.95); // 0.95를 더해서 올림
-																	// 처리.
+		int maxPage = (int) Math.ceil(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
+																	
 		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
 		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
 		// 현재 페이지에 보여줄 마지막 페이지 수(10, 20, 30, ...)
@@ -458,16 +460,15 @@ public class UserController {
 		return "/user/myPageComplete";
 	}
 	
-	@RequestMapping("/complDetail")
-	public void complDetail(HttpServletRequest request,Model model) {
-		
-		int paymentNum = Integer.parseInt(request.getParameter("paymentNum"));
+	@RequestMapping("/complDetail/{paymentNum}")
+	public String complDetail(@PathVariable("paymentNum") int paymentNum,Model model) {
 		
 		PaymentVO payment = paymentSvc.get(paymentNum);
 		
 		model.addAttribute("payment", payment);
 		
 		
+		return "/user/complDetail";
 	}
 	
 }

@@ -24,8 +24,6 @@
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br><br>
-	complArticleList : ${complArticleList}
-	
 	
 	<section id="listForm" style="width: 700px; margin: auto;">
 		<div align="center">
@@ -54,15 +52,11 @@
 					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-				map.key : ${map.key}
 					<tr style="border-bottom: 1px solid #369;">
 								
 						<td style="width: 200px;">
 							<c:set var="setNum" value="${(setNum + map.value)}" />
-							setNum : ${setNum }
-							fn:length(complArticleList)-setNum : ${fn:length(complArticleList)-setNum}
-							boardNum : ${complArticleList[fn:length(complArticleList)-setNum].boardNum} 
-							<a href="../boardDetail.do/boardNum/${map.key}/page/${pageInfo.page}">
+							<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${complArticleList[mapSt.index].boardNum}">
 													<img src="<c:url value='/image/${complArticleList[setNum-1].boardFile}' />" 
 													width=50 height=50 style="padding: 30px" /> 
 							</a>
@@ -71,8 +65,7 @@
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">
 									<tr>
-										<td style="border-bottom: 2px solid red">
-											${article.boardNum}, ${article.paymentNum }
+										<td>
 									
 									<c:if test="${article.boardNum eq map.key}">
 									 	<c:set var="boardTotal" value="${(article.boardPrice*article.orderCount)}" />

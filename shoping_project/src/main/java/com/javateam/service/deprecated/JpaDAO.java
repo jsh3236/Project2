@@ -4,6 +4,7 @@
 package com.javateam.service.deprecated;
 
 import java.util.List;
+import java.util.Map;
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.OrderListVO;
@@ -37,11 +38,16 @@ public interface JpaDAO {
 	PaymentVO getPay(int paymentNum);
 	PaymentVO getNew();
 	PaymentComplVO getComplNew();
+	List<PaymentComplVO> getCompl(String sc);
 	OrderListVO getorder(int orderNum);
+	
 	
 	List<BoardVO> getListByPageAndLimit(int page, int limit);
 	List<OrderListVO> getListByPageAndLimit(int page,int limit,String username);
 	List<PaymentComplVO> getListByPageAndLimit2(int page,int limit,String username);
+	List<PaymentComplVO> getListByPageAndLimit2(int page,int limit);
+	List<List<PaymentComplVO>> getListByPageAndpaymentNum(int page,Map paging,String username);
+	List<List<PaymentComplVO>> getListByPageAndpaymentNum(int page,Map paging);
 	
 	List<OrderListVO> getList(String username,String sc);
 	List<PaymentComplVO> getList2(String username,String sc);

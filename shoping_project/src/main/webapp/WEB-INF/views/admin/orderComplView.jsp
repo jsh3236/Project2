@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="ko-kr">
 <head>
-<title>order complete</title>
+<title>admin complete</title>
 
 <!-- jQuery : 3.2.1 -->
 <script src="<c:url value='/js/jQuery/3.2.1/jquery-3.2.1.min.js' />"></script>
@@ -40,14 +40,22 @@ function openDetail(num){
     window.open("detail", "detailWindow",'left='+px+',top='+py+',width='+cw+',height='+ch+', toolbar=no, menubar=no, scrollbars=no,titlebar = no, resizable=no' );
     document.getElementById(frm).submit();
 }
-
 </script>
 
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br><br>
-	<c:set var="count" value="0" />
+	
+	<!-- 페이지 확인(팝업) -->
+	<div style="padding-left: 30px">
+		총 게시글 수 : ${pageInfo.listCount}<br> 현재 페이지 : ${pageInfo.page}<br>
+		총 페이지 : ${pageInfo.maxPage}<br> 시작 페이지 : ${pageInfo.startPage}<br>
+		끝 페이지 : ${pageInfo.endPage}
+	</div>
+	
+	<c:set var="count" value="-1" /> 
+
 	<section id="listForm" style="width: 900px; margin: auto;">
 		<div align="center">
 			<h2>구매 목록</h2>
@@ -56,7 +64,7 @@ function openDetail(num){
 			<table id="payment_tbl" class="mytable">
 				<tr style="height: 35px; text-align: center; ">
 					<th style="width: 200px;">
-					 	이미지	
+					 	구매자
 					</th>
 					<th style="width: 300px;">
 					 	상품명
@@ -82,13 +90,8 @@ function openDetail(num){
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 					<tr style="border-bottom: 1px solid #369;">
-								
 						<td style="width: 200px;">
-							<c:set var="setNum" value="${(setNum + map.value)}" />
-							<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${complArticleList[mapSt.index].boardNum}">
-													<img src="<c:url value='/image/${complArticleList[fn:length(complArticleList)-setNum].boardFile}' />" 
-													width=50 height=50 style="padding: 30px" /> 
-							</a>
+							${complArticleList[mapSt.index].username}
 						</td>
 						<td colspan="4">
 							<table>
@@ -115,6 +118,7 @@ function openDetail(num){
 								</c:forEach>
 							</table>
 						</td>
+						<!-- 상품 금액 -->
 						<td style="width: 150px;">
 							<fmt:formatNumber type="number" value="${total}" /> 원 
 							<c:set var="totalstotal" value="${totalstotal+total}" />
@@ -122,21 +126,25 @@ function openDetail(num){
 						</td>
 						
 						<td style="width: 150px;">
+							
 							${complArticleList[count].complName}<br>
+							
 							<form action="${pageContext.request.contextPath}/user/complDetail/${complArticleList[count].paymentNum}"
-								method="post" name="detailform" id="detailform" target="detailWindow">
+								method="post" name="detailform${count}" id="detailform${count}" target="detailWindow">
+									
+								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail(${count});" value="상세정보" /> 
 								
-								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail();" value="상세정보" /> 
-								
-								<input type="hidden" name="paymentNum" value="${complArticleList[count].paymentNum}" />
 							</form>
 						</td>
 						
 						<td style="width: 150px;">
-							${complArticleList[count].complProgress}
+								 ${paymentlist[mapSt.index].paymentProgress} <br>
+								 <input type="button" id="detailBtn" name="detailBtn" onclick="location.href='${pageContext.request.contextPath}/admin/progressAction.do/${paymentlist[mapSt.index].paymentNum}'" value="다음단계" /> 
 						</td>
 		
 					</tr>
+					
+					
 				</c:forEach>
 				
 				

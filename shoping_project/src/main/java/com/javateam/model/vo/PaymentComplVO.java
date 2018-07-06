@@ -58,7 +58,6 @@ public class PaymentComplVO{
 	@Column(name="board_num", nullable=false)
 	private int boardNum; // board_tbl 외래키
 	
-	
 	// paymentComplDTO -> paymentComplVO
     public PaymentComplVO(PaymentComplDTO payment) {
         this.complNum = payment.getComplNum();

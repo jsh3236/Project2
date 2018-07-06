@@ -268,39 +268,25 @@ fieldset[disabled] .btn-info.focus {
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<!-- 인자들 -->
+	<!-- 게시글정보 보기(팝업) -->
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
+	
+		<!-- 페이지 확인 -->
 		<div style="padding-left: 30px">
 			총 게시글 수 : ${pageInfo.listCount}<br> 현재 페이지 : ${pageInfo.page}<br>
 			총 페이지 : ${pageInfo.maxPage}<br> 시작 페이지 : ${pageInfo.startPage}<br>
 			끝 페이지 : ${pageInfo.endPage}
-		</div>
+		</div><br>
+		
 		<!-- 상품 올리기 -->
-		<button type="button" class="btn btn-info btn-lg" style="padding-left: 30px"
-			onclick="location.href='${pageContext.request.contextPath}/admin/mouseBoardwrite'">상품
-			올리기</button>
-
-		<!-- 		<div class="modal fade" id="myModal" role="dialog">
-			<div class="modal-dialog">
-
-				Modal content
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Modal Header</h4>
-					</div>
-					<div class="modal-body">
-						<p>Some text in the modal.</p>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div>
- -->
+		<div style="padding-left: 30px">
+			<button type="button" class="btn btn-info btn-lg"
+				onclick="location.href='${pageContext.request.contextPath}/admin/mouseBoardwrite'">상품
+				올리기</button>
+		</div>
+		
 	</sec:authorize>
 	<!-- 게시글정보 보기(팝업) 끝 -->
-
-
-	<br>
 
 	<!-- 게시판 리스트 시작 -->
 	<section id="listForm" style="width: 700px; margin: auto;">
@@ -308,38 +294,36 @@ fieldset[disabled] .btn-info.focus {
 		<c:if test="${not empty articleList && pageInfo.listCount > 0}">
 
 			<!-- 게시글 부분 시작 -->
-			<table id="board_tbl">
+			<table id="board_tbl" style="text-align: center">
 
 				<c:forEach var="article" items="${articleList}" varStatus="st">
 					<c:if test="${(st.count + (pageInfo.page-1)*10)%2 eq 1 }">
 						<tr>
 					</c:if>
-					<td style="padding-right: 200px; padding-bottom: 150px"><c:choose>
+					<td style="padding-right: 200px; padding-bottom: 150px">
+						<c:choose>
 							<c:when test="${article.boardReLev != 0}">
-								<c:forEach var="a" begin="0" end="${article.boardReLev * 2}"
-									step="1" varStatus="st">
+									<c:forEach var="a" begin="0" end="${article.boardReLev * 2}" step="1" varStatus="st">
 	                                        &nbsp;
-	                                    </c:forEach>
+	                                   </c:forEach>
 							</c:when>
 							<c:otherwise>
 							</c:otherwise>
-						</c:choose> <a
-						href="../boardDetail.do/boardNum/${article.boardNum}/page/${pageInfo.page}">
-							<img src="<c:url value='/image/${article.boardFile}' />"
-							width=250 height=250 style="padding: 30px" />
-					</a>
-						<p>${article.boardSubject}</p>
-						<p id=pricedetail>
-						<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원</p> 
-						<sec:authorize
-							access="hasRole('ROLE_ADMIN')">
-							<button type="button" class="btn btn-info btn-lg"
-								onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'"
-								style="margin-left: 50px">수정</button>
-							<button type="button" id="deleteBtn" class="btn btn-info btn-lg"
-								onclick="deleteBtn(${article.boardNum})">삭제
-							</button>
-						</sec:authorize></td>
+						</c:choose> 
+						<a href="../boardDetail.do/boardNum/${article.boardNum}">
+							<img src="<c:url value='/image/${article.boardFile}' />" width=250 height=250 style="padding: 30px" />
+						</a>
+						
+						${article.boardSubject}<br>
+						<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 <br>
+						
+						<sec:authorize access="hasRole('ROLE_ADMIN')">
+							<button type="button" class="btn btn-info btn-lg" onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'">수정</button>
+							<button type="button" id="deleteBtn" class="btn btn-info btn-lg"onclick="deleteBtn(${article.boardNum})">삭제</button>
+						</sec:authorize>
+					
+					</td>
+					
 					<c:if test="${(st.count + (pageInfo.page-1)*10)%2 eq 0}">
 						</tr>
 					</c:if>

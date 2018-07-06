@@ -46,6 +46,8 @@ public class PaymentVO{
 	@Column(name="payment_amount", nullable=false)
 	private int paymentAmount; // 주문 가격
 	
+	@Column(name="payment_progress", nullable=false)
+	private String paymentProgress; //진행상태
 	
 	
     // PaymentDTO -> PaymentVO
@@ -57,6 +59,7 @@ public class PaymentVO{
 		this.paymentPhone = payment.getPaymentPhone();
 		this.paymentMethod = payment.getPaymentMethod();
 		this.paymentAmount = payment.getPaymentAmount();
+		this.paymentProgress = payment.getPaymentProgress();
 	}
 	
 }
