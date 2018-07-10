@@ -11,7 +11,7 @@
 	배송주소 : ${payment.paymentAddress}<br>
 	결제방법: ${payment.paymentMethod}<br>
 	핸드폰번호: ${payment.paymentPhone}<br>
-	결제금액: ${payment.paymentAmount}
+	결제금액: ${payment.paymentAmount}<br>
 	진행상태: ${payment.paymentProgress}
 </body>
 </html>

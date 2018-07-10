@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.CustomUser;
 import com.javateam.model.vo.OrderListDTO;
 import com.javateam.model.vo.OrderListVO;
@@ -30,6 +31,7 @@ import com.javateam.model.vo.PaymentComplDTO;
 import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentDTO;
 import com.javateam.model.vo.PaymentVO;
+import com.javateam.service.BoardService;
 import com.javateam.service.CustomProvider;
 import com.javateam.service.OrderlistService;
 import com.javateam.service.PaymentComplService;
@@ -57,6 +59,9 @@ public class UserController {
 
 	@Autowired
 	private OrderlistService orderlistSvc;
+	
+	@Autowired
+	private BoardService boardSvc;
 	
 	@Autowired
 	private CustomProvider customSvc;
@@ -143,13 +148,7 @@ public class UserController {
 		String nowPage = request.getParameter("nowPage");
 		String flag = request.getParameter("flag");
 		System.out.println("flag : " + flag);
-		// 결과 메시지 생성
-		// model.addAttribute("msg", "게시글을 성공적으로 저장하였습니다");
-		/* ra.addAttribute("msg", "게시글"); */
-		/* listBoard(1,model);// 메시지 페이지 */
-		/*
-		 * return "board/mouseBoard";
-		 */
+
 		ra.addAttribute("username", orderlistVO.getUsername());
 		if (flag.equals("1")) {
 			return "redirect:/user/orderList/1";
@@ -225,13 +224,17 @@ public class UserController {
 	/**
 	 * @param boardNum
 	 */
-	//orderPage
+	//orderPage (orderList -> 전체구매, 선택상품구매ㅛㅛ)
 	@RequestMapping("/orderPage/{boardNum}/{username}")
 	public String orderPage(@PathVariable("boardNum") String boardNum, @PathVariable("username") String username,
 			Model model) {
 		
+		System.out.println("boardNum :"+boardNum);
+		
 		StringTokenizer st = new StringTokenizer(boardNum, ",");
 		int[] boardNumList = new int[st.countTokens()];
+		
+		System.out.println("boardNumList : "+boardNumList);
 
 		for (int i = 0; i < boardNumList.length; i++) {
 			boardNumList[i] = Integer.parseInt(st.nextToken());
@@ -252,21 +255,49 @@ public class UserController {
 
 		VOCountCalC calc = new VOCountCalC();
 		
-		
 		CustomUser user = customSvc.loadUserByUsername(username);
 		System.out.println("user : "+user);
 		
 		model.addAttribute("user",user);
 		model.addAttribute("boardNumMap", calc.toMap(orderArticleList));
 		model.addAttribute("orderArticleList", orderArticleList);
+		model.addAttribute("flag",0);
 
 		return "user/orderPage";
 	}
 	
+	//directOrderPage (mouseBoard_view -> 구매하기 버튼)
+		@RequestMapping("/directOrderPage.do")
+	public String directOrderPage(@Valid @ModelAttribute("orderlist") OrderListDTO orderlistDTO, Model model) {
+			
+			
+			System.out.println("장바구니 처리");
+
+			OrderListVO orderlistVO = new OrderListVO(orderlistDTO);
+
+			
+			List<OrderListVO> orderArticleList = new ArrayList<>();
+			
+			orderArticleList.add(orderlistVO);
+
+			
+			VOCountCalC calc = new VOCountCalC();
+			
+			CustomUser user = customSvc.loadUserByUsername(orderlistDTO.getUsername());
+			System.out.println("user : "+user);
+			
+			model.addAttribute("user",user);
+			model.addAttribute("boardNumMap", calc.toMap(orderArticleList));
+			model.addAttribute("orderArticleList", orderArticleList);
+			model.addAttribute("flag",1);
+
+			return "user/orderPage";
+		}
+	
 	
 	//orderComplete
-	@RequestMapping(value="/paymentAction.do",method=RequestMethod.POST, produces="application/json; charset=UTF-8")
-	public String paymentAction(@RequestParam Map<String,String> map,Model model) {
+	@RequestMapping(value="/paymentAction.do/{flag}",method=RequestMethod.POST, produces="application/json; charset=UTF-8")
+	public String paymentAction(@PathVariable("flag") int flag,@RequestParam Map<String,String> map,Model model) {
 		
 		System.out.println("=============================================");
 		map.keySet().forEach(x->System.out.println(x+","+map.get(x)));
@@ -276,6 +307,7 @@ public class UserController {
 		
 		StringTokenizer st = null;
 		StringTokenizer st2 = null;
+		int bNum = 0;
 		
 		// payment insert()
 		if(map.get("flag")!=null) {
@@ -292,6 +324,8 @@ public class UserController {
 			PaymentVO paymentVO = new PaymentVO(payment);
 			
 			paymentSvc.insertPayment(paymentVO);
+			
+			bNum = Integer.parseInt(map.get("boardNum"));
 			
 			st = new StringTokenizer(map.get("order"), ",");
 			st2 = new StringTokenizer(map.get("boardNum"), ",");
@@ -316,37 +350,62 @@ public class UserController {
 			
 			paymentSvc.insertPayment(paymentVO);
 			
+			bNum = Integer.parseInt(map.get("boardNum2"));
+			
 			st = new StringTokenizer(map.get("order2"), ",");
 			st2 = new StringTokenizer(map.get("boardNum2"), ",");
 		}
 		
 		
 		// paymentCopl insert()
+		
 		int paymentNum = paymentSvc.getNew().getPaymentNum();
 		String complName = paymentSvc.getNew().getPaymentName();
 		
-		while(st.hasMoreTokens()) {
+		// 장바구니에서 구매할 경우
+		System.out.println("장바구니에서 구매할 경우 아닌경우 :"+flag);
+		if(flag==0) {
 			
-			int num = Integer.parseInt(st.nextToken());
-			
-			OrderListVO orderlist = orderlistSvc.getArticle(num);
+			while(st.hasMoreTokens()) {
+				
+				int num = Integer.parseInt(st.nextToken());
+				
+				OrderListVO orderlist = orderlistSvc.getArticle(num);
+				
+				PaymentComplDTO compl = new PaymentComplDTO();
+				
+				compl.setPaymentNum(paymentNum);
+				compl.setBoardFile(orderlist.getBoardFile());
+				compl.setBoardPrice(orderlist.getBoardPrice());
+				compl.setBoardSubject(orderlist.getBoardSubject());
+				compl.setOrderCount(orderlist.getOrderCount());
+				compl.setOrderOption(orderlist.getOrderOption());
+				compl.setUsername(orderlist.getUsername());
+				compl.setComplName(complName);
+				compl.setBoardNum(orderlist.getBoardNum());
+				
+				complSvc.insertPaymentCompl(new PaymentComplVO(compl));
+				
+			}
+		} else if(flag==1) { // 바로 구매한 경우
 			
 			PaymentComplDTO compl = new PaymentComplDTO();
 			
+			BoardVO board = boardSvc.getArticle(bNum);
+			
 			compl.setPaymentNum(paymentNum);
-			compl.setBoardFile(orderlist.getBoardFile());
-			compl.setBoardPrice(orderlist.getBoardPrice());
-			compl.setBoardSubject(orderlist.getBoardSubject());
-			compl.setOrderCount(orderlist.getOrderCount());
-			compl.setOrderOption(orderlist.getOrderOption());
-			compl.setUsername(orderlist.getUsername());
+			compl.setBoardFile(board.getBoardFile());
+			compl.setBoardPrice(board.getBoardPrice());
+			compl.setBoardSubject(board.getBoardSubject());
+			compl.setOrderCount(Integer.parseInt(map.get("orderCount")));
+			compl.setOrderOption(map.get("orderOption"));
+			compl.setUsername(map.get("username"));
 			compl.setComplName(complName);
-			compl.setBoardNum(orderlist.getBoardNum());
+			compl.setBoardNum(board.getBoardNum());
 			
 			complSvc.insertPaymentCompl(new PaymentComplVO(compl));
 			
 		}
-		
 		// compl list addAttrribute
 		log.info("#################compl list attrribute#####################");
 		
@@ -395,6 +454,13 @@ public class UserController {
 		return "/user/orderComplete";
 	}
 	
+	@RequestMapping("/cancel.do/{orderNum}")
+	public String Cancel(@PathVariable("orderNum") int orderNum) {
+		
+		orderlistSvc.deleteOrderlist(orderNum);
+		
+		return "redirect:history.go(-1)";
+	}
 	
 	//myPageComplete
 	@RequestMapping("/paymentComplete/{username}/{page}")
@@ -431,6 +497,13 @@ public class UserController {
 				paymentArticleList.add(allList.get(i).get(j));
 			}
 		}
+		
+		//compl에 맞는 payment 불러오기
+		List<PaymentVO> paymentlist = new ArrayList<>();
+		for(int i=0; i<key.length; i++){
+			paymentlist.add(paymentSvc.get(key[i]));
+		}
+				
 
 		
 		int listCount = complSvc.getListCount(username);
@@ -447,12 +520,14 @@ public class UserController {
 			endPage = maxPage;
 
 		PageInfo pageInfo = new PageInfo();
+		
 		pageInfo.setEndPage(endPage);
 		pageInfo.setListCount(listCount);
 		pageInfo.setMaxPage(maxPage);
 		pageInfo.setPage(page);
 		pageInfo.setStartPage(startPage);
 		
+		model.addAttribute("paymentlist",paymentlist);
 		model.addAttribute("boardNumMap", calc.toMap3(paymentArticleList));
 		model.addAttribute("complArticleList", paymentArticleList);
 		model.addAttribute("pageInfo", pageInfo);

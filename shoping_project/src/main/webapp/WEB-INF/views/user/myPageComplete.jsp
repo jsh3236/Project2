@@ -55,9 +55,7 @@ function openDetail(num){
 		<br>
 			<table id="payment_tbl" class="mytable">
 				<tr style="height: 35px; text-align: center; ">
-					<th style="width: 200px;">
-					 	이미지	
-					</th>
+					
 					<th style="width: 300px;">
 					 	상품명
 					</th>
@@ -81,15 +79,8 @@ function openDetail(num){
 					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-					<tr style="border-bottom: 1px solid #369;">
+					<tr style="border-bottom: 1px solid #369; height: 100px">
 								
-						<td style="width: 200px;">
-							<c:set var="setNum" value="${(setNum + map.value)}" />
-							<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${complArticleList[mapSt.index].boardNum}">
-													<img src="<c:url value='/image/${complArticleList[fn:length(complArticleList)-setNum].boardFile}' />" 
-													width=50 height=50 style="padding: 30px" /> 
-							</a>
-						</td>
 						<td colspan="4">
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">
@@ -122,18 +113,17 @@ function openDetail(num){
 						</td>
 						
 						<td style="width: 150px;">
-							${complArticleList[count].complName}<br>
-							<form action="${pageContext.request.contextPath}/user/complDetail/${complArticleList[count].paymentNum}"
-								method="post" name="detailform" id="detailform" target="detailWindow">
+							${paymentlist[mapSt.index].paymentName}<br>
+							<form action="${pageContext.request.contextPath}/user/complDetail/${paymentlist[mapSt.index].paymentNum}"
+								method="post" name="detailform${count}" id="detailform${count}" target="detailWindow">
 								
-								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail();" value="상세정보" /> 
+								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail(${count});" value="상세정보" /> 
 								
-								<input type="hidden" name="paymentNum" value="${complArticleList[count].paymentNum}" />
 							</form>
 						</td>
 						
 						<td style="width: 150px;">
-							${complArticleList[count].complProgress}
+							${paymentlist[mapSt.index].paymentProgress}
 						</td>
 		
 					</tr>

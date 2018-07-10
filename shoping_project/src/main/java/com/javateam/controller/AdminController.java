@@ -1,5 +1,6 @@
 package com.javateam.controller;
 
+import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.rosuda.REngine.Rserve.RConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.javateam.model.vo.BoardDTO;
@@ -207,8 +210,8 @@ public class AdminController {
 	
 	
 	//myPageComplete
-	@RequestMapping("/paymentComplete/{username}/{page}")
-	public String paymentAction(@PathVariable("username") String username,@PathVariable("page") int page, Model model) {
+	@RequestMapping("/paymentComplete/{page}")
+	public String paymentAction(@PathVariable("page") int page, Model model) {
 		
 		page = page!=0 ? page : 1; // page 설정
 		
@@ -249,7 +252,7 @@ public class AdminController {
 		}
 		
 		// 총 구매 갯수
-		int listCount = complSvc.getListCount(username);
+		int listCount = complSvc.getListCount();
 		
 		// 총 페이지 수.
 		int maxPage = (int) Math.ceil(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
@@ -276,12 +279,94 @@ public class AdminController {
 		
 		return "/admin/orderComplView";
 	}
+	
 
 	@RequestMapping("/progressAction.do/{paymentNum}")
 	public String progress(@PathVariable("paymentNum") int paymentNum) {
 		
-		paymentSvc.get(paymentNum);
+		PaymentVO payment = paymentSvc.get(paymentNum);
 		
-		return "/admin/orderComplView";
+		if(payment.getPaymentProgress().equals("결제완료")) payment.setPaymentProgress("배송중");
+		else if(payment.getPaymentProgress().equals("배송중")) payment.setPaymentProgress("거래 완료");
+		
+		paymentSvc.insertPayment(payment);
+		
+		return "redirect:/admin/paymentComplete/1";
 	}
+	
+	@RequestMapping("/management")
+	public String management() {
+		
+		return "/admin/management";
+	}
+	
+	@RequestMapping("/manage.do")
+    public ModelAndView testd() {
+		
+        String path = "C:\\Users\\ss\\git\\Project\\shoping_project\\src\\main\\webapp\\resources\\used-image";
+        String fileName = "avgManage";
+        
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/admin/management");
+        
+        List<PaymentComplVO> complList = complSvc.getPaymentList();
+        
+        String name = "";
+        String payment = "";
+        
+        System.out.println("============================");
+        for(int i=0; i<complList.size(); i++) {
+        	if(i==complList.size()-1){
+        		name +="'"+ complList.get(i).getBoardSubject()+"'"+",";
+        		payment += complList.get(i).getBoardPrice()+","; 
+        	} else {
+        		name +="'"+ complList.get(i).getBoardSubject()+"'";
+        		payment += complList.get(i).getBoardPrice();
+        	}
+        }
+        System.out.println("name :"+name);
+        System.out.println("payment : "+payment);
+        System.out.println("============================");
+        
+        
+        
+        RConnection connection = null;
+        
+        try {
+        	
+            File file = new File(path + "/"+fileName);
+            if( file.exists() ){
+                if(file.delete()){
+                    System.out.println("파일삭제 성공");
+                }else{
+                    System.out.println("파일삭제 실패");
+                }
+            }else{
+                System.out.println("파일이 존재하지 않습니다.");
+            }
+            
+            connection = new RConnection();
+            connection.eval("library(ggplot2)");
+            connection.eval("require(ggplot2)");
+//            connection.eval("name <- c('제닉스','제닉스2','g950','g340')");
+//            connection.eval("count <- c(100,33,21,87)");
+            connection.eval("name <- c("+name+")");
+            connection.eval("count <- c(100,33,21,87)");
+            connection.eval("pp <- data.frame(이름=name,판매수입=payment)");
+            connection.eval("pp$pos <- pp$판매수입>=mean(pp$판매수입)");
+            connection.eval("png(filename='C://Users/ss/git/Project/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height=600)");
+            connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매수입, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(fill='평균 이상'))");
+            connection.parseAndEval("print(dev.off());");
+            connection.close();	
+            
+            view.addObject("viewPage", fileName);
+            
+        } catch (Exception e) {
+        	System.out.println("!! 에러 !!");
+            System.out.println(e);
+        }
+        return view;
+	}
+	
+	
 }

@@ -97,5 +97,21 @@ public class PaymentComplServiceImpl implements PaymentComplService{
 		return dao.getCompl(sc);
 	}
 
+	@Override
+	public List<PaymentComplVO> getPaymentList() {
+		
+		log.info("PaymentComplVO getPayment");
+		
+		return dao.getPayment();
+	}
+
+	@Override
+	public int getListCount() {
+		
+		log.info("Compl getListCount >>");
+		
+		return dao.getCompl("desc").size();
+	}
+
 
 }

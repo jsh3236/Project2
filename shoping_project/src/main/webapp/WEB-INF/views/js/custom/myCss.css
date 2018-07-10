@@ -236,6 +236,7 @@ fieldset[disabled] .btn-info.focus {
 .mytable { border-collapse:collapse; text-align: center; font-size: 12px;}  
 .mytable td { border: none; }
 .mytable th { border: none; border-bottom: 3px solid #369; border-top: 1px solid #369; }
+.mytable tr { height: 100px; }
 
 .redfont {
 	font-size: 21px;

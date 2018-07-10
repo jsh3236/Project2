@@ -21,7 +21,11 @@ public interface PaymentComplService {
 	
 	List<PaymentComplVO> getCompl(String sc);
 	
+	List<PaymentComplVO> getPaymentList();
+	
 	int getListCount(String username);
+	
+	int getListCount();
 	
 	List<PaymentComplVO> getArticleList(int page, int limit,String username);
 	

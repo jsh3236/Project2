@@ -232,6 +232,23 @@ function getOption(opt, size) {
 	 });
 		 
  }
+ 
+ function directOrder() {
+	 
+	 $(document).ready( function() {
+		 
+ 		 if($("#orderOption option").index($("#orderOption option:selected"))!='0') {
+				
+ 				$("#orderlistform").attr("action", "${pageContext.request.contextPath}/user/directOrderPage.do");
+				 document.getElementById('orderlistform').submit();
+				 
+		 } else {
+			 
+			 alert('옵션을 선택해 주세요.');
+			 
+		 }
+	 });
+ }
 
 
 </script>
@@ -327,7 +344,7 @@ function getOption(opt, size) {
 			<!-- 구매하기 장바구니 버튼 -->			
 			<tr class="tr_bg">
 				<td>
-					<a class="but" href="${pageContext.request.contextPath}/board/mouse/${nowPage}"> 구매하기 </a> 
+					<a class="but" href="#" onclick="directOrder();"> 구매하기 </a> 
 				</td>
 				<td>
 					<a class="but" href="#" onclick="orderlist();" > 장바구니 </a>
@@ -353,11 +370,6 @@ function getOption(opt, size) {
 	</div>
 	 <!-- 제품 상세정보 끝 -->
 	 
-	 <!-- 미완성 버튼 -->
-    <div>
-        <a class="a2" href="boardDeleteForm.bo?board_num=${article.boardNum}&page=${nowPage}">삭제 </a> 
-        <a class="a2" href="${pageContext.request.contextPath}/board/mouse/${nowPage}"> 목록</a>
-    </div>
     
     <!-- 옵션 추가 스크립트 -->
     <script>

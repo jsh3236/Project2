@@ -4,19 +4,27 @@
 package com.javateam.model.vo;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
 import lombok.Data;
+
 @SequenceGenerator(
 	    name = "PAYMENTCOMPL_SEQ_GENERATOR",
 	    sequenceName = "PAYMENTCOMPL_SEQ",
 	    initialValue = 1,
 	    allocationSize = 1)
+
+@SqlResultSetMapping( name="paymentColumnAlias",
+						columns={@ColumnResult(name="payment"),@ColumnResult(name="num"),@ColumnResult(name="subject")}
+)
+
 /**
  * @author ss
  *

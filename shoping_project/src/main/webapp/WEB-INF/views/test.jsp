@@ -14,7 +14,7 @@
  <br>
  <jsp:include page="${viewPage}" flush="false" />
 
-<img src="<c:url value='C://Users/ss/git/Project/shoping_project/src/main/webapp/resources/used-image/${viewPage}' />" width=300 height=300 />
+<img src="<c:url value='/image/${viewPage}' />" width=300 height=300 />
 viewPage : ${viewPage}
 
 </body>

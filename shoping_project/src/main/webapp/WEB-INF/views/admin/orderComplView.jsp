@@ -90,9 +90,11 @@ function openDetail(num){
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 					<tr style="border-bottom: 1px solid #369;">
+					
 						<td style="width: 200px;">
 							${complArticleList[mapSt.index].username}
 						</td>
+						
 						<td colspan="4">
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">

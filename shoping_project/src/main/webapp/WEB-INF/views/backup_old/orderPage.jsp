@@ -28,6 +28,7 @@
 <link rel="stylesheet" href="<c:url value='/js/custom/myCss.css' />">
 
 <script>
+
  //배송지 선택 함수
 function display(num){
 	if(num=='1') {
@@ -38,10 +39,19 @@ function display(num){
 		direct.style.display = 'block';
 	}
 }
+
+
+
 var app = angular.module('orderBody', []);
 app.controller('orderAngularController', [ '$scope', function($scope) {
+
+
 } ]);
+
+
 	
+
+
 //도로명 주소 검색
  function getPostcodeAddress() {
     new daum.Postcode({
@@ -51,6 +61,7 @@ app.controller('orderAngularController', [ '$scope', function($scope) {
             // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
             var fullAddr = ''; // 최종 주소 변수
             var extraAddr = ''; // 조합형 주소 변수
+
             // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
             if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
                 fullAddr = data.roadAddress;
@@ -79,16 +90,19 @@ app.controller('orderAngularController', [ '$scope', function($scope) {
 //             }
            
 //             alert(output); 
+
             // 3단계 : 해당 필드들에 정보 입력
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
             document.getElementById('postcode').value = data.zonecode; //5자리 새우편번호 사용
             document.getElementById('address').value = fullAddr;
+
             // 커서를 상세주소 필드로 이동한다.
             document.getElementById('address2').focus();
             $("#address_msg").show();
         }
     }).open();
 }
+
  // submit
 function paymentSubmit(){
 	$(document).ready( function(){
@@ -120,6 +134,17 @@ function paymentSubmit(){
 	
 	});
 }
+ 
+ function cancel(flag) {
+	 
+	 if(flag == 0) {
+		location.href='history.go(-1)';
+	 } else if(flag == 1) {
+		location.href='${pageContext.request.contextPath}/user/cancel.do/${orderArticleList[0].orderNum}";
+ 	}
+		 
+ }
+
  
  function test() {
 	 alert('1');
@@ -245,7 +270,7 @@ function paymentSubmit(){
 					</td>
 				</tr>
 			<!------------------ 배송지 선택 끝 ------------------->
-		<form action="${pageContext.request.contextPath}/user/paymentAction.do/${flag}"
+		<form action="${pageContext.request.contextPath}/user/paymentAction.do"
 			method="post" name="paymentform" id="paymentform">
 			
 			<input type="hidden" name="boardNum" value="" />
@@ -254,8 +279,6 @@ function paymentSubmit(){
 			<input type="hidden" name="paymentAmount" value="${totalstotal}" />
 			<input type="hidden" name="paymentMethod" value="0" />
 			<input type="hidden" name="flag" value="0" />
-			<input type="hidden" name="orderOption" value="${orderArticleList[0].orderOption}" />
-			<input type="hidden" name="orderCount" value="${orderArticleList[0].orderCount}" />
 			
 		<!-- 유저를 골랐을 경우 -->
 			<table id="user" class="type03" style="border-bottom: 1px solid #ccc;">
@@ -283,7 +306,7 @@ function paymentSubmit(){
 			</table>
 		</form>
 			
-		<form action="${pageContext.request.contextPath}/user/paymentAction.do/${flag}"
+		<form action="${pageContext.request.contextPath}/user/paymentAction.do"
 			method="post" name="paymentform2" id="paymentform2">
 			
 			<input type="hidden" name="boardNum2" value="" />
@@ -292,8 +315,6 @@ function paymentSubmit(){
 			<input type="hidden" name="paymentAmount" value="${totalstotal}" />
 			<input type="hidden" name="paymentMethod2" value="1" /> 
 			<input type="hidden" name="flag2" value="0" />
-			<input type="hidden" name="orderOption" value="${orderArticleList[0].orderOption}" />
-			<input type="hidden" name="orderCount" value="${orderArticleList[0].orderCount}" />
 			<!-- 직접 입력을 눌렀을 경우 -->
 			<table id="direct" class="type03" align="center">
 				<tr style="border-right: hidden; border-bottom: hidden">
@@ -443,6 +464,7 @@ function paymentSubmit(){
 			</table>
 			
 			
+			<button class="whiteBtn" type="button" style="background-color: white" onclick=""><span>취소</span></button>
 			
 		</section>
 		

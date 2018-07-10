@@ -34,8 +34,6 @@ public class HomeController {
 	@Autowired
 	private BoardService boardSvc; 
 	
-	@Autowired
-	private FileSystemResource uploadDirResource;
 
 	@RequestMapping("/")
 	public String home(Model model)  {
@@ -52,6 +50,8 @@ public class HomeController {
         String path = "C://Users//ss//git//Project//shoping_project//src//main//webapp//WEB-INF//views";
         ModelAndView view = new ModelAndView();
         view.setViewName("test");
+        
+        
         RConnection connection = null;
         try {
             connection = new RConnection();
@@ -117,8 +117,11 @@ public class HomeController {
         String path = "C:\\Users\\ss\\git\\Project\\shoping_project\\src\\main\\webapp\\resources\\used-image";
         ModelAndView view = new ModelAndView();
         view.setViewName("test");
+        
         RConnection connection = null;
+        
         try {
+        	
             File file = new File(path + "/test.png");
             if( file.exists() ){
                 if(file.delete()){
@@ -130,18 +133,27 @@ public class HomeController {
                 System.out.println("파일이 존재하지 않습니다.");
             }
             
-            String ggplot = "print(ggplot(data=data, aess(x=이름,y=판매량) ) + "+ "geom_boxplot() ); dev.off()";
-            
+            System.out.println("1");
             connection = new RConnection();
-            
+            System.out.println("2");
             connection.eval("library(ggplot2)");
+            System.out.println("3");
             connection.eval("require(ggplot2)");
+            System.out.println("4");
             connection.eval("name <- c('제닉스','제닉스2','g950','g340')");
+            System.out.println("5");
             connection.eval("count <- c(100,33,21,87)");
+            System.out.println("6");
             connection.eval("pp <- data.frame(이름=name,판매량=count)");
+            connection.eval("pp$pos <- pp$판매량>=mean(pp$판매량)");
+            System.out.println("7");
             connection.eval("png(filename='C://Users/ss/git/Project/shoping_project/src/main/webapp/resources/used-image/test.png',width=800,height=600)");
-            connection.parseAndEval(ggplot);
+            System.out.println("8");
+            connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매량, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(shape='평균 이상'))");
+            System.out.println("9");
+            connection.parseAndEval("print(dev.off());");
             connection.close();
+            System.out.println("10");
             
             /*
              * 기존 소스는 생성된 .jsp 에서 한글이 깨짐.

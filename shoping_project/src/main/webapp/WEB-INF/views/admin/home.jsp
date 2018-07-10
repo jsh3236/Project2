@@ -35,8 +35,15 @@ function openDetail(){
 		<h2>관리자 메뉴</h2>
 	</div>
 	<br><br>
+	
 	<div style="text-align: center;">
-		<button class="whiteBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/admin/paymentComplete/<sec:authentication property="principal.username" />/1'"><span>구매 목록 관리</span></button>
+		<button class="whiteBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/admin/paymentComplete/1'"><span>구매 목록 관리</span></button>
+	</div> 
+	
+	<br>
+	
+	<div style="text-align: center;">
+		<button class="whiteBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/admin/manage.do'"><span>상품 관리</span></button>
 	</div>
 	
 </body>

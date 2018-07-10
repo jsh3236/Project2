@@ -669,7 +669,7 @@ public class JpaDAOImpl implements JpaDAO {
 			System.out.println("JpaDAOIMpl getlist2 : "+list);
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.info("PaymentComplVO getlist error");
+			log.info("PaymentComplVO getList2 error");
 			transactionManager.rollback(status);
 		} //
 		
@@ -715,7 +715,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.info("PaymentComplVO getListByPageAndLimit error");
+			log.info("PaymentComplVO getListByPageAndLimit2 error");
 			transactionManager.rollback(status);
 		} //
 		
@@ -748,7 +748,7 @@ public class JpaDAOImpl implements JpaDAO {
 
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.info("PaymentComplVO getListByPageAndLimit error");
+			log.info("PaymentComplVO getListByPageAndLimit2 error");
 			transactionManager.rollback(status);
 		} //
 		
@@ -880,8 +880,50 @@ public class JpaDAOImpl implements JpaDAO {
 			System.out.println("JpaDAOIMpl getlist2 : "+list);
 			transactionManager.commit(status);
 		} catch (Exception e) {
-			log.info("PaymentComplVO getlist error");
+			log.info("PaymentComplVO getCompl error");
 			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<PaymentComplVO> getPayment() {
+		
+		String list_sql = "select board_num as num,board_subject as subject,sum(order_count*board_price) as payment "
+				+ "		  from paymentcompl_tbl "
+				+ "		  group by board_num,board_subject";
+		
+		
+		List<PaymentComplVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			
+			list = entityManager.createNativeQuery(list_sql,"paymentColumnAlias")
+					.getResultList(); 
+					
+			System.out.println("JpaDAOIMpl getlist2 : "+list);
+			
+			for(Object o : list) {
+				System.out.println("o : "+o);
+			}
+			
+			for(int i=0; i<list.size(); i++) {
+				System.out.println("list : "+list.get(i).toString());
+			}
+			
+			transactionManager.commit(status);
+			
+		} catch (Exception e) {
+			
+			log.info("PaymentComplVO getPayment error");
+			transactionManager.rollback(status);
+			
 		} //
 		
 		return list;

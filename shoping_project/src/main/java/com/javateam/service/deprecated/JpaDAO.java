@@ -26,6 +26,8 @@ public interface JpaDAO {
 	List<BoardVO> list();
 	List<OrderListVO> orderlist(String username);
 	List<PaymentComplVO> complList(String usrename);
+	List<PaymentComplVO> getCompl(String sc);
+	List<PaymentComplVO> getPayment();
 	
 	void update(BoardVO board);
 	void update(OrderListVO orderlist);
@@ -38,7 +40,6 @@ public interface JpaDAO {
 	PaymentVO getPay(int paymentNum);
 	PaymentVO getNew();
 	PaymentComplVO getComplNew();
-	List<PaymentComplVO> getCompl(String sc);
 	OrderListVO getorder(int orderNum);
 	
 	
