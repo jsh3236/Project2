@@ -40,6 +40,15 @@ function openDetail(num){
     window.open("detail", "detailWindow",'left='+px+',top='+py+',width='+cw+',height='+ch+', toolbar=no, menubar=no, scrollbars=no,titlebar = no, resizable=no' );
     document.getElementById(frm).submit();
 }
+
+function progress(complNum) {
+	
+	document.getElementById('progressBtn'+complNum).style.display = 'none';
+	
+	location.href='${pageContext.request.contextPath}/admin/progressAction.do/'+complNum;
+	
+}
+
 </script>
 
 </head>
@@ -103,7 +112,7 @@ function openDetail(num){
 									 	<c:set var="boardTotal" value="${(article.boardPrice*article.orderCount)}" />
 										<c:set var="total" value="${total+boardTotal}" /> 
 										<c:set var="count" value="${count+1}" />
-										<tr align="center">
+										<tr align="center" style="height: 50px">
 											<td style="width: 310px;">	
 												${article.boardSubject}
 											</td>
@@ -118,7 +127,9 @@ function openDetail(num){
 											</td>
 											<td style="width: 150px;">
 												 ${article.complProgress} <br>
-												 <input type="button" id="detailBtn" name="detailBtn" onclick="location.href='${pageContext.request.contextPath}/admin/progressAction.do/${paymentlist[mapSt.index].paymentNum}'" value="다음단계" /> 
+												 <c:if test="${article.complProgress eq '결제완료'}">
+												 	<input type="button" id="progressBtn${article.complNum}" name="progressBtn${article.complNum}" onclick="progress(${article.complNum});" value="다음단계" /> 
+												 </c:if>
 											</td>
 										</tr>
 									</c:if>

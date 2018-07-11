@@ -286,6 +286,8 @@ public class AdminController {
 		
 		PaymentComplVO payment = complSvc.get(complNum);
 		
+		System.out.println("complVO :"+payment);
+		
 		if(payment.getComplProgress().equals("결제완료")) payment.setComplProgress("배송중");
 		
 		complSvc.updatePaymentCompl(payment);

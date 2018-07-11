@@ -66,7 +66,7 @@ function openDetail(num){
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<br><br>
 	<c:set var="count" value="0" />
-	<section id="listForm" style="width: 900px; margin: auto;">
+	<section id="listForm" style="width: 800px; margin: auto;">
 		<div align="center">
 			<h2>구매 목록</h2>
 		</div>
@@ -104,7 +104,7 @@ function openDetail(num){
 						<td style="width :310px;">
 							${paymentlist[mapSt.index].paymentDate}(${complArticleList[mapSt.index].complNum})
 						</td>
-						<td colspan="4">
+						<td colspan="5">
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">
 									<c:if test="${article.paymentNum eq map.key}">
@@ -125,8 +125,8 @@ function openDetail(num){
 												<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
 											</td>
 											<td style="width: 150px; height: 100px">
-												${paymentlist[mapSt.index].paymentProgress} <br>
-												<c:if test="${paymentlist[mapSt.index].paymentProgress eq '거래 완료'}">
+												${complArticleList[mapSt.index].complProgress} <br>
+												<c:if test="${complArticleList[mapSt.index].complProgress eq '거래 완료'}">
 													<button class="whiteBtn2" id="reviewBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/user/review/${paymentlist[mapSt.index].paymentNum}'">
 														<span>리뷰하기</span>
 													</button>
