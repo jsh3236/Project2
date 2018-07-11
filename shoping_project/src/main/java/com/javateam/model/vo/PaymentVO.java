@@ -3,6 +3,8 @@
  */
 package com.javateam.model.vo;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,9 +48,9 @@ public class PaymentVO{
 	@Column(name="payment_amount", nullable=false)
 	private int paymentAmount; // 주문 가격
 	
-	@Column(name="payment_progress", nullable=false)
-	private String paymentProgress; //진행상태
-	
+	@Column(name="payment_date", nullable=false)
+	private String paymentDate; //구매일자
+
 	
     // PaymentDTO -> PaymentVO
 	public PaymentVO(PaymentDTO payment) {
@@ -59,7 +61,7 @@ public class PaymentVO{
 		this.paymentPhone = payment.getPaymentPhone();
 		this.paymentMethod = payment.getPaymentMethod();
 		this.paymentAmount = payment.getPaymentAmount();
-		this.paymentProgress = payment.getPaymentProgress();
+		this.paymentDate = payment.getPaymentDate();
 	}
 	
 }

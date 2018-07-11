@@ -40,13 +40,34 @@ public class LoginController {
 	
 	@RequestMapping("/idCheck2")
 	@ResponseBody
-	public boolean idCheck2(@RequestParam("username") String username) {
-		
+	public int idCheck2(@RequestParam("username") String username) {
+		int flag = 0;
 		System.out.println("id : "+username);
+		System.out.println("username.length() :"+username.length()+", boolean");
 		
-		boolean flag = authJdbcService.hasUsername(username);
+		if(username.equals("")){
+			
+			flag = 0;
 		
-		return !flag;
+		} else if(username.length()<6) {
+			
+			flag = 2;
+			
+		}
+		
+		else if(!authJdbcService.hasUsername(username)) {
+			
+			flag = 1;
+			
+		} 
+		
+		else {
+			
+			flag = 3;
+			
+		}
+	
+		return flag;
 	}
 
 	

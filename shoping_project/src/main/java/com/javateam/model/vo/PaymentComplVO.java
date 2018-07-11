@@ -3,6 +3,8 @@
  */
 package com.javateam.model.vo;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
 import javax.persistence.Entity;
@@ -66,6 +68,10 @@ public class PaymentComplVO{
 	@Column(name="board_num", nullable=false)
 	private int boardNum; // board_tbl 외래키
 	
+	@Column(name="compl_progress", nullable=false)
+	private String complProgress; //진행상태
+	
+	
 	// paymentComplDTO -> paymentComplVO
     public PaymentComplVO(PaymentComplDTO payment) {
         this.complNum = payment.getComplNum();
@@ -78,6 +84,10 @@ public class PaymentComplVO{
         this.username = payment.getUsername();
         this.complName = payment.getComplName();
         this.boardNum = payment.getBoardNum();
+        this.complProgress = payment.getComplProgress();
     }
+    
+    
+    
 	
 }

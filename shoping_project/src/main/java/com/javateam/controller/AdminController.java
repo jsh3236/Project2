@@ -281,15 +281,14 @@ public class AdminController {
 	}
 	
 
-	@RequestMapping("/progressAction.do/{paymentNum}")
-	public String progress(@PathVariable("paymentNum") int paymentNum) {
+	@RequestMapping("/progressAction.do/{complNum}")
+	public String progress(@PathVariable("complNum") int complNum) {
 		
-		PaymentVO payment = paymentSvc.get(paymentNum);
+		PaymentComplVO payment = complSvc.get(complNum);
 		
-		if(payment.getPaymentProgress().equals("결제완료")) payment.setPaymentProgress("배송중");
-		else if(payment.getPaymentProgress().equals("배송중")) payment.setPaymentProgress("거래 완료");
+		if(payment.getComplProgress().equals("결제완료")) payment.setComplProgress("배송중");
 		
-		paymentSvc.insertPayment(payment);
+		complSvc.updatePaymentCompl(payment);
 		
 		return "redirect:/admin/paymentComplete/1";
 	}
@@ -309,19 +308,27 @@ public class AdminController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/admin/management");
         
-        List<PaymentComplVO> complList = complSvc.getPaymentList();
+        List<PaymentComplVO> complList = complSvc.getCompl("desc");
         
         String name = "";
         String payment = "";
         
+        System.out.println("##############################1");
+        List<Object> sum = complSvc.getPaymentList();
+        for(Object o: sum) {
+        	System.out.println("o : "+o.toString());
+        	 log.info("sum : {}", o);
+        }
+        System.out.println("##############################2");
+
         System.out.println("============================");
         for(int i=0; i<complList.size(); i++) {
         	if(i==complList.size()-1){
-        		name +="'"+ complList.get(i).getBoardSubject()+"'"+",";
-        		payment += complList.get(i).getBoardPrice()+","; 
-        	} else {
         		name +="'"+ complList.get(i).getBoardSubject()+"'";
-        		payment += complList.get(i).getBoardPrice();
+        		payment += complList.get(i).getBoardPrice(); 
+        	} else {
+        		name +="'"+ complList.get(i).getBoardSubject()+"'"+",";
+        		payment += complList.get(i).getBoardPrice()+",";
         	}
         }
         System.out.println("name :"+name);
@@ -351,7 +358,7 @@ public class AdminController {
 //            connection.eval("name <- c('제닉스','제닉스2','g950','g340')");
 //            connection.eval("count <- c(100,33,21,87)");
             connection.eval("name <- c("+name+")");
-            connection.eval("count <- c(100,33,21,87)");
+            connection.eval("count <- c("+payment+")");
             connection.eval("pp <- data.frame(이름=name,판매수입=payment)");
             connection.eval("pp$pos <- pp$판매수입>=mean(pp$판매수입)");
             connection.eval("png(filename='C://Users/ss/git/Project/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height=600)");

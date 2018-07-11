@@ -3,6 +3,8 @@
  */
 package com.javateam.model.vo;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 
 import lombok.Data;
@@ -23,5 +25,5 @@ public class PaymentComplDTO {
 	private String username; // 유저 이름
 	private String complName; // 유저 아이디
 	private int boardNum; //board_tbl의 외래키
-	
+	private String complProgress; //진행상태
 }

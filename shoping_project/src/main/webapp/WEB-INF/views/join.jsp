@@ -204,14 +204,14 @@ $(function() {
 		    	},
 		    	success : function(data) {
 		    		
-		    		if(data.trim()=='true') { //서버 리턴 전송값 true
+		    		if(data.trim()==1) { //서버 리턴 전송값 1 (ID 사용 가능)
 		    		
 		    			// 메세지 팝업 처리
 		    			$('#username_err').text("사용할 수 있는 ID 입니다.");
 		    			$('#username_err').css('color', 'black');
 		    			$('#username').focus();
 		    			
-		    		} else { // 서버 리턴 값 false
+		    		} else if(data.trim()==3){ // 서버 리턴 값 3 (ID 사용 불가)
 		    			
 		    			// 메세지 팝업 처리
 		    			$('#username_err').text("중복된  ID가 존재합니다.");
@@ -219,6 +219,20 @@ $(function() {
 		    			$('#username_err').val("");
 		    			$('#username').val("");
 		    			$('#username').focus();
+		    			
+		    		} else if(data.trim()==2){ // 서버 리턴 2 (ID 6자 이하일때)
+		    			
+		    			$('#username_err').text("");
+		    			$('#username').focus();
+		    			
+		    		} else { //서버 리턴 0 (ID가 NULL 값일때)
+		    			
+		    			$('#username_err').text("ID를 입력해주세요.");
+		    			$('#username_err').css('color', '#FF3636');
+		    			$('#username_err').val("");
+		    			$('#username').val("");
+		    			$('#username').focus();
+		    			
 		    		}
 		    		
 		    	}

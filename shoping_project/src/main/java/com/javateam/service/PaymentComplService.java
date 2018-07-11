@@ -19,9 +19,13 @@ public interface PaymentComplService {
 	
 	PaymentComplVO getComplNew();
 	
+	PaymentComplVO get(int complNum);
+	
+	void updatePaymentCompl(PaymentComplVO payment);
+	
 	List<PaymentComplVO> getCompl(String sc);
 	
-	List<PaymentComplVO> getPaymentList();
+	List<Object> getPaymentList();
 	
 	int getListCount(String username);
 	

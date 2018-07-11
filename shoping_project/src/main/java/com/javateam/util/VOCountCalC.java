@@ -31,6 +31,8 @@ public class VOCountCalC {
 		
 	}
 	
+	
+	
 	public Map<Integer, Integer> toMap2(List<PaymentComplVO> list) {
 		
 		System.out.println("list :"+list);
@@ -48,6 +50,8 @@ public class VOCountCalC {
 		return (int) list.stream().filter(x->(x.getBoardNum()==boardNum)).count();
 		
 	}
+	
+	
 	
 	
 	public Map<Integer, Integer> toMap3(List<PaymentComplVO> list) {

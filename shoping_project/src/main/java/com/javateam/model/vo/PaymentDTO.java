@@ -3,7 +3,7 @@
  */
 package com.javateam.model.vo;
 
-import javax.persistence.Column;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -19,5 +19,5 @@ public class PaymentDTO {
 	private String paymentPhone;
 	private String paymentMethod;
 	private int paymentAmount;
-	private String paymentProgress; //진행상태
+	private String paymentDate; // 주문일
 }

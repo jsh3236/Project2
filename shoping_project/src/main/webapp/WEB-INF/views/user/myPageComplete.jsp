@@ -10,6 +10,22 @@
 <html lang="ko-kr">
 <head>
 <title>order complete</title>
+<style>
+.whiteBtn2 {
+    background-color: red;
+    animation-name: example;
+    animation-duration: 0.15s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* Standard syntax */
+@keyframes example {
+    0%   {background-color: #f75252;}
+    100% {background-color: #f77052;}
+}
+
+</style>
 
 <!-- jQuery : 3.2.1 -->
 <script src="<c:url value='/js/jQuery/3.2.1/jquery-3.2.1.min.js' />"></script>
@@ -19,6 +35,7 @@
 
 <!-- bootstrap JS : 3.3.7 -->
 <script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
+
 <script>
 
 function openDetail(num){  
@@ -41,6 +58,7 @@ function openDetail(num){
     document.getElementById(frm).submit();
 }
 
+
 </script>
 
 </head>
@@ -55,7 +73,10 @@ function openDetail(num){
 		<br>
 			<table id="payment_tbl" class="mytable">
 				<tr style="height: 35px; text-align: center; ">
-					
+				
+					<th style="width: 300px;">
+						주문일(결제번호)
+					</th>
 					<th style="width: 300px;">
 					 	상품명
 					</th>
@@ -69,18 +90,20 @@ function openDetail(num){
 						가격
 					</th>
 					<th style="width: 150px;">
+						진행상태
+					</th>
+					<th style="width: 150px;">
 						합계
 					</th>
 					<th style="width: 150px;">
 						수령인
 					</th>
-					<th style="width: 150px;">
-						진행상태
-					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 					<tr style="border-bottom: 1px solid #369; height: 100px">
-								
+						<td style="width :310px;">
+							${paymentlist[mapSt.index].paymentDate}(${complArticleList[mapSt.index].complNum})
+						</td>
 						<td colspan="4">
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">
@@ -100,6 +123,14 @@ function openDetail(num){
 											</td>
 											<td style="width: 150px;" >
 												<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
+											</td>
+											<td style="width: 150px; height: 100px">
+												${paymentlist[mapSt.index].paymentProgress} <br>
+												<c:if test="${paymentlist[mapSt.index].paymentProgress eq '거래 완료'}">
+													<button class="whiteBtn2" id="reviewBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/user/review/${paymentlist[mapSt.index].paymentNum}'">
+														<span>리뷰하기</span>
+													</button>
+												</c:if>
 											</td>
 										</tr>
 									</c:if>
@@ -122,9 +153,7 @@ function openDetail(num){
 							</form>
 						</td>
 						
-						<td style="width: 150px;">
-							${paymentlist[mapSt.index].paymentProgress}
-						</td>
+						
 		
 					</tr>
 				</c:forEach>

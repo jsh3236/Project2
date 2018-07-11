@@ -10,6 +10,7 @@ import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.OrderListVO;
 import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentVO;
+import com.javateam.model.vo.ReviewVO;
 
 
 /**
@@ -22,21 +23,24 @@ public interface JpaDAO {
 	void insert(OrderListVO orderlist);
 	void insert(PaymentVO payment);
 	void insert(PaymentComplVO payment);
+	void insert(ReviewVO review);
 	
 	List<BoardVO> list();
 	List<OrderListVO> orderlist(String username);
 	List<PaymentComplVO> complList(String usrename);
 	List<PaymentComplVO> getCompl(String sc);
-	List<PaymentComplVO> getPayment();
+	List<Object> getPayment();
 	
 	void update(BoardVO board);
 	void update(OrderListVO orderlist);
+	void update(PaymentComplVO payment);
 	
 	boolean delete(int boardNum);
 	boolean deleteOrderList(int orderNum);
 	boolean allDeleteOrderlist(String username);
 	
 	BoardVO get(int boardNum);
+	PaymentComplVO getCompl(int complNum);
 	PaymentVO getPay(int paymentNum);
 	PaymentVO getNew();
 	PaymentComplVO getComplNew();
@@ -57,6 +61,7 @@ public interface JpaDAO {
 	
 	
 	void updateReadCount(int boardNum);
+	
 	
 	
 }

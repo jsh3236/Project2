@@ -19,7 +19,7 @@ public class ReviewDTO {
 	private String reviewContent;
 	private String username;
 	private Date reviewDate;
-	private int orderNum;
 	private int paymentNum;
+	private String reviewSubject;
 	
 }

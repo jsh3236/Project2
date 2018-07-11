@@ -56,7 +56,7 @@ function openDetail(num){
 	
 	<c:set var="count" value="-1" /> 
 
-	<section id="listForm" style="width: 900px; margin: auto;">
+	<section id="listForm" style="width: 1000px; margin: auto;">
 		<div align="center">
 			<h2>구매 목록</h2>
 		</div>
@@ -79,14 +79,15 @@ function openDetail(num){
 						가격
 					</th>
 					<th style="width: 150px;">
+						진행상태
+					</th>
+					<th style="width: 150px;">
 						합계
 					</th>
 					<th style="width: 150px;">
 						수령인
 					</th>
-					<th style="width: 150px;">
-						진행상태
-					</th>
+					
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 					<tr style="border-bottom: 1px solid #369;">
@@ -95,7 +96,7 @@ function openDetail(num){
 							${complArticleList[mapSt.index].username}
 						</td>
 						
-						<td colspan="4">
+						<td colspan="5">
 							<table>
 								<c:forEach var="article" items="${complArticleList}" varStatus="st">
 									<c:if test="${article.paymentNum eq map.key}">
@@ -115,6 +116,10 @@ function openDetail(num){
 											<td style="width: 150px;" >
 												<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
 											</td>
+											<td style="width: 150px;">
+												 ${article.complProgress} <br>
+												 <input type="button" id="detailBtn" name="detailBtn" onclick="location.href='${pageContext.request.contextPath}/admin/progressAction.do/${paymentlist[mapSt.index].paymentNum}'" value="다음단계" /> 
+											</td>
 										</tr>
 									</c:if>
 								</c:forEach>
@@ -129,9 +134,9 @@ function openDetail(num){
 						
 						<td style="width: 150px;">
 							
-							${complArticleList[count].complName}<br>
+							${paymentlist[mapSt.index].paymentName}<br>
 							
-							<form action="${pageContext.request.contextPath}/user/complDetail/${complArticleList[count].paymentNum}"
+							<form action="${pageContext.request.contextPath}/user/complDetail/${paymentlist[mapSt.index].paymentNum}"
 								method="post" name="detailform${count}" id="detailform${count}" target="detailWindow">
 									
 								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail(${count});" value="상세정보" /> 
@@ -139,10 +144,7 @@ function openDetail(num){
 							</form>
 						</td>
 						
-						<td style="width: 150px;">
-								 ${paymentlist[mapSt.index].paymentProgress} <br>
-								 <input type="button" id="detailBtn" name="detailBtn" onclick="location.href='${pageContext.request.contextPath}/admin/progressAction.do/${paymentlist[mapSt.index].paymentNum}'" value="다음단계" /> 
-						</td>
+						
 		
 					</tr>
 					

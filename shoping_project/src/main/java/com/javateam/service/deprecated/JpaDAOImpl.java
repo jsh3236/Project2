@@ -25,6 +25,7 @@ import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.OrderListVO;
 import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentVO;
+import com.javateam.model.vo.ReviewVO;
 
 import lombok.extern.java.Log;
 
@@ -889,14 +890,14 @@ public class JpaDAOImpl implements JpaDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PaymentComplVO> getPayment() {
+	public List<Object> getPayment() {
 		
 		String list_sql = "select board_num as num,board_subject as subject,sum(order_count*board_price) as payment "
 				+ "		  from paymentcompl_tbl "
 				+ "		  group by board_num,board_subject";
 		
 		
-		List<PaymentComplVO> list = null;
+		List<Object> list = null;
 		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
 		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
 
@@ -904,17 +905,17 @@ public class JpaDAOImpl implements JpaDAO {
 		
 		try {
 			
-			list = entityManager.createNativeQuery(list_sql,"paymentColumnAlias")
+			list = entityManager.createNativeQuery(list_sql)
 					.getResultList(); 
 					
 			System.out.println("JpaDAOIMpl getlist2 : "+list);
 			
 			for(Object o : list) {
-				System.out.println("o : "+o);
+				System.out.println("o : "+o.toString());
 			}
 			
 			for(int i=0; i<list.size(); i++) {
-				System.out.println("list : "+list.get(i).toString());
+				System.out.println("################list : "+list.get(i).toString());
 			}
 			
 			transactionManager.commit(status);
@@ -927,6 +928,70 @@ public class JpaDAOImpl implements JpaDAO {
 		} //
 		
 		return list;
+	}
+
+	@Override
+	public void insert(ReviewVO review) {
+		
+		System.out.println("insert : " +review);
+
+		transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+			@Override
+			protected void doInTransactionWithoutResult(TransactionStatus status) {
+
+				try {
+
+					entityManager.merge(review);
+
+				} catch (Exception e) {
+
+					log.info("insertReview error : "+e);
+					
+					status.setRollbackOnly();
+
+				}
+			}
+		});
+		
+	}
+
+	@Override
+	public PaymentComplVO getCompl(int complNum) {
+		
+		log.info("get");
+
+		return entityManager.find(PaymentComplVO.class, complNum);
+		
+	}
+
+	@Override
+	public void update(PaymentComplVO payment) {
+
+		log.info("update");
+		System.out.println("update !!!");
+
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		System.out.println("payment.getBoardNum() : "+payment.getBoardNum());
+
+		try {
+            entityManager.createNativeQuery("UPDATE paymentcompl_tbl SET compl_progress=? WHERE compl_num=?")
+            .setParameter(1, payment.getComplProgress())
+            .setParameter(2, payment.getComplNum())
+            .executeUpdate(); 
+            
+			transactionManager.commit(status);
+			
+			System.out.println("update complete");
+		} catch (Exception e) {
+			log.info("error");
+			transactionManager.rollback(status);
+		} // try
+
+		
 	}
 	
 	

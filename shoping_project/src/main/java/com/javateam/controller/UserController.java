@@ -3,6 +3,9 @@
  */
 package com.javateam.controller;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,11 +39,10 @@ import com.javateam.service.CustomProvider;
 import com.javateam.service.OrderlistService;
 import com.javateam.service.PaymentComplService;
 import com.javateam.service.PaymentService;
+import com.javateam.service.ReviewService;
 import com.javateam.util.VOCountCalC;
 
 import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
-import oracle.net.aso.s;
 
 /**
  * @author ss
@@ -65,6 +67,9 @@ public class UserController {
 	
 	@Autowired
 	private CustomProvider customSvc;
+	
+	@Autowired
+	private ReviewService reviewSvc;
 
 	// 장바구니
 	@RequestMapping(value = "/orderList/{page}")
@@ -307,8 +312,11 @@ public class UserController {
 		
 		StringTokenizer st = null;
 		StringTokenizer st2 = null;
-		int bNum = 0;
 		
+		 String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+		                .format(new Date(System.currentTimeMillis()));
+		
+		 
 		// payment insert()
 		if(map.get("flag")!=null) {
 			log.info("### flag = 1 ###");
@@ -316,8 +324,8 @@ public class UserController {
 			payment.setPaymentMethod(map.get("paymentMethod"));
 			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
 			payment.setPaymentName(map.get("paymentName"));
+			payment.setPaymentDate(date);
 			payment.setPaymentPhone(map.get("paymentPhone"));
-			payment.setPaymentProgress("결제완료");
 			
 			System.out.println("!!!!!!!!payment :"+payment);
 			
@@ -325,7 +333,6 @@ public class UserController {
 			
 			paymentSvc.insertPayment(paymentVO);
 			
-			bNum = Integer.parseInt(map.get("boardNum"));
 			
 			st = new StringTokenizer(map.get("order"), ",");
 			st2 = new StringTokenizer(map.get("boardNum"), ",");
@@ -342,7 +349,8 @@ public class UserController {
 			payment.setPaymentAmount(Integer.parseInt(map.get("paymentAmount")));
 			payment.setPaymentName(map.get("paymentName"));
 			payment.setPaymentPhone(phone);
-			payment.setPaymentProgress("결제완료");
+			payment.setPaymentDate(date);
+			
 			
 			System.out.println("!!!!!!!!payment :"+payment);
 			
@@ -350,7 +358,6 @@ public class UserController {
 			
 			paymentSvc.insertPayment(paymentVO);
 			
-			bNum = Integer.parseInt(map.get("boardNum2"));
 			
 			st = new StringTokenizer(map.get("order2"), ",");
 			st2 = new StringTokenizer(map.get("boardNum2"), ",");
@@ -383,6 +390,7 @@ public class UserController {
 				compl.setUsername(orderlist.getUsername());
 				compl.setComplName(complName);
 				compl.setBoardNum(orderlist.getBoardNum());
+				compl.setComplProgress("결제완료");
 				
 				complSvc.insertPaymentCompl(new PaymentComplVO(compl));
 				
@@ -391,7 +399,7 @@ public class UserController {
 			
 			PaymentComplDTO compl = new PaymentComplDTO();
 			
-			BoardVO board = boardSvc.getArticle(bNum);
+			BoardVO board = boardSvc.getArticle(paymentNum);
 			
 			compl.setPaymentNum(paymentNum);
 			compl.setBoardFile(board.getBoardFile());
@@ -402,6 +410,7 @@ public class UserController {
 			compl.setUsername(map.get("username"));
 			compl.setComplName(complName);
 			compl.setBoardNum(board.getBoardNum());
+			compl.setComplProgress("결제완료");
 			
 			complSvc.insertPaymentCompl(new PaymentComplVO(compl));
 			
@@ -544,6 +553,33 @@ public class UserController {
 		
 		
 		return "/user/complDetail";
+	}
+	
+	@RequestMapping("/review/{paymentNum}")
+	public String review(@PathVariable("paymentNum") int paymentNum, Model model) {
+		
+		PaymentVO payment = paymentSvc.get(paymentNum);
+		
+		model.addAttribute("payment",payment);
+		
+		return "/user/myPageReview";
+	}
+	
+	@RequestMapping("/reviewWriteAction.do")
+	public String reviewWrite(@RequestParam Map<String,String> map) {
+		
+		System.out.println("##########################");
+		System.out.println("map :"+map);
+		System.out.println("##########################");
+
+		
+/*		ReviewVO review = new ReviewVO(reviewDTO);
+		
+		reviewSvc.insertReview(review); */
+		
+		int boardNum = 0;
+		
+		return "redirect:/board/boardDetail.do/boardNum/"+boardNum;
 	}
 	
 }

@@ -98,7 +98,7 @@ public class PaymentComplServiceImpl implements PaymentComplService{
 	}
 
 	@Override
-	public List<PaymentComplVO> getPaymentList() {
+	public List<Object> getPaymentList() {
 		
 		log.info("PaymentComplVO getPayment");
 		
@@ -111,6 +111,23 @@ public class PaymentComplServiceImpl implements PaymentComplService{
 		log.info("Compl getListCount >>");
 		
 		return dao.getCompl("desc").size();
+	}
+
+	@Override
+	public PaymentComplVO get(int complNum) {
+
+		log.info("Compl get >>");
+
+		return dao.getCompl(complNum);
+	}
+
+	@Override
+	public void updatePaymentCompl(PaymentComplVO payment) {
+
+		log.info("Compl update >>");
+
+		dao.update(payment);
+		
 	}
 
 
