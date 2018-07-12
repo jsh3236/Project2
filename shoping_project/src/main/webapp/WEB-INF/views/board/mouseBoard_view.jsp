@@ -14,6 +14,25 @@
 
 <style>
 
+.btn-group .button {
+    background-color: #277fc7; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+    margin-top: 200px;
+    width: 300px;
+}
+
+.btn-group .button:hover {
+    background-color: #2171b3;
+}
+
 #articleForm {
     width: 500px;
     height: 500px;
@@ -273,7 +292,6 @@ function getOption(opt, size) {
 	</sec:authorize>
 						
     <br>
-    
     <!-- 주문  form -->
     <form:form modelAttribute="orderlist" id="orderlistform"
 			action="${pageContext.request.contextPath}/user/orderListAction.do"
@@ -360,13 +378,14 @@ function getOption(opt, size) {
     </form:form>
     <!-- 주문 form 끝 -->
     
+	<div class="btn-group" style="">
+	  <button class="button">상세 정보</button>
+	  <button class="button">상품평</button>
+	</div>
+    
     <!-- 제품 상세정보 -->
-    <div style="margin-top: 200px">
-            ${article.boardContent}
-    </div>
     <div>
-           <img  src="<c:url value='/image/${article.boardFileContent}' />"
-							 style="padding: 30px" /> 
+           <img  src="<c:url value='/image/${article.boardFileContent}' />" /> 
 	</div>
 	 <!-- 제품 상세정보 끝 -->
 	 

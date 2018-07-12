@@ -13,4 +13,6 @@ public interface ReviewService {
 	
 	void insertReview(ReviewVO review);
 	
+	boolean hasReview(int complNum,String username);
+	
 }

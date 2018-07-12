@@ -22,7 +22,7 @@
 
 <script>
 
-function write() {
+function writeReview() {
 	
 	document.getElementById('reviewform').submit();
 	
@@ -41,25 +41,23 @@ function write() {
 			method="post" name="reviewform">
 		
 		<input type="hidden" id="username" name="username" value="<sec:authentication property="principal.username" />" />
-		<input type="hidden" id="paymentNum" name="paymentNum" value="${payment.paymentNum}" />
-		
+		<input type="hidden" id="complNum" name="complNum" value="${paymentCompl.complNum}" />
+		<input type="hidden" id="boardNum" name="boardNum" value="${paymentCompl.boardNum}" />
 				
 		<table>
 			<tr>
 				<td>
-					이미지
+					<img src="<c:url value='/image/${paymentCompl.boardFile}' />" width=75 height=75 />
 				</td>
 				<td>
-					제목<br>
-					옵션
+					${paymentCompl.boardSubject}<br>
+					<font style="font-size: 10px; color: gray;">${paymentCompl.orderOption}</font>
 				</td>
 			</tr>
-		</table>	
-		
-		<table>
+			
 			<tr>
 				<td>
-					상품
+					<img src="<c:url value='/image/check.png' />" width=16 height=14.7 />상품(필수)
 				</td>
 				<td>
 					매우 불만족 <input type="radio" id="score" name="score" value="1"> &nbsp;&nbsp;&nbsp;
@@ -69,19 +67,19 @@ function write() {
 					매우 만족 <input type="radio" id="score" name="score" value="5">
 				</td>
 			</tr>
-		</table>
-		
-		<table>
+			
 			<tr>
-				<td>
+				<td colspan="2">
 					<input type="text" id="subject" name="subject" placeholder="제목을 입력해 주세요." />
 				</td>
 			</tr>
+			
 			<tr>
-				<td>
+				<td colspan="2">
 					<input type="text" id="content" name="content" placeholder="내용을 입력해 주세요." />
 				</td>
 			</tr>
+			
 		</table>
 	
 	</form:form>
@@ -89,7 +87,7 @@ function write() {
 	<br>
 	
 	<div align="center">
-		<button type="button" onclick="write();"><span>확인</span></button> &nbsp;&nbsp;
+		<button type="button" onclick="writeReview();"><span>확인</span></button> &nbsp;&nbsp;
 		<button type="button" onclick="history.go(-1);"><span>취소</span></button>
 	</div>
 			

@@ -59,9 +59,9 @@ public interface JpaDAO {
 	List<List<OrderListVO>> getList(String username,int[] boardNumList,String sc);
 	List<List<PaymentComplVO>> getComplList(int complNum,int[] boardNumList,String sc);
 	
-	
 	void updateReadCount(int boardNum);
 	
+	boolean hasReview(int complNum,String username);
 	
 	
 }

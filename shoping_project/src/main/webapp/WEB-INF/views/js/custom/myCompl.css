@@ -248,17 +248,17 @@ fieldset[disabled] .btn-info.focus {
 font-size: 13px;
 text-align: left;
 font-weight: 700;
-width: 115px;
-padding-left: 14px;
-padding-top: 7px;
-padding-bottom: 14px;
+width: 100px;
+padding-left: 18px;
+padding-top: 13px;
+padding-bottom: 13px;
 background-color: #f75252;
 
 display: inline-block;
 border-radius: 4px;
 border: none;
 color: white;
-padding-right: 20px;
+padding-right: 10px;
 transition: all 0.5s;
 cursor: pointer;
 margin: 5px;
@@ -282,7 +282,7 @@ margin: 5px;
 }
 
 .whiteBtn2:hover span {
-  padding-right: 25px;
+  padding-right: 15px;
 }
 
 .whiteBtn2:hover span:after {

@@ -89,7 +89,7 @@ function openDetail(num){
 					<th style="width: 150px;">
 						가격
 					</th>
-					<th style="width: 150px;">
+					<th style="width: 300px;">
 						진행상태
 					</th>
 					<th style="width: 150px;">
@@ -100,9 +100,9 @@ function openDetail(num){
 					</th>
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
-					<tr style="border-bottom: 1px solid #369; height: 100px">
+					<tr style="border-bottom: 3px solid #369; height: 100px">
 						<td style="width :310px;">
-							${paymentlist[mapSt.index].paymentDate}(${complArticleList[mapSt.index].complNum})
+							${datefront[mapSt.index]}<br>${dateback[mapSt.index]}(${complArticleList[mapSt.index].complNum})
 						</td>
 						<td colspan="5">
 							<table>
@@ -112,7 +112,7 @@ function openDetail(num){
 										<c:set var="total" value="${total+boardTotal}" /> 
 										<c:set var="count" value="${count+1}" />
 										<tr align="center">
-											<td style="width: 310px;">	
+											<td style="width: 380px;">	
 												${article.boardSubject}
 											</td>
 											<td style="width: 90px;">
@@ -124,13 +124,28 @@ function openDetail(num){
 											<td style="width: 150px;" >
 												<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
 											</td>
-											<td style="width: 150px; height: 100px">
-												${complArticleList[mapSt.index].complProgress} <br>
-												<c:if test="${complArticleList[mapSt.index].complProgress eq '거래 완료'}">
-													<button class="whiteBtn2" id="reviewBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/user/review/${paymentlist[mapSt.index].paymentNum}'">
-														<span>리뷰하기</span>
-													</button>
-												</c:if>
+											<td style="width: 200px; height: 100px">
+												${article.complProgress} <br>
+												<c:choose>
+												
+													<c:when test="${article.complProgress eq '배송중'}">
+														<button type="button" onclick="location.href='${pageContext.request.contextPath}/user/progressAction.do/${article.complNum}'">
+															<span>배송 완료</span>
+														</button>
+													</c:when>
+
+												    <c:when test="${article.complProgress eq '거래완료' && hasReview[st.index]}">
+												    	<button class="whiteBtn2" id="reviewBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/user/review/${article.complNum}'">
+															<span>리뷰하기</span>
+														</button>
+												    </c:when>
+												
+												    <c:otherwise>
+												       		<font style="font-size: 9px; color: gray;">소중한 리뷰 <br> 감사합니다.</font>
+												    </c:otherwise>
+												
+												</c:choose>
+
 											</td>
 										</tr>
 									</c:if>

@@ -45,11 +45,14 @@ public class ReviewVO{
 	@Column(name="review_username", nullable=false)
 	private String username; // 유저 아이디
 	
-	@Column(name="payment_num", nullable=false)
-	private int paymentNum; // payment_tbl의 외래키
+	@Column(name="compl_num", nullable=false)
+	private int complNum; // payment_tbl의 외래키
 	
 	@Column(name="review_date", nullable=false)
 	private Date reviewDate; // 주문일
+	
+	@Column(name="board_num", nullable=false)
+	private int boardNum; // board_tbl의 외래키
 	
     // ReviewDTO -> ReviewVO
 	public ReviewVO(ReviewDTO review) {
@@ -59,8 +62,9 @@ public class ReviewVO{
 		this.reviewContent = review.getReviewContent();
 		this.username = review.getUsername();
 		this.reviewDate = review.getReviewDate();
-		this.paymentNum = review.getPaymentNum();
+		this.complNum = review.getComplNum();
 		this.reviewSubject = review.getReviewSubject();
+		this.boardNum = review.getBoardNum();
 		
 	}
 	

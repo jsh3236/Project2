@@ -34,6 +34,8 @@ import com.javateam.model.vo.PaymentComplDTO;
 import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentDTO;
 import com.javateam.model.vo.PaymentVO;
+import com.javateam.model.vo.ReviewDTO;
+import com.javateam.model.vo.ReviewVO;
 import com.javateam.service.BoardService;
 import com.javateam.service.CustomProvider;
 import com.javateam.service.OrderlistService;
@@ -509,9 +511,18 @@ public class UserController {
 		
 		//compl에 맞는 payment 불러오기
 		List<PaymentVO> paymentlist = new ArrayList<>();
+		List<String> datefront = new ArrayList<>();
+		List<String> dateback = new ArrayList<>();
 		for(int i=0; i<key.length; i++){
 			paymentlist.add(paymentSvc.get(key[i]));
+			datefront.add(paymentlist.get(i).getPaymentDate().substring(0, 10));
+			dateback.add(paymentlist.get(i).getPaymentDate().substring(11, 19));
 		}
+		
+		System.out.println("#####################");
+		System.out.println("datefront : "+datefront);
+		System.out.println("dateback : "+dateback);
+		System.out.println("#####################");
 				
 
 		
@@ -536,6 +547,19 @@ public class UserController {
 		pageInfo.setPage(page);
 		pageInfo.setStartPage(startPage);
 		
+		List<Boolean> flag = new ArrayList<>();
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+		for(int i=0; i<paymentArticleList.size(); i++) {
+			System.out.println("paymentArticleList.get(i).getComplNum() :"+paymentArticleList.get(i).getComplNum());
+			flag.add(reviewSvc.hasReview(paymentArticleList.get(i).getComplNum(), username));
+			System.out.println("flag :"+flag.get(i));
+		}
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2");
+
+		
+		model.addAttribute("hasReview", flag);
+		model.addAttribute("datefront",datefront);
+		model.addAttribute("dateback",dateback);
 		model.addAttribute("paymentlist",paymentlist);
 		model.addAttribute("boardNumMap", calc.toMap3(paymentArticleList));
 		model.addAttribute("complArticleList", paymentArticleList);
@@ -555,12 +579,12 @@ public class UserController {
 		return "/user/complDetail";
 	}
 	
-	@RequestMapping("/review/{paymentNum}")
-	public String review(@PathVariable("paymentNum") int paymentNum, Model model) {
+	@RequestMapping("/review/{complNum}")
+	public String review(@PathVariable("complNum") int complNum, Model model) {
 		
-		PaymentVO payment = paymentSvc.get(paymentNum);
+		PaymentComplVO paymentCompl = complSvc.get(complNum);
 		
-		model.addAttribute("payment",payment);
+		model.addAttribute("paymentCompl",paymentCompl);
 		
 		return "/user/myPageReview";
 	}
@@ -568,18 +592,46 @@ public class UserController {
 	@RequestMapping("/reviewWriteAction.do")
 	public String reviewWrite(@RequestParam Map<String,String> map) {
 		
-		System.out.println("##########################");
-		System.out.println("map :"+map);
-		System.out.println("##########################");
+		System.out.println("=============================================");
+		map.keySet().forEach(x->System.out.println(x+","+map.get(x)));
+		System.out.println("=============================================");
 
+		String username = map.get("username");
 		
-/*		ReviewVO review = new ReviewVO(reviewDTO);
+		ReviewDTO reviewDTO = new ReviewDTO();
 		
-		reviewSvc.insertReview(review); */
+		reviewDTO.setComplNum(Integer.parseInt(map.get("complNum")));
+		reviewDTO.setBoardNum(Integer.parseInt(map.get("boardNum")));
+		reviewDTO.setUsername(username);
+		reviewDTO.setReviewScore(Integer.parseInt(map.get("score")));
+		reviewDTO.setReviewSubject(map.get("subject"));
+		reviewDTO.setReviewContent(map.get("content"));
+		reviewDTO.setReviewDate(new Date(System.currentTimeMillis()));
 		
-		int boardNum = 0;
+		ReviewVO review = new ReviewVO(reviewDTO);
 		
-		return "redirect:/board/boardDetail.do/boardNum/"+boardNum;
+		reviewSvc.insertReview(review); 
+		
+		
+		
+		return "redirect:/user/paymentComplete/"+username+"/1";
+	}
+	
+	@RequestMapping("/progressAction.do/{complNum}")
+	public String progress(@PathVariable("complNum") int complNum) {
+		
+		PaymentComplVO payment = complSvc.get(complNum);
+		
+		System.out.println("complVO :"+payment);
+		
+		if(payment.getComplProgress().equals("배송중")) payment.setComplProgress("거래완료");
+		
+		complSvc.updatePaymentCompl(payment);
+		
+		String username = payment.getUsername(); 
+		
+		
+		return "redirect:/user/paymentComplete/"+username+"/1";
 	}
 	
 }

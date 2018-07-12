@@ -863,6 +863,7 @@ public class JpaDAOImpl implements JpaDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PaymentComplVO> getCompl(String sc) {
+		
 		String list_sql = "select * "
 				+ "			from paymentcompl_tbl "
 				+ "			order by compl_NUM " +sc;
@@ -909,14 +910,6 @@ public class JpaDAOImpl implements JpaDAO {
 					.getResultList(); 
 					
 			System.out.println("JpaDAOIMpl getlist2 : "+list);
-			
-			for(Object o : list) {
-				System.out.println("o : "+o.toString());
-			}
-			
-			for(int i=0; i<list.size(); i++) {
-				System.out.println("################list : "+list.get(i).toString());
-			}
 			
 			transactionManager.commit(status);
 			
@@ -993,6 +986,41 @@ public class JpaDAOImpl implements JpaDAO {
 
 		
 	}
-	
+
+	@Override
+	public boolean hasReview(int complNum, String username) {
+		
+		log.info("hasReview >> ");
+
+		String list_sql = "select * from review_tbl where review_username=? and compl_num=?";
+		
+		System.out.println("complNum : "+complNum);
+		System.out.println("username : "+username);
+		
+		ReviewVO list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		try {
+			
+			list = (ReviewVO) entityManager.createNativeQuery(list_sql,ReviewVO.class)
+					.setParameter(1, username)
+					.setParameter(2, complNum)
+					.getSingleResult(); 
+					
+			System.out.println("##########JpaDAOIMpl hasReview : "+list);
+			
+			if(list.getComplNum()==complNum) {
+				return false;
+			} else {
+				return true;
+			}
+			
+		} catch (Exception e) {
+			log.info("hasReview error and empty");
+		} //
+		
+		return true;
+	}
 	
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -30,6 +31,7 @@ import com.javateam.model.vo.BoardDTO;
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.PageInfo;
 import com.javateam.model.vo.PaymentComplVO;
+import com.javateam.model.vo.PaymentResultVO;
 import com.javateam.model.vo.PaymentVO;
 import com.javateam.service.BoardService;
 import com.javateam.service.CustomProvider;
@@ -38,6 +40,7 @@ import com.javateam.service.PaymentComplService;
 import com.javateam.service.PaymentService;
 import com.javateam.util.FileUploadUtil;
 import com.javateam.util.VOCountCalC;
+import com.javateam.util.myToString;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -315,14 +318,44 @@ public class AdminController {
         String name = "";
         String payment = "";
         
-        System.out.println("##############################1");
+        System.out.println("################################1");
+        
         List<Object> sum = complSvc.getPaymentList();
+        
         for(Object o: sum) {
-        	System.out.println("o : "+o.toString());
-        	 log.info("sum : {}", o);
+        	
+        	System.out.println("o: "+ new PaymentResultVO(o).toString());
+			log.info("sum : {}", o);
+			
+        }
+        
+        System.out.println("#################################2");
+        
+/*        System.out.println("##############################1");
+        for(Object o: sum) {
+        	System.out.println("o.toString : "+o.toString());
+        	System.out.println("o.hashCode : "+o.hashCode());
+        	System.out.println("o.getClass : "+o.getClass());
+        	log.info("sum : {}", o);
+        	System.arraycopy(sum, 0, arr, 0, 1);
+        	System.out.println("--------------------------------");
         }
         System.out.println("##############################2");
-
+        
+        System.out.println("##############################3");
+        for(Object s:arr) {
+        	System.out.println("s :"+s);
+        	System.out.println("--------------------------------");
+        }
+        System.out.println("##############################3");
+        
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@1");
+        for(int i=0; i<sum.size(); i++) {
+        	System.out.println(new myToString().ObjToString(sum.get(i)));
+        }
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
+        
+        
         System.out.println("============================");
         for(int i=0; i<complList.size(); i++) {
         	if(i==complList.size()-1){
@@ -337,7 +370,7 @@ public class AdminController {
         System.out.println("payment : "+payment);
         System.out.println("============================");
         
-        
+        */
         
         RConnection connection = null;
         
@@ -376,6 +409,7 @@ public class AdminController {
         }
         return view;
 	}
+
 	
 	
 }

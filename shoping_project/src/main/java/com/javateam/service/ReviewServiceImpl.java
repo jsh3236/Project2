@@ -28,4 +28,11 @@ public class ReviewServiceImpl implements ReviewService {
 		dao.insert(review);
 	}
 
+	@Override
+	public boolean hasReview(int complNum, String username) {
+		log.info("insertReview ##");
+		
+		return dao.hasReview(complNum,username);
+	}
+
 }

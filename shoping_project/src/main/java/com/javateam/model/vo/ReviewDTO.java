@@ -19,7 +19,8 @@ public class ReviewDTO {
 	private String reviewContent;
 	private String username;
 	private Date reviewDate;
-	private int paymentNum;
+	private int complNum;
+	private int boardNum;
 	private String reviewSubject;
 	
 }

@@ -7,10 +7,42 @@
 <title>Detail Information</title>
 </head>
 <body>
-	이름: ${payment.paymentName} <br>
-	배송주소 : ${payment.paymentAddress}<br>
-	결제방법: ${payment.paymentMethod}<br>
-	핸드폰번호: ${payment.paymentPhone}<br>
-	결제금액: ${payment.paymentAmount}<br>
+	<table>
+		<tr>
+			<td style="text-align: right; padding-right: 10px">이름:
+			</td>
+			<td> ${payment.paymentName} 
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right; padding-right: 10px">배송주소 :
+			</td>
+			<td> ${payment.paymentAddress}
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right; padding-right: 10px">결제방법:
+			</td>
+			<td> ${payment.paymentMethod}
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right; padding-right: 10px">핸드폰번호: 
+			</td>
+			<td>${payment.paymentPhone}
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right; padding-right: 10px">결제금액: 
+			</td>
+			<td>${payment.paymentAmount}
+			</td>
+		</tr>
+		
+		
+		
+		
+		
+	</table>
 </body>
 </html>
