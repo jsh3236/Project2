@@ -11,6 +11,8 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입 폼</title>
+
+
 <style>
 
 /* 테이블 모양  */
@@ -54,14 +56,15 @@ font {
 }
 </style>
 
-<!-- bootstrap JS : 3.3.7 -->
-<script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
-
-
 <!-- bootstrap CSS : 3.3.7 -->
 <%-- <link rel="stylesheet"
 	href="<c:url value='/js/bootstrap/3.3.7/css/bootstrap.min.css' />">
 	 --%>
+
+<!-- bootstrap JS : 3.3.7 -->
+<script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
+
+
 <!-- jQuery UI CSS : 캘린더(datePicker) -->
 <link rel="stylesheet"
 	href="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.css' />">
@@ -339,7 +342,7 @@ function joinUp() {
 							   ng-required="true"> &nbsp;
 							  
 						<!-- 아이디 중복 체크 -->
-						<input type="button" value="중복 확인" id="idcheck" class="btn btn-info btn-lg""><br> 
+						<input type="button" value="중복 확인" id="idcheck"><br> 
 					
 				</td>
 
@@ -568,14 +571,11 @@ function joinUp() {
 
 		<!------------------ 버튼 ------------------->
 		<br><br>
-			<input type="submit" id="sub"
-			value="회원가입" 
-			style="margin-left: 350px"  ng-disabled="join.$invalid"/> &nbsp;&nbsp; 
-			
-		<input type="button" 
-				   value="취소"
-				   onclick="history.back()" />
-					  <!-- "history.go(-1)" -->
+		<div align="center">
+			<button id="sub" type="submit" class="newsletter_submit_btn trans_300" value="Submit" ng-disabled="join.$invalid" style="background-color: #346698">회원가입</button>
+			&nbsp;
+			<button id="cancel" type="submit" class="newsletter_submit_btn trans_300" value="뒤로가기" style="background-color: #346698" onclick="history.back()">뒤로가기</button>
+		</div>
 	</form>
 </body>
 </html>

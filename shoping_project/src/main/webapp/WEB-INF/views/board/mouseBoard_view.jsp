@@ -384,11 +384,18 @@ function getOption(opt, size) {
 	</div>
     
     <!-- 제품 상세정보 -->
-    <div>
+    <div id="info">
            <img  src="<c:url value='/image/${article.boardFileContent}' />" /> 
 	</div>
 	 <!-- 제품 상세정보 끝 -->
 	 
+	 <!-- 리뷰 보기 -->
+	 <div id="rev">
+	 	<table>
+	 		<tr>
+	 		</tr>
+	 	</table>
+	 </div>
     
     <!-- 옵션 추가 스크립트 -->
     <script>
