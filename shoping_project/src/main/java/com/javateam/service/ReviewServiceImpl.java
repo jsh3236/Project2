@@ -1,5 +1,7 @@
 package com.javateam.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +35,14 @@ public class ReviewServiceImpl implements ReviewService {
 		log.info("insertReview ##");
 		
 		return dao.hasReview(complNum,username);
+	}
+
+	@Override
+	public List<ReviewVO> getReview(int boardNum) {
+
+		log.info("getReview ##");
+		
+		return dao.getReview(boardNum);
 	}
 
 }

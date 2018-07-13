@@ -377,7 +377,7 @@ function getOption(opt, size) {
 	    
     </form:form>
     <!-- 주문 form 끝 -->
-    
+    <br><br><br>
 	<div class="btn-group" style="">
 	  <button class="button">상세 정보</button>
 	  <button class="button">상품평</button>

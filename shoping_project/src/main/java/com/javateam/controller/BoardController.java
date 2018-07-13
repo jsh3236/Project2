@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.PageInfo;
+import com.javateam.model.vo.ReviewVO;
 import com.javateam.service.BoardService;
+import com.javateam.service.ReviewService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +25,9 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardSvc;
+	
+	@Autowired
+	private ReviewService reviewSvc;
 
     @RequestMapping("/mouse/{page}")
     public String listBoard(@PathVariable("page") int page,
@@ -79,9 +84,14 @@ public class BoardController {
         	optionList.add(st.nextToken());
         }
         
-        model.addAttribute("optionList", optionList);
+        // 리뷰 리스트 얻어오기
+        List<ReviewVO> review = reviewSvc.getReview(boardNum);
         
+        
+        model.addAttribute("review", review);
+        model.addAttribute("optionList", optionList);
         model.addAttribute("article", boardSvc.getArticle(boardNum));
+        
         // 조회수 업데이트
         boardSvc.updateReadCount(boardNum);
         // return boardSvc.getArticle(boardNum);

@@ -19,7 +19,7 @@
 	
 	<!-- file upload path : 반드시 네트워크 경로 쓸 것.
     windows 경로 (X)  ex) E:\lsh\fileupload (X) -->
-    <resources mapping="/image/**" location="file:///C://Users//ss//git//Project//shoping_project//src//main//webapp//resources//used-image//" />
+    <resources mapping="/image/**" location="file:///C://Users//jsh32//git//Project2//shoping_project//src//main//webapp//resources//used-image//" />
 <!--     <resources mapping="/image/**" location="file:///C://Users//jsh32//git//Project2//shoping_project//src//main//webapp//WEB-INF//used-image//" /> -->
 	<!-- <resources mapping="/iamge/**" location="file:///C://Users//ss//git//Project//shoping_project//src//main//webapp//resources//used-image//" /> -->
  	<!-- image path /image로 불러와짐

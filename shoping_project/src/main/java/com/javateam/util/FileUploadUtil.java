@@ -21,7 +21,7 @@ public class FileUploadUtil {
 	public String fileUpload(MultipartFile file, BoardDTO boardDTO, HttpServletRequest request,BoardVO boardVO) {
 		FileOutputStream fos = null;
 		/*String path = "D:\\jsh-work\\used-image\\";*/
-		String path = "C:\\Users\\ss\\git\\Project\\shoping_project\\src\\main\\webapp\\resources\\used-image\\";
+		String path = "C:\\Users\\jsh32\\git\\Project2\\shoping_project\\src\\main\\webapp\\resources\\used-image\\";
 		
 		// 업로드 파일 처리
 		if (file != null) { // 파일 유효성 점검

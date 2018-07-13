@@ -12,10 +12,15 @@
 
 
 <body>
+<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<div style="text-align: center;">
 		<h1>상품 판매 현황</h1>
-		<br><br><br>
-		<img src="<c:url value='/image/test.png' />" />
+		<br><br><br><br><br>
+		
+	</div>
+	
+	<div>
+		<img src="<c:url value='/image/${viewPage}' />" />
 	</div>
 	
 	

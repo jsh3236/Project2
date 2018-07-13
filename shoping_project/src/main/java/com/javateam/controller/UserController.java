@@ -401,7 +401,7 @@ public class UserController {
 			
 			PaymentComplDTO compl = new PaymentComplDTO();
 			
-			BoardVO board = boardSvc.getArticle(paymentNum);
+			BoardVO board = boardSvc.getArticle(Integer.parseInt(map.get("boardNum")));
 			
 			compl.setPaymentNum(paymentNum);
 			compl.setBoardFile(board.getBoardFile());

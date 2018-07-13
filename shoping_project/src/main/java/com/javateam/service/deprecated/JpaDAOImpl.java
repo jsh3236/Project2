@@ -1022,5 +1022,35 @@ public class JpaDAOImpl implements JpaDAO {
 		
 		return true;
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ReviewVO> getReview(int boardNum) {
+		
+		String list_sql = "select * "
+				+ "			from review_tbl "
+				+ "			where board_num = ?";
+		
+		
+		List<ReviewVO> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			list = entityManager.createNativeQuery(list_sql,ReviewVO.class)
+					.setParameter(1, boardNum)
+					.getResultList(); 
+					
+			System.out.println("JpaDAOIMpl getReview : "+list);
+			transactionManager.commit(status);
+		} catch (Exception e) {
+			log.info("PaymentComplVO getCompl error");
+			transactionManager.rollback(status);
+		} //
+		
+		return list;
+	}
 	
 }

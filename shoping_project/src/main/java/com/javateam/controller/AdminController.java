@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -304,73 +305,48 @@ public class AdminController {
 		return "/admin/management";
 	}
 	
+	
 	@RequestMapping("/manage.do")
     public ModelAndView testd() {
 		
-        String path = "C:\\Users\\ss\\git\\Project\\shoping_project\\src\\main\\webapp\\resources\\used-image";
-        String fileName = "avgManage";
+        String path = "C:\\Users\\jsh32\\git\\Project2\\shoping_project\\src\\main\\webapp\\resources\\used-image";
+        String fileName = "avgManage.png";
         
         ModelAndView view = new ModelAndView();
         view.setViewName("/admin/management");
-        
-        List<PaymentComplVO> complList = complSvc.getCompl("desc");
+
         
         String name = "";
         String payment = "";
         
-        System.out.println("################################1");
+       
         
-        List<Object> sum = complSvc.getPaymentList();
+        myToString to = new myToString();
         
-        for(Object o: sum) {
+        List<Object> temp = complSvc.getPaymentList(); // DAO
+        List<Object[]> list = to.toList(temp.toArray()); // custom 변환 메서드
+        
+        // 나열 출력
+        for(int i=0; i<list.size(); i++) {
         	
-        	System.out.println("o: "+ new PaymentResultVO(o).toString());
-			log.info("sum : {}", o);
-			
+        	for(int j=0; j<list.get(i).length; j++) {
+        		if(j==1) {
+        			name += "'"+(String)list.get(i)[j]+"',";
+        		}
+        		else if(j==2) {
+        			payment += (String)list.get(i)[j]+",";
+        		}
+        		
+        	}
+        	
         }
         
+        System.out.println("################################1");
+        System.out.println("name :"+name.substring(0, name.length()-1));
+        System.out.println("payment :"+payment.substring(0, payment.length()-2));
         System.out.println("#################################2");
         
-/*        System.out.println("##############################1");
-        for(Object o: sum) {
-        	System.out.println("o.toString : "+o.toString());
-        	System.out.println("o.hashCode : "+o.hashCode());
-        	System.out.println("o.getClass : "+o.getClass());
-        	log.info("sum : {}", o);
-        	System.arraycopy(sum, 0, arr, 0, 1);
-        	System.out.println("--------------------------------");
-        }
-        System.out.println("##############################2");
-        
-        System.out.println("##############################3");
-        for(Object s:arr) {
-        	System.out.println("s :"+s);
-        	System.out.println("--------------------------------");
-        }
-        System.out.println("##############################3");
-        
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@1");
-        for(int i=0; i<sum.size(); i++) {
-        	System.out.println(new myToString().ObjToString(sum.get(i)));
-        }
-        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2");
-        
-        
-        System.out.println("============================");
-        for(int i=0; i<complList.size(); i++) {
-        	if(i==complList.size()-1){
-        		name +="'"+ complList.get(i).getBoardSubject()+"'";
-        		payment += complList.get(i).getBoardPrice(); 
-        	} else {
-        		name +="'"+ complList.get(i).getBoardSubject()+"'"+",";
-        		payment += complList.get(i).getBoardPrice()+",";
-        	}
-        }
-        System.out.println("name :"+name);
-        System.out.println("payment : "+payment);
-        System.out.println("============================");
-        
-        */
+       
         
         RConnection connection = null;
         
@@ -392,12 +368,12 @@ public class AdminController {
             connection.eval("require(ggplot2)");
 //            connection.eval("name <- c('제닉스','제닉스2','g950','g340')");
 //            connection.eval("count <- c(100,33,21,87)");
-            connection.eval("name <- c("+name+")");
-            connection.eval("count <- c("+payment+")");
+            connection.eval("name <- c("+name.substring(0, name.length()-1)+")");
+            connection.eval("payment <- c("+payment.substring(0, payment.length()-1)+")");
             connection.eval("pp <- data.frame(이름=name,판매수입=payment)");
             connection.eval("pp$pos <- pp$판매수입>=mean(pp$판매수입)");
-            connection.eval("png(filename='C://Users/ss/git/Project/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height=600)");
-            connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매수입, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(fill='평균 이상'))");
+            connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height=600)");
+            connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매수입, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(fill='평균 이상')+ scale_y_continuous(labels = scales::comma)+theme(axis.title.y=element_text(size=20),axis.title.x=element_text(size=20)))");
             connection.parseAndEval("print(dev.off());");
             connection.close();	
             

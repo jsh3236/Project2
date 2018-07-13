@@ -45,6 +45,7 @@ public interface JpaDAO {
 	PaymentVO getNew();
 	PaymentComplVO getComplNew();
 	OrderListVO getorder(int orderNum);
+	List<ReviewVO> getReview(int boardNum);
 	
 	
 	List<BoardVO> getListByPageAndLimit(int page, int limit);
