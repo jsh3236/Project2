@@ -231,7 +231,7 @@ public class UserController {
 	/**
 	 * @param boardNum
 	 */
-	//orderPage (orderList -> 전체구매, 선택상품구매ㅛㅛ)
+	//orderPage (orderList -> 전체구매, 선택상품구매)
 	@RequestMapping("/orderPage/{boardNum}/{username}")
 	public String orderPage(@PathVariable("boardNum") String boardNum, @PathVariable("username") String username,
 			Model model) {
@@ -275,11 +275,15 @@ public class UserController {
 	
 	//directOrderPage (mouseBoard_view -> 구매하기 버튼)
 		@RequestMapping("/directOrderPage.do")
-	public String directOrderPage(@Valid @ModelAttribute("orderlist") OrderListDTO orderlistDTO, Model model) {
+	public String directOrderPage(@Valid @ModelAttribute("orderlist") OrderListDTO orderlistDTO, Model model,HttpServletRequest request) {
 			
 			
-			System.out.println("장바구니 처리");
-
+			System.out.println("바로구매 처리");
+			System.out.println("orderlistDTO :"+orderlistDTO);
+/*			System.out.println("request.getParameter('orderCount') :"+request.getParameter("orderCount"));
+			
+			orderlistDTO.setOrderCount(Integer.parseInt(request.getParameter("orderCount")));
+*/
 			OrderListVO orderlistVO = new OrderListVO(orderlistDTO);
 
 			
@@ -287,11 +291,10 @@ public class UserController {
 			
 			orderArticleList.add(orderlistVO);
 
-			
+			System.out.println("###orderArticleList :"+orderArticleList);
 			VOCountCalC calc = new VOCountCalC();
 			
 			CustomUser user = customSvc.loadUserByUsername(orderlistDTO.getUsername());
-			System.out.println("user : "+user);
 			
 			model.addAttribute("user",user);
 			model.addAttribute("boardNumMap", calc.toMap(orderArticleList));
@@ -509,6 +512,8 @@ public class UserController {
 			}
 		}
 		
+		
+		
 		//compl에 맞는 payment 불러오기
 		List<PaymentVO> paymentlist = new ArrayList<>();
 		List<String> datefront = new ArrayList<>();
@@ -528,8 +533,13 @@ public class UserController {
 		
 		int listCount = complSvc.getListCount(username);
 		
+		
+		
 		// 총 페이지 수.
-		int maxPage = (int) Math.ceil(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
+		int maxPage = (int) Math.floor(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
+		
+		System.out.println("listCount :"+listCount);
+		System.out.println("maxPage :"+maxPage);
 																	
 		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
 		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;

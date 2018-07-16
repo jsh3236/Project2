@@ -9,6 +9,12 @@
 <body>
 	<table>
 		<tr>
+			<td style="text-align: right; padding-right: 10px">결제번호:
+			</td>
+			<td> ${payment.paymentNum} 
+			</td>
+		</tr>
+		<tr>
 			<td style="text-align: right; padding-right: 10px">이름:
 			</td>
 			<td> ${payment.paymentName} 

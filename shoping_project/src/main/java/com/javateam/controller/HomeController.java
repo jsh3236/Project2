@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.rosuda.REngine.Rserve.RConnection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +21,14 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.javateam.model.vo.BoardVO;
 import com.javateam.model.vo.Users;
 import com.javateam.service.AuthJdbcService;
 import com.javateam.service.BoardService;
+import com.javateam.service.OrderlistService;
 
 @Controller
 public class HomeController {
@@ -34,13 +39,26 @@ public class HomeController {
 	@Autowired
 	private BoardService boardSvc; 
 	
+	@Autowired
+	private OrderlistService orderSvc;
+	
 
 	@RequestMapping("/")
 	public String home(Model model)  {
 		
-		List<BoardVO> boardlist = boardSvc.getArticleList(1, 10);
+		List<BoardVO> boardlist = boardSvc.getArticleList(1,boardSvc.getListCount());
+		System.out.println("boardlist : "+boardlist);
+		System.out.println("boardlist.size() :"+boardlist.size());
 		
-		model.addAttribute("boardlist", boardlist);
+		List<BoardVO> boardRelist = new ArrayList<>();
+		
+		for(int i=boardlist.size()-1; i>boardlist.size()-6; i--) {
+			boardRelist.add(boardlist.get(i));
+		}
+		
+		// 최신리스트를 위해 역순 입력
+		
+		model.addAttribute("boardRelist", boardRelist);
 		
 		return "home";
 	}
@@ -213,7 +231,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/joinAction")
-	public void join(@RequestParam("username") String username,
+	public String join(@RequestParam("username") String username,
 					 @RequestParam("pw") String password,
 					 @RequestParam("name") String name,
 					 @RequestParam("gender") String sex,
@@ -255,7 +273,23 @@ public class HomeController {
 								email,
 								new Date(System.currentTimeMillis()));
 		authJdbcService.insertUsers(users, "ROLE_USER");
+		
+		return "/";
 	} // 
+	
+	@RequestMapping("/getCount")
+	@ResponseBody
+	public String getCount(@RequestParam("username") String username, Model model) {
+		
+		String orderlistCount = ""+orderSvc.getListCount(username);
+		
+		System.out.println("###username :"+username);
+		System.out.println("###orderlistCount : "+ orderlistCount);
+		
+		model.addAttribute("orderlistCount", orderlistCount);
+		
+		return orderlistCount;
+	}
 	
 	
 

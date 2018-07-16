@@ -213,7 +213,7 @@
 	h1{font-size: 36px;}
 	h2{font-size: 24px;}
 	h6{font-size: 12px;}
-	.red_button a
+	.red_button2 a
 	{
 		font-size: 12px;
 	}
@@ -302,7 +302,7 @@
 		margin-left: 0px;
 		margin-top: 15px;
 	}
-	.add_to_cart_button
+	.add_to_cart_button2
 	{
 		margin-left: 0px;
 		margin-top: 15px;
@@ -446,7 +446,7 @@
 		height: 15px;
 		font-size: 10px;		
 	}
-	.add_to_cart_button
+	.add_to_cart_button2
 	{
 		margin-top: 20px;
 	}
@@ -504,7 +504,7 @@
 		font-size: 12px !important;
 	}
 	.review_submit_btn,
-	.add_to_cart_button
+	.add_to_cart_button2
 	{
 		font-size: 12px;
 		width: 130px;

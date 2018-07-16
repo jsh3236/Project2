@@ -12,7 +12,7 @@
 <meta name="description" content="Colo Shop Template">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/bootstrap4/bootstrap.min.css"">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/bootstrap4/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
@@ -119,10 +119,10 @@ $(document).ready(function() {
 		        	success : function(data) {
 		        		
 		        		if (data.trim() == "true") {
-			           		 alert("로그인에 성공하셨습니다.");
+			           		 /* alert("로그인에 성공하셨습니다."); */
 			       			 document.loginForm.submit();
 			           	} else 
-			       			 alert("아이디가 존재하지 않습니다."); 
+			       			alert("아이디가 존재하지 않습니다.");
 		        			 $("#username").focus();
 			        	}
 		        	
@@ -133,7 +133,31 @@ $(document).ready(function() {
 	    
 	}) //
 
+	
+	
+// 주문 수량 가져오기
+	$(document).ready(function() {
+		
+		$.ajax({
+    		url : "${pageContext.request.contextPath}/getCount",
+    	    type: "post",
+    	    /*dataType: "json", 
+    	     async: false,*/
+        	data : {
+        		username : $("#userID").val()
+        	},
+        	success : function(data) {
+        		
+        		
+        		$('#checkout_items').text(data);
+        		
+        		
+			}
+        	
+    	}); // $.ajax
 
+	    
+	}) //
 </script>
 	
 <style>
@@ -165,9 +189,8 @@ body{
 </style>
 </head>
 <body>
+
 <sec:authorize access="!isAuthenticated()">
-
-
 	<header class="header trans_300">
 
 		<!-- Top Navigation -->
@@ -184,21 +207,9 @@ body{
 
 								<!-- Currency / Language / My Account -->
 
-								<li class="currency">
-									<a href="#">
-										usd
-										<i class="fa fa-angle-down"></i>
-									</a>
-									<ul class="currency_selection">
-										<li><a href="#">cad</a></li>
-										<li><a href="#">aud</a></li>
-										<li><a href="#">eur</a></li>
-										<li><a href="#">gbp</a></li>
-									</ul>
-								</li>
 								<li class="language">
 									<a href="#">
-										English
+										한국어
 										<i class="fa fa-angle-down"></i>
 									</a>
 									<ul class="language_selection">
@@ -209,7 +220,7 @@ body{
 									</ul>
 								</li>
 								<li class="account">
-									<a href="#">
+									<a data-toggle="modal" href="#myModal">
 										My Account
 										<i class="fa fa-angle-down"></i>
 									</a>
@@ -245,11 +256,10 @@ body{
 							</ul>
 							<ul class="navbar_user">
 								<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-								<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+								<li><a data-toggle="modal" href="#myModal"><i class="fa fa-user" aria-hidden="true"></i></a></li>
 								<li class="checkout">
-									<a href="#">
+									<a data-toggle="modal" href="#myModal">
 										<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-										<span id="checkout_items" class="checkout_items">2</span>
 									</a>
 								</li>
 							</ul>
@@ -276,7 +286,7 @@ body{
 			
 			<form id="loginForm" 
 			  name="loginForm" 
-			  action="<c:url value='j_spring_security_check' />"
+			  action="${pageContext.request.contextPath}/j_spring_security_check"
 			  method="POST">
 			
 			
@@ -322,7 +332,7 @@ body{
 </sec:authorize>
 
 <sec:authorize access="hasRole('ROLE_ADMIN')">
-
+<input type="hidden" id="userID" name="userID" value="<sec:authentication property='principal.username' />">
 	<header class="header trans_300">
 
 		<!-- Top Navigation -->
@@ -353,7 +363,7 @@ body{
 								</li>
 								<li class="language">
 									<a href="#">
-										English
+										한국어
 										<i class="fa fa-angle-down"></i>
 									</a>
 									<ul class="language_selection">
@@ -400,11 +410,11 @@ body{
 							</ul>
 							<ul class="navbar_user">
 								<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-								<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+								<li><a href="${pageContext.request.contextPath}/admin/home"><i class="fa fa-user" aria-hidden="true"></i></a></li>
 								<li class="checkout">
-									<a href="#">
+									<a href="${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />">
 										<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-										<span id="checkout_items" class="checkout_items">2</span>
+										<span id="checkout_items" class="checkout_items"></span>
 									</a>
 								</li>
 							</ul>
@@ -444,8 +454,7 @@ body{
 
 
 <sec:authorize access="hasRole('ROLE_USER')">
-
-
+<input type="hidden" id="userID" name="userID" value="<sec:authentication property='principal.username' />">
 
 	<header class="header trans_300">
 
@@ -477,7 +486,7 @@ body{
 								</li>
 								<li class="language">
 									<a href="#">
-										English
+										한국어
 										<i class="fa fa-angle-down"></i>
 									</a>
 									<ul class="language_selection">
@@ -488,7 +497,7 @@ body{
 									</ul>
 								</li>
 								<li class="account">
-									<a href="${pageContext.request.contextPath}/admin/home">
+									<a href="${pageContext.request.contextPath}/user/myPage">
 										<sec:authentication property="principal.username" />&nbsp;님
 										<i class="fa fa-angle-down"></i>
 									</a>
@@ -524,11 +533,11 @@ body{
 							</ul>
 							<ul class="navbar_user">
 								<li><a href="#"><i class="fa fa-search" aria-hidden="true"></i></a></li>
-								<li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+								<li><a href="${pageContext.request.contextPath}/user/myPage"><i class="fa fa-user" aria-hidden="true"></i></a></li>
 								<li class="checkout">
-									<a href="#">
+									<a href="${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />">
 										<i class="fa fa-shopping-cart" aria-hidden="true"></i>
-										<span id="checkout_items" class="checkout_items">2</span>
+										<span id="checkout_items" class="checkout_items"></span>
 									</a>
 								</li>
 							</ul>

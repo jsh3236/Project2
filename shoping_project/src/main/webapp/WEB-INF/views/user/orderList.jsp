@@ -127,7 +127,7 @@ function selectOrder() {
 	<c:set var="total" value="0" />
 	<c:set var="totalstotal" value="0" />
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<br>
+	<br><br><br><br><br><br><br><br>
 	<!-- 장바구니 리스트 시작 -->
 	<section id="listForm" style="width: 1200px; margin: auto;">
 		<c:if test="${not empty orderArticleList && pageInfo.listCount > 0}">
@@ -237,7 +237,7 @@ function selectOrder() {
 				<button class="whiteBtn" type="button" onclick="history.go(-1);"><span>쇼핑계속하기</span></button>
 			</div>
 			
-			
+	<%-- 		
 			<!-- 페이징(paging) -->
 			<section id="pageList">
 
@@ -282,7 +282,7 @@ function selectOrder() {
 				</ul>
 
 			</section>
-			<!-- 페이징 끝 -->
+			<!-- 페이징 끝 --> --%>
 
 	</section>
 	<!-- 장바구니 리스트 끝 -->

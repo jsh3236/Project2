@@ -1052,5 +1052,39 @@ public class JpaDAOImpl implements JpaDAO {
 		
 		return list;
 	}
-	
+
+	@Override
+	public void updateSale(BoardVO board) {
+
+		log.info("delete");
+
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+		TransactionStatus status = transactionManager.getTransaction(def);
+
+		try {
+            entityManager.createNativeQuery("UPDATE board_tbl SET board_dflag=?, board_sale=? WHERE board_num=?")
+            .setParameter(1, board.getBoardDflag())
+            .setParameter(2, board.getBoardSale())
+            .setParameter(3, board.getBoardNum())
+            .executeUpdate(); 
+            
+			transactionManager.commit(status);
+			
+			System.out.println("updateSale complete");
+		} catch (Exception e) {
+			log.info("error");
+			transactionManager.rollback(status);
+		} // try
+
+	} //
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ReviewVO> getAllReview() {
+		log.info("getAllReview");
+
+		return (List<ReviewVO>) entityManager.createNativeQuery("SELECT * FROM review_tbl", ReviewVO.class)
+				.getResultList();
+	}
 }

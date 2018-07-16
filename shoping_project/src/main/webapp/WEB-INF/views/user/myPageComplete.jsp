@@ -64,12 +64,15 @@ function openDetail(num){
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<br><br>
-	<c:set var="count" value="0" />
-	<section id="listForm" style="width: 800px; margin: auto;">
+	<br><br><br><br><br><br><br><br>
 		<div align="center">
 			<h2>구매 목록</h2>
 		</div>
+	<c:if test="${not empty boardNumMap}">
+	
+	<c:set var="count" value="0" />
+	<section id="listForm" style="width: 800px; margin: auto;">
+		
 		<br>
 			<table id="payment_tbl" class="mytable">
 				<tr style="height: 35px; text-align: center; ">
@@ -128,6 +131,10 @@ function openDetail(num){
 												${article.complProgress} <br>
 												<c:choose>
 												
+													<c:when test="${article.complProgress eq '결제완료'}">
+														
+													</c:when>
+													
 													<c:when test="${article.complProgress eq '배송중'}">
 														<button type="button" onclick="location.href='${pageContext.request.contextPath}/user/progressAction.do/${article.complNum}'">
 															<span>배송 완료</span>
@@ -227,6 +234,15 @@ function openDetail(num){
 			</div>
 			
 		</section>
+		
+		</c:if>
+		
+		<c:if test="${empty boardNumMap}">
+			<div align="center">
+				<br><br><br>
+				<h4>구매 목록이 없습니다.</h4>
+			</div>
+		</c:if>
 	
 </body>
 </html>

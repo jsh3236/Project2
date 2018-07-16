@@ -82,5 +82,13 @@ public class BoardServiceImpl implements BoardService {
         dao.update(board);
 	}
 
+	@Override
+	public void updateBoardSale(BoardVO board) {
+		log.info("updateBoardSale");
+		
+        dao.updateSale(board);
+		
+	}
+
 
 }

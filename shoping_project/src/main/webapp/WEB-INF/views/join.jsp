@@ -13,6 +13,12 @@
 <title>회원가입 폼</title>
 
 
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Colo Shop Template">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
 <style>
 
 /* 테이블 모양  */
@@ -56,30 +62,23 @@ font {
 }
 </style>
 
+
 <!-- bootstrap CSS : 3.3.7 -->
 <%-- <link rel="stylesheet"
 	href="<c:url value='/js/bootstrap/3.3.7/css/bootstrap.min.css' />">
 	 --%>
+	 
+<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 
 <!-- bootstrap JS : 3.3.7 -->
 <script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
 
-
-<!-- jQuery UI CSS : 캘린더(datePicker) -->
-<link rel="stylesheet"
-	href="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.css' />">
-
 <!-- 주소검색 : daum -->
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
-<!-- jQuery -->
-<script src="<c:url value='/js/jQuery/3.3.1/jquery-3.3.1.min.js' />"></script>
+<%-- <!-- jQuery -->
+<script src="<c:url value='/js/jQuery/3.2.1/jquery-3.2.1.min.js' />"></script> --%>
 
-<!-- jQuery UI -->
-<script src="<c:url value='/js/jQuery/ui/1.12.1/jquery-ui.min.js' />"></script>
-
-<!-- jQuery UI : 캘린더(datePicker) 설정(한글 지원) -->
-<script src="<c:url value='/js/custom/datepicker.ko.js' />"></script>
 
 <!-- 폼 점검(form validation) -->
 <%-- <script src="<c:url value='/custom/memberJoinAngularValidator.js' />"></script> --%>
@@ -196,7 +195,8 @@ font {
 $(function() {
 	
 	$("input#idcheck").click(function(e) {
-		    
+		alert('1');
+		
 		    $.ajax ({
 		    	
 		    	url: '${pageContext.request.contextPath}/idCheck2',
@@ -291,12 +291,13 @@ function joinUp() {
 
 <body ng-app="joinBody" ng-controller="joinAngularController">
 <div><jsp:include page="include.jsp" flush="false" /></div>
+<br><br><br><br><br>
 	<form id="join" 
 		  name="join" 
 		  action="joinAction" 
 		  method="post">
 		  
-		<table class="type03" align="center">
+		<table class="type03" style="margin: auto">
 		
 		<!------------------ 이름 ------------------->
 			<tr>
@@ -577,5 +578,10 @@ function joinUp() {
 			<button id="cancel" type="submit" class="newsletter_submit_btn trans_300" value="뒤로가기" style="background-color: #346698" onclick="history.back()">뒤로가기</button>
 		</div>
 	</form>
+	
+
+
+	
+	
 </body>
 </html>

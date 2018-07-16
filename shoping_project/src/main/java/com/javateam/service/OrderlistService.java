@@ -14,8 +14,8 @@ import com.javateam.model.vo.OrderListVO;
  *
  */
 public interface OrderlistService {
-	void insertBoard(OrderListVO orderlistVO);
 	
+	void insertBoard(OrderListVO orderlistVO);
 	
 	int getListCount(String username);
 	

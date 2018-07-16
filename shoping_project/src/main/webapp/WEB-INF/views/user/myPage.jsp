@@ -5,42 +5,32 @@
 <!DOCTYPE html>
 <html lang="ko-kr">
 <head>
-<style>
 
-a.myType {
-	text-decoration: none;
-	font-size: 50px;
-}
-
-a.myType:active,
-a.myType:HOVER,
-a.myType:VISITED,
-a.myType:LINK
-{
-	color: black;
-}
-
-</style>
-
+<!-- myCss -->
+<link rel="stylesheet" href="<c:url value='/js/custom/myCompl.css' />">
 
 <meta charset="UTF-8">
 <title>myPage</title>
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<div style="text-align: center;">
-		<h1>My Page</h1>
-	</div>
 	<br><br><br><br><br><br>
+	
 	<div style="text-align: center;">
-		<a class="myType" href="${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />"> 장바구니 </a> 
+		<h2>마이 페이지</h2>
+	</div>
+	<br><br>
+	
+	<div style="text-align: center;">
+		<button class="whiteBtn" onclick="location.href='${pageContext.request.contextPath}/user/orderList/1?username=<sec:authentication property='principal.username' />'"><span>장바구니</span></button> 
 	</div>
 	<br>
 	
 	<div style="text-align: center;">
-	<a class="myType" href="${pageContext.request.contextPath}/user/paymentComplete/<sec:authentication property='principal.username' />/1"> 구매 목록 </a> 
+		<button class="whiteBtn" onclick="location.href='${pageContext.request.contextPath}/user/paymentComplete/<sec:authentication property='principal.username' />/1'"><span>구매 목록</span></button> 
 	</div>
 	
 	<br>
+	
 </body>
 </html>

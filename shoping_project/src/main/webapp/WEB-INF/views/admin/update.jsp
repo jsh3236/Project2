@@ -174,6 +174,7 @@ font {
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
 	<!-- 게시판 등록 -->
+	<br><br><br><br><br><br>
 	<section id="writeForm">
 
 		<h2>마우스 상품 수정</h2>

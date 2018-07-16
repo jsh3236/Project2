@@ -21,6 +21,8 @@ public interface BoardService {
 	
 	void updateBoard(BoardVO board);
 	
+	void updateBoardSale(BoardVO board);
+	
 	void updateReadCount(int boardNum);
 	
 	public BoardVO getArticle(int boardNum);

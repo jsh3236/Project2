@@ -1,9 +1,13 @@
 package com.javateam.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.hibernate.mapping.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +35,9 @@ public class BoardController {
 
     @RequestMapping("/mouse/{page}")
     public String listBoard(@PathVariable("page") int page,
-                          Model model) {
+                          Model model , HttpServletRequest request) {
     	
-      int limit = 4; // 페이지당 글수
+      int limit = 10; // 페이지당 글수
       List<BoardVO> articleList;
      
       page = page!=0 ? page : 1; // page 설정
@@ -60,7 +64,7 @@ public class BoardController {
      
       model.addAttribute("pageInfo", pageInfo);
       model.addAttribute("articleList", articleList);
-     
+      
       System.out.println("listBoard");
       
       return "board/mouseBoard";
@@ -87,10 +91,30 @@ public class BoardController {
         // 리뷰 리스트 얻어오기
         List<ReviewVO> review = reviewSvc.getReview(boardNum);
         
+        // 리뷰 데이트 모양 바꾸기
+        List<String> reviewDate = new ArrayList<>();
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         
+        // 리뷰 총 점수 얻기
+        int totalScore = 0;
+        
+        for(ReviewVO r: review) {
+        	reviewDate.add(s.format(r.getReviewDate()));
+        	totalScore += r.getReviewScore();
+        }
+        
+        if(!review.isEmpty()) totalScore = (int) Math.floor(totalScore/review.size());
+        
+        // 리뷰 리스트 갯수 얻기
+        int reviewCount = reviewSvc.getCount(boardNum);
+        
+        model.addAttribute("totalScore", totalScore);
+        model.addAttribute("reviewCount", reviewCount);
+        model.addAttribute("reviewDate",reviewDate);
         model.addAttribute("review", review);
         model.addAttribute("optionList", optionList);
         model.addAttribute("article", boardSvc.getArticle(boardNum));
+        
         
         // 조회수 업데이트
         boardSvc.updateReadCount(boardNum);
@@ -102,6 +126,10 @@ public class BoardController {
 
 	@RequestMapping("/keyBoardwrite")
 	public void keyBoard() {
+	}
+	
+	@RequestMapping("/mouseBoard2")
+	public void mouseBoard2() {
 	}
 
 	@RequestMapping("/headBoardwrite")

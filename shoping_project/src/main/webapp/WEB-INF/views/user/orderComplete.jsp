@@ -58,7 +58,7 @@
 							<c:set var="setNum" value="${(setNum + map.value)}" />
 							<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${complArticleList[mapSt.index].boardNum}">
 													<img src="<c:url value='/image/${complArticleList[setNum-1].boardFile}' />" 
-													width=50 height=50 style="padding: 30px" /> 
+													width=50 height=50 /> 
 							</a>
 						</td>
 						<td colspan="4">

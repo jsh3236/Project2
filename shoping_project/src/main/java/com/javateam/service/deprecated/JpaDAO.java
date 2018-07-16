@@ -30,8 +30,10 @@ public interface JpaDAO {
 	List<PaymentComplVO> complList(String usrename);
 	List<PaymentComplVO> getCompl(String sc);
 	List<Object> getPayment();
+	List<ReviewVO> getAllReview();
 	
 	void update(BoardVO board);
+	void updateSale(BoardVO board);
 	void update(OrderListVO orderlist);
 	void update(PaymentComplVO payment);
 	

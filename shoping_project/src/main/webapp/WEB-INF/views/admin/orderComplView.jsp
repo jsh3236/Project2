@@ -54,7 +54,7 @@ function progress(complNum) {
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<br><br>
+	<br><br><br><br><br><br>
 	
 	<!-- 페이지 확인(팝업) -->
 	<div style="padding-left: 30px">
@@ -72,8 +72,8 @@ function progress(complNum) {
 		<br>
 			<table id="payment_tbl" class="mytable">
 				<tr style="height: 35px; text-align: center; ">
-					<th style="width: 200px;">
-					 	구매자
+					<th style="width: 300px;">
+					 	주문일(결제번호)
 					</th>
 					<th style="width: 300px;">
 					 	상품명
@@ -94,15 +94,15 @@ function progress(complNum) {
 						합계
 					</th>
 					<th style="width: 150px;">
-						수령인
+						구매자
 					</th>
 					
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 					<tr style="border-bottom: 1px solid #369;">
 					
-						<td style="width: 200px;">
-							${complArticleList[mapSt.index].username}
+						<td style="width: 310px;">
+							${datefront[mapSt.index]}<br>${dateback[mapSt.index]}(${complArticleList[mapSt.index].complNum})
 						</td>
 						
 						<td colspan="5">
@@ -145,9 +145,9 @@ function progress(complNum) {
 						
 						<td style="width: 150px;">
 							
-							${paymentlist[mapSt.index].paymentName}<br>
+							${userID[mapSt.index]}<br>
 							
-							<form action="${pageContext.request.contextPath}/user/complDetail/${paymentlist[mapSt.index].paymentNum}"
+							<form action="${pageContext.request.contextPath}/user/complDetail/${paymentNum[mapSt.index]}"
 								method="post" name="detailform${count}" id="detailform${count}" target="detailWindow">
 									
 								<input type="button" id="detailBtn" name="detailBtn" onclick="openDetail(${count});" value="상세정보" /> 
@@ -172,10 +172,10 @@ function progress(complNum) {
 					<c:choose>
 						<c:when test="${pageInfo.page <= 1}">
 							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
-							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/1">이전</a></li>
+							<li><a href="${pageContext.request.contextPath}/admin/paymentComplete/1">이전</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${pageInfo.page - 1}">이전</a></li>
+							<li><a href="${pageContext.request.contextPath}/admin/paymentComplete/${pageInfo.page - 1}">이전</a></li>
 						</c:otherwise>
 					</c:choose>
 
@@ -185,10 +185,10 @@ function progress(complNum) {
 						<c:choose>
 							<c:when test="${a == pageInfo.page}">
 								<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
-								<li class="active"><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${a}">${a}</a></li>
+								<li class="active"><a href="${pageContext.request.contextPath}/admin/paymentComplete/${a}">${a}</a></li>
 							</c:when>
 							<c:otherwise>
-								<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${a}">${a}</a></li>
+								<li><a href="${pageContext.request.contextPath}/admin/paymentComplete/${a}">${a}</a></li>
 							</c:otherwise>
 						</c:choose>
 
@@ -198,10 +198,10 @@ function progress(complNum) {
 						<c:when test="${pageInfo.page >= pageInfo.maxPage}">
 							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨.
                                                   링크 교정 => page=${pageInfo.page} -->
-							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${pageInfo.page}">다음</a></li>
+							<li><a href="${pageContext.request.contextPath}/admin/paymentComplete/${pageInfo.page}">다음</a></li>
 						</c:when>
 						<c:otherwise>
-							<li><a href="${pageContext.request.contextPath}/user/paymentComplete/${complArticleList[0].username}/${pageInfo.page + 1}">다음</a></li>
+							<li><a href="${pageContext.request.contextPath}/admin/paymentComplete/${pageInfo.page + 1}">다음</a></li>
 						</c:otherwise>
 					</c:choose>
 

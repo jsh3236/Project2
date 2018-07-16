@@ -5,6 +5,7 @@
 
 package com.javateam.model.vo;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -36,5 +37,7 @@ public class BoardDTO {
     private int boardReSeq; // 관련글 중 출력 순서
     private int boardReadCount = 0; // 조회수
     private String boardDate; // 작성일
+	private String boardDflag; // 할인 선택
+	private int boardSale; // 할인 금액
     
 }

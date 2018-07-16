@@ -34,11 +34,13 @@ import com.javateam.model.vo.PageInfo;
 import com.javateam.model.vo.PaymentComplVO;
 import com.javateam.model.vo.PaymentResultVO;
 import com.javateam.model.vo.PaymentVO;
+import com.javateam.model.vo.ReviewVO;
 import com.javateam.service.BoardService;
 import com.javateam.service.CustomProvider;
 import com.javateam.service.OrderlistService;
 import com.javateam.service.PaymentComplService;
 import com.javateam.service.PaymentService;
+import com.javateam.service.ReviewService;
 import com.javateam.util.FileUploadUtil;
 import com.javateam.util.VOCountCalC;
 import com.javateam.util.myToString;
@@ -58,6 +60,9 @@ public class AdminController {
 	
 	@Autowired
 	private PaymentComplService complSvc;
+	
+	@Autowired
+	private ReviewService reviewSvc;
 	
 	@RequestMapping("/mouseBoardwrite")
 	public String mouseBoard(Model model) {
@@ -142,6 +147,9 @@ public class AdminController {
 		
 		boardVO.setBoardOption(boardOption);
 		
+		boardVO.setBoardDflag("0");
+		boardVO.setBoardSale(0);
+		
 		// 게시글 저장
 		boardSvc.insertBoard(boardVO);
 
@@ -213,7 +221,7 @@ public class AdminController {
 	} //
 	
 	
-	//myPageComplete
+	//orderCompleteView
 	@RequestMapping("/paymentComplete/{page}")
 	public String paymentAction(@PathVariable("page") int page, Model model) {
 		
@@ -255,11 +263,31 @@ public class AdminController {
 			paymentlist.add(paymentSvc.get(key[i]));
 		}
 		
+		// payment에 맞는 user id,payment_name,date 구하기
+		List<String> userID = new ArrayList<>();
+		List<Integer> paymentNum = new ArrayList<>();
+		List<String> datefront = new ArrayList<>();
+		List<String> dateback = new ArrayList<>();
+		
+		for(int i=0; i<paymentlist.size(); i++) {
+			for(int j=0; j<complArticleList.size(); j++ ) {
+				if(complArticleList.get(j).getPaymentNum()==paymentlist.get(i).getPaymentNum()) {
+					userID.add(complArticleList.get(j).getUsername());
+					paymentNum.add(paymentlist.get(i).getPaymentNum());
+					datefront.add(paymentlist.get(i).getPaymentDate().substring(0, 10));
+					dateback.add(paymentlist.get(i).getPaymentDate().substring(11, 19));
+					break;
+				}
+			}
+		}
+		
+		System.out.println("userID:"+userID);
+		
 		// 총 구매 갯수
 		int listCount = complSvc.getListCount();
 		
 		// 총 페이지 수.
-		int maxPage = (int) Math.ceil(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
+		int maxPage = (int) Math.ceil(listCount/4)-1; //  큰 정수 중 가장 가까운 정수 찾기
 																	
 		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
 		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
@@ -276,7 +304,10 @@ public class AdminController {
 		pageInfo.setPage(page);
 		pageInfo.setStartPage(startPage);
 		
-		model.addAttribute("paymentlist",paymentlist);
+		model.addAttribute("userID", userID);
+		model.addAttribute("datefront",datefront);
+		model.addAttribute("dateback",dateback);
+		model.addAttribute("paymentNum",paymentNum);
 		model.addAttribute("boardNumMap", calc.toMap3(complArticleList));
 		model.addAttribute("complArticleList", complArticleList);
 		model.addAttribute("pageInfo", pageInfo);
@@ -306,11 +337,13 @@ public class AdminController {
 	}
 	
 	
+
 	@RequestMapping("/manage.do")
     public ModelAndView testd() {
 		
         String path = "C:\\Users\\jsh32\\git\\Project2\\shoping_project\\src\\main\\webapp\\resources\\used-image";
         String fileName = "avgManage.png";
+        String fileName2 = "textmining.png";
         
         ModelAndView view = new ModelAndView();
         view.setViewName("/admin/management");
@@ -341,33 +374,40 @@ public class AdminController {
         	
         }
         
-        System.out.println("################################1");
-        System.out.println("name :"+name.substring(0, name.length()-1));
-        System.out.println("payment :"+payment.substring(0, payment.length()-2));
-        System.out.println("#################################2");
         
+        List<ReviewVO> review = reviewSvc.getAllReview();
+        
+        String reviewTxt = "";
+        
+        for(ReviewVO r : review) {
+        	reviewTxt += r.getReviewContent()+" ";
+        }
        
+        System.out.println("reviewTxt : "+ reviewTxt);
         
         RConnection connection = null;
         
+        // ggplot2
+        
         try {
-        	
-            File file = new File(path + "/"+fileName);
+        	File file = null;
+            file = new File(path + "/"+fileName);
             if( file.exists() ){
                 if(file.delete()){
-                    System.out.println("파일삭제 성공");
+                    System.out.println(fileName+"파일삭제 성공");
                 }else{
-                    System.out.println("파일삭제 실패");
+                    System.out.println(fileName+"파일삭제 실패");
                 }
             }else{
-                System.out.println("파일이 존재하지 않습니다.");
+                System.out.println(fileName+"파일이 존재하지 않습니다.");
             }
             
             connection = new RConnection();
+            
             connection.eval("library(ggplot2)");
             connection.eval("require(ggplot2)");
-//            connection.eval("name <- c('제닉스','제닉스2','g950','g340')");
-//            connection.eval("count <- c(100,33,21,87)");
+//          connection.eval("name <- c('제닉스','제닉스2','g950','g340')");
+//          connection.eval("count <- c(100,33,21,87)");
             connection.eval("name <- c("+name.substring(0, name.length()-1)+")");
             connection.eval("payment <- c("+payment.substring(0, payment.length()-1)+")");
             connection.eval("pp <- data.frame(이름=name,판매수입=payment)");
@@ -375,8 +415,54 @@ public class AdminController {
             connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height=600)");
             connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매수입, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(fill='평균 이상')+ scale_y_continuous(labels = scales::comma)+theme(axis.title.y=element_text(size=20),axis.title.x=element_text(size=20)))");
             connection.parseAndEval("print(dev.off());");
+            
+            
+            
+            // textmining
+
+            file = new File(path + "/"+fileName2);
+            if( file.exists() ){
+                if(file.delete()){
+                    System.out.println(fileName2+"파일삭제 성공");
+                }else{
+                    System.out.println(fileName2+"파일삭제 실패");
+                }
+            }else{
+                System.out.println(fileName2+"파일이 존재하지 않습니다.");
+            }
+            
+            System.out.println("1");
+            
+            
+            connection.eval("library(KoNLP)");
+            connection.eval("require(KoNLP)");
+            connection.eval("library(wordcloud)");
+            connection.eval("require(wordcloud)");
+            connection.eval("library(dplyr)");
+            connection.eval("require(dplyr)");
+            connection.eval("library(RColorBrewer)");
+            connection.eval("require(RColorBrewer)");
+            connection.eval("useSejongDic()");
+            
+            connection.eval("review <- ('"+reviewTxt+"')");
+            connection.eval(" txt<- gsub('[~!@#$%&*()_+=?<>]','',txt)");
+           /* connection.eval(" txt <- gsub('\\d+','',txt)");*/
+           /* txt <- str_replace_all(txt, "\\W", " ")*/
+            connection.eval("nouns <- extractNoun(review)");
+            connection.eval("wordcount <- table(unlist(nouns))");
+            connection.eval("df_word <- as.data.frame(wordcount, stringsAsFactors = F)");
+            connection.eval("df_word <- rename(df_word,word = Var1,freq = Freq)");
+            connection.eval("df_word <- filter(df_word, nchar(word) >= 2)");
+            connection.eval("top_20 <- df_word %>% arrange(desc(freq)) %>% head(20)");
+            connection.eval("pal <- brewer.pal(9,'Blues')[5:9]");
+            connection.eval("palete <- brewer.pal(9,'Set1')");
+            connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName2+"',width=400,height=300)");
+            connection.parseAndEval("print(wordcloud(words = df_word$word, freq=df_word$freq, scale=c(5,0.5), rot.per=0.25, min.freq=1, random.order=F, random.color=T, colors=pal))");
+            connection.parseAndEval("print(dev.off());");
+            
             connection.close();	
             
+            view.addObject("reviewText", fileName2);
             view.addObject("viewPage", fileName);
             
         } catch (Exception e) {
@@ -385,7 +471,29 @@ public class AdminController {
         }
         return view;
 	}
-
 	
+	
+
+	@RequestMapping("/discount.do/{boardNum}")
+	public String discount(@PathVariable("boardNum") int boardNum, HttpServletRequest request) {
+		
+		String disImage = request.getParameter("disImage"); // 할인 선택이냐 new 선택이냐
+		int page = Integer.parseInt(request.getParameter("page")); //현재 페이지
+		
+		System.out.println("boardNum : " + boardNum);
+		
+		int price = 0;
+		if(!request.getParameter("price").isEmpty()) {
+			price = Integer.parseInt(request.getParameter("price"));
+		}
+		
+		BoardVO board = boardSvc.getArticle(boardNum);
+		board.setBoardDflag(disImage);
+		board.setBoardSale(price);
+		
+		boardSvc.updateBoardSale(board);
+		
+		return "redirect:/board/mouse/"+page;
+	}
 	
 }

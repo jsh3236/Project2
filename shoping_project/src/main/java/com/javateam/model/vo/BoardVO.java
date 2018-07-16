@@ -70,6 +70,12 @@ public class BoardVO {
 	
 	@Column(name="board_date")
 	private String boardDate; // 작성일
+	
+	@Column(name="board_dflag", nullable=true)
+	private String boardDflag; // 할인 선택
+	
+	@Column(name="board_sale", nullable=true)
+	private int boardSale; // 할인 금액
 
 	
 	// BoardDTO -> BoardVO
@@ -87,5 +93,8 @@ public class BoardVO {
         this.boardReadCount = board.getBoardReadCount();
         this.boardDate = board.getBoardDate();
         this.boardOption = board.getBoardOption();
+        this.boardDflag = board.getBoardDflag();
+        this.boardSale = board.getBoardSale();
+        
     }
 }

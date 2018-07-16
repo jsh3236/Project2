@@ -9,17 +9,75 @@
 <head>
 <title>Home</title>
 
-<!-- jQuery : 3.2.1 -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Colo Shop Template">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/categories_styles.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/categories_responsive.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/styles/bootstrap4/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/OwlCarousel2-2.2.1/owl.theme.default.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/OwlCarousel2-2.2.1/animate.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/plugins/jquery-ui-1.12.1.custom/jquery-ui.css">
+
+
+<script src="${pageContext.request.contextPath}/resources/js/jquery-3.2.1.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/styles/bootstrap4/popper.js"></script>
+<script src="${pageContext.request.contextPath}/resources/styles/bootstrap4/bootstrap.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/Isotope/isotope.pkgd.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/easing/easing.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/jquery-ui-1.12.1.custom/jquery-ui.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/categories_custom.js"></script>
+
+<%-- <!-- jQuery : 3.2.1 -->
 <script src="<c:url value='/js/jQuery/3.2.1/jquery-3.2.1.min.js' />"></script>
-<%-- 
+
 <!-- jQuery : 3.3.1 -->
 <script src="<c:url value='/js/jQuery/3.3.1/jquery-3.3.1.min.js' />"></script>
- --%>
+
 <!-- bootstrap JS : 3.3.7 -->
-<script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script>
+<script src="<c:url value='/js/bootstrap/3.3.7/js/bootstrap.min.js' />"></script> --%>
 
 <script>
 
+// 할인 모달 라디오 버튼
+function display(str){
+	if(str=='sale') {
+		$('#price').css("display","");
+	} else {
+		$('#price').css("display","none");
+	}
+}
+
+function radioCheck(num) {
+	
+ 	if(num == '1') {
+		$("input:radio[name='disImage']:input[value='sale']").prop("checked", true);
+		$('#price').css("display","");
+
+	} else {
+		$("input:radio[name='disImage']:input[value='new']").prop("checked", true);
+		$('#price').css("display","none");
+		
+	} 
+}
+
+$(document).ready(function(){
+    $('.modal-footer a').click(function(){
+    	$('#discountForm').submit();
+	});
+
+});
+
+function onModal(boardNum) {
+	document.getElementById('discountForm').action = "${pageContext.request.contextPath}/admin/discount.do/"+boardNum;
+	$('#myModal').modal('show');
+}
+    
 
 function deleteBtn(boardNum) {
 	 if (confirm("정말 삭제 하시겠습니까?")){ 
@@ -32,241 +90,20 @@ function deleteBtn(boardNum) {
 }; // deleteBtn 
 
 
+
+
 </script>
 
 
-<style type="text/css">
 
-/* 등록된 글이 없을 경우, 페이징 처리 */
-#emptyArea, #pageList {
-	margin: auto;
-	text-align: center;
-}
-
-/* reset */
-* {
-	margin: 0;
-	padding: 0;
-}
-
-p {
-	text-align: center;
-}
-
-li {
-	list-style: none;
-}
-
-a {
-	text-decoration: none;
-}
-
-
- .but {
- 	 background-color: #B1B6BD; 
- 	 color: white;
- 	 font-weight: 700;
- 	 width : 110px;
-	display:  block;
-	line-height: 50px; padding: 0 15px;  display:  block;
- }
  
- .btn {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: normal;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-      touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-}
-
-.btn-info {
-  color: #fff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
-}
-.btn-info:focus,
-.btn-info.focus {
-  color: #fff;
-  background-color: #31b0d5;
-  border-color: #1b6d85;
-}
-.btn-info:hover {
-  color: #fff;
-  background-color: #31b0d5;
-  border-color: #269abc;
-}
-.btn-info:active,
-.btn-info.active,
-.open > .dropdown-toggle.btn-info {
-  color: #fff;
-  background-color: #31b0d5;
-  border-color: #269abc;
-}
-.btn-info:active:hover,
-.btn-info.active:hover,
-.open > .dropdown-toggle.btn-info:hover,
-.btn-info:active:focus,
-.btn-info.active:focus,
-.open > .dropdown-toggle.btn-info:focus,
-.btn-info:active.focus,
-.btn-info.active.focus,
-.open > .dropdown-toggle.btn-info.focus {
-  color: #fff;
-  background-color: #269abc;
-  border-color: #1b6d85;
-}
-.btn-info:active,
-.btn-info.active,
-.open > .dropdown-toggle.btn-info {
-  background-image: none;
-}
-.btn-info.disabled:hover,
-.btn-info[disabled]:hover,
-fieldset[disabled] .btn-info:hover,
-.btn-info.disabled:focus,
-.btn-info[disabled]:focus,
-fieldset[disabled] .btn-info:focus,
-.btn-info.disabled.focus,
-.btn-info[disabled].focus,
-fieldset[disabled] .btn-info.focus {
-  background-color: #5bc0de;
-  border-color: #46b8da;
-}
-.btn-info .badge {
-  color: #5bc0de;
-  background-color: #fff;
-}
-
-.btn-lg,
-.btn-group-lg > .btn {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-  border-radius: 6px;
-}
-
-.btn-lg .caret {
-  border-width: 5px 5px 0;
-  border-bottom-width: 0;
-}
-
-.pagination {
-  display: inline-block;
-  padding-left: 0;
-  margin: 20px 0;
-  border-radius: 4px;
-}
-.pagination > li {
-  display: inline;
-}
-.pagination > li > a,
-.pagination > li > span {
-  position: relative;
-  float: left;
-  padding: 6px 12px;
-  margin-left: -1px;
-  line-height: 1.42857143;
-  color: #337ab7;
-  text-decoration: none;
-  background-color: #fff;
-  border: 1px solid #ddd;
-}
-.pagination > li:first-child > a,
-.pagination > li:first-child > span {
-  margin-left: 0;
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-}
-.pagination > li:last-child > a,
-.pagination > li:last-child > span {
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-.pagination > li > a:hover,
-.pagination > li > span:hover,
-.pagination > li > a:focus,
-.pagination > li > span:focus {
-  z-index: 2;
-  color: #23527c;
-  background-color: #eee;
-  border-color: #ddd;
-}
-.pagination > .active > a,
-.pagination > .active > span,
-.pagination > .active > a:hover,
-.pagination > .active > span:hover,
-.pagination > .active > a:focus,
-.pagination > .active > span:focus {
-  z-index: 3;
-  color: #fff;
-  cursor: default;
-  background-color: #337ab7;
-  border-color: #337ab7;
-}
-.pagination > .disabled > span,
-.pagination > .disabled > span:hover,
-.pagination > .disabled > span:focus,
-.pagination > .disabled > a,
-.pagination > .disabled > a:hover,
-.pagination > .disabled > a:focus {
-  color: #777;
-  cursor: not-allowed;
-  background-color: #fff;
-  border-color: #ddd;
-}
-.pagination-lg > li > a,
-.pagination-lg > li > span {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.3333333;
-}
-.pagination-lg > li:first-child > a,
-.pagination-lg > li:first-child > span {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
-}
-.pagination-lg > li:last-child > a,
-.pagination-lg > li:last-child > span {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-.pagination-sm > li > a,
-.pagination-sm > li > span {
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-}
-.pagination-sm > li:first-child > a,
-.pagination-sm > li:first-child > span {
-  border-top-left-radius: 3px;
-  border-bottom-left-radius: 3px;
-}
-.pagination-sm > li:last-child > a,
-.pagination-sm > li:last-child > span {
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-}
-
-
-</style>
-
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
+
+	
+<div class="super_container">
+<div class="container product_section_container">
 	<!-- 인자들 -->
 	<!-- 게시글정보 보기(팝업) -->
 	<sec:authorize access="hasRole('ROLE_ADMIN')">
@@ -276,7 +113,7 @@ fieldset[disabled] .btn-info.focus {
 			총 게시글 수 : ${pageInfo.listCount}<br> 현재 페이지 : ${pageInfo.page}<br>
 			총 페이지 : ${pageInfo.maxPage}<br> 시작 페이지 : ${pageInfo.startPage}<br>
 			끝 페이지 : ${pageInfo.endPage}
-		</div><br>
+		</div>
 		
 		<!-- 상품 올리기 -->
 		<div style="padding-left: 30px">
@@ -287,107 +124,378 @@ fieldset[disabled] .btn-info.focus {
 		
 	</sec:authorize>
 	<!-- 게시글정보 보기(팝업) 끝 -->
+	
 
-	<!-- 게시판 리스트 시작 -->
-	<section id="listForm" style="width: 700px; margin: auto;">
+	
+		<div class="row">
+			<div class="col product_section clearfix">
 
-		<c:if test="${not empty articleList && pageInfo.listCount > 0}">
+				<!-- Breadcrumbs -->
 
-			<!-- 게시글 부분 시작 -->
-			<table id="board_tbl" style="text-align: center">
+				<div class="breadcrumbs d-flex flex-row align-items-center">
+					<ul>
+						<li><a href="${pageContext.request.contextPath}/">Home</a></li>
+						<li class="active"><a href="${pageContext.request.contextPath}/board/mouse/1"><i class="fa fa-angle-right" aria-hidden="true"></i>Mouse's</a></li>
+					</ul>
+				</div>
 
-				<c:forEach var="article" items="${articleList}" varStatus="st">
-					<c:if test="${(st.count + (pageInfo.page-1)*10)%2 eq 1 }">
-						<tr>
-					</c:if>
-					<td style="padding-right: 200px; padding-bottom: 150px">
-						<c:choose>
-							<c:when test="${article.boardReLev != 0}">
-									<c:forEach var="a" begin="0" end="${article.boardReLev * 2}" step="1" varStatus="st">
-	                                        &nbsp;
-	                                   </c:forEach>
-							</c:when>
-							<c:otherwise>
-							</c:otherwise>
-						</c:choose> 
-						<a href="../boardDetail.do/boardNum/${article.boardNum}">
-							<img src="<c:url value='/image/${article.boardFile}' />" width=250 height=250 style="padding: 30px" />
-						</a>
+				<!-- Sidebar -->
+
+				<div class="sidebar">
+					<div class="sidebar_section">
+						<div class="sidebar_title">
+							<h5>Product Category</h5>
+						</div>
+						<ul class="sidebar_categories">
+							<li class="active"><a href="${pageContext.request.contextPath}/board/mouse/1"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>Mouse</a></li>
+							<li><a href="#">Keyboard</a></li>
+							<li><a href="#">Monitor</a></li>
+						</ul>
+					</div>
+
+					<!-- Price Range Filtering -->
+					<div class="sidebar_section">
+						<div class="sidebar_title">
+							<h5>Filter by Price</h5>
+						</div>
+						<p>
+							<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+						</p>
+						<div id="slider-range"></div>
+						<div class="filter_button"><span>filter</span></div>
+					</div>
+
+
+				</div>
+
+				<!-- Main Content -->
+
+				<div class="main_content">
+
+					<!-- Products -->
+
+					<div class="products_iso">
+						<div class="row">
+							<div class="col">
+								
+								<div>
+									<a class="jsh_red_button" href="#">상품 올리기</a>
+								</div>
+	
+								<!-- Product Sorting -->
+								
+									<div class="product_sorting_container product_sorting_container_top">
+									<div class="pages d-flex flex-row align-items-center">
+										<div class="page_current">
+											<span>${pageInfo.page}</span>
+											<ul class="page_selection">
+												<c:forEach var="a" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+			
+													<c:choose>
+														<c:when test="${a == pageInfo.page}">
+															<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
+															<li class="active"><a href="../mouse/${a}">${a}</a></li>
+														</c:when>
+														<c:otherwise>
+															<li><a href="../mouse/${a}">${a}</a></li>
+														</c:otherwise>
+													</c:choose>
+							
+												</c:forEach>
+											</ul>
+										</div>
+										<div class="page_total"><span>of</span> ${pageInfo.maxPage}</div>
+										<c:choose>
+											<c:when test="${pageInfo.page >= pageInfo.maxPage}">
+												<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨.
+					                                                  링크 교정 => page=${pageInfo.page} -->
+												<div id="next_page_1" class="page_next"><a href="../mouse/${pageInfo.page}"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div>
+											</c:when>
+											<c:otherwise>
+												<div id="next_page_1" class="page_next"><a href="../mouse/${pageInfo.page + 1}"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div>
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+				
+
+								<!-- Product Grid -->
+
+								<div class="product-grid">
+
+									<!-- Product -->
+									
+									<table id="board_tbl" style="text-align: center">
+								
+										<c:forEach var="article" items="${articleList}" varStatus="st">
+										
+											<sec:authorize access="hasRole('ROLE_ADMIN')">
+												<div class="product-item men" style="height: 420px">
+											</sec:authorize>
+											<sec:authorize access="hasRole('ROLE_USER')">
+												<div class="product-item men">
+											</sec:authorize>
+											<sec:authorize access="!isAuthenticated()">
+												<div class="product-item men">
+											</sec:authorize>
+											
+												<div class="product discount product_filter">
+													<div class="product_image" style="padding-top: 60px">
+														<a href="../boardDetail.do/boardNum/${article.boardNum}"><img src="<c:url value='/image/${article.boardFile}' />" alt=""></a>
+													</div>
+													
+													<c:choose>
+												      	<c:when test="${article.boardDflag eq 'sale'}">
+												      	
+												            <div class="favorite favorite_left"></div>
+															<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-${article.boardSale}</span></div>
+															<div class="product_info">
+																<h6 class="product_name"><a href="../boardDetail.do/boardNum/${article.boardNum}">${article.boardSubject}</a></h6>
+																<div class="product_price">${article.boardPrice}원<span>${article.boardPrice+article.boardSale}원</span></div>
+															</div>
+															
+												      	</c:when>
+												       	<c:when test="${article.boardDflag eq 'new'}">
+												       	
+												        	<div class="favorite"></div>
+															<div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
+															<div class="product_info">
+																<h6 class="product_name"><a href="../boardDetail.do/boardNum/${article.boardNum}">${article.boardSubject}</a></h6>
+																<div class="product_price">${article.boardPrice}원</div>
+															</div>
+													
+												      	</c:when>
+												      	<c:otherwise>
+												      	
+												        	<div class="favorite"></div>
+													        <div class="product_info">
+																<h6 class="product_name"><a href="../boardDetail.do/boardNum/${article.boardNum}">${article.boardSubject}</a></h6>
+																<div class="product_price">${article.boardPrice}원</div>
+															</div>
+															
+													    </c:otherwise>
+												    </c:choose>
+
+												</div>
+												
+												<div class="red_button add_to_cart_button"><a href="../boardDetail.do/boardNum/${article.boardNum}">go buy</a></div>
+												<sec:authorize access="hasRole('ROLE_ADMIN')">
+													<div class="jsh_center">
+															<a class="jsh_red_button jsh_button" href="${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}">수정</a>
+															<a class="jsh_red_button jsh_button" id="deleteBtn" href="#" onclick='deleteBtn(${article.boardNum});'>삭제</a>
+															<a class="jsh_red_button jsh_button" data-toggle="modal" href="#" onclick="onModal(${article.boardNum})">할인</a>
+													</div>
+													
+													<!-- 할인 Modal -->
+													
+													<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+														<div class="modal-dialog">
+															<div class="modal-content">
+													
+																<div class="modal-header">
+																	<h4 class="modal-title" id="myModalLabel">Discount Select</h4>
+																	<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="">×</button>
+																</div> <!-- /.modal-header -->
+																
+																
+																<form id="discountForm" 
+																  name="discountForm" 
+																  action=""
+																  method="POST">
+																  
+																<input type="hidden" id="page" name="page" value="${pageInfo.page}" />
+																  
+																<div class="modal-body">
+																<input type="radio" id="disImage" name="disImage" value="sale" onclick="display(this.value);" checked="checked"><img onclick="radioCheck('1');" src="<c:url value='/image/css_image/sale.jpg' />" >&nbsp;&nbsp;&nbsp;&nbsp;
+																<input type="radio" id="disImage" name="disImage" value="new" onclick="display(this.value);"><img onclick="radioCheck('2');" src="<c:url value='/image/css_image/new.jpg' />" >
+																
+																		<div class="form-group">
+																			<div class="input-group">
+																				<input type="text" class="form-control" id="price" name="price" placeholder="할인 금액 ">
+																			</div>
+																		</div> <!-- /.form-group -->
+																
+																</div> <!-- /.modal-body -->
+													
+																<div class="modal-footer">
+																	<!-- <button type="submit" id="login" name="login" class="form-control btn btn-primary">Ok</button> -->
+																	<div class="jshblack_button login_button"><a id="Confirm" href="#">Confirm</a></div>
+																				   
+																	<div class="progress">
+																		<div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="100" style="width: 0%;">
+																			<span class="sr-only">progress</span>
+																		</div>
+																	</div>
+																</div> <!-- /.modal-footer -->
+																
+																</form>
+																
+															</div><!-- /.modal-content -->
+														</div><!-- /.modal-dialog -->
+													</div><!-- / 할인 modal -->
+													
+												</sec:authorize>
+											</div>
+											
+											
+										</c:forEach>
+								
+									</table>
+							
+
+							</div>
+							
+							
+							<div class="product_sorting_container product_sorting_container_bottom clearfix">
+								<div class="pages d-flex flex-row align-items-center">
+									<div class="page_current">
+										<span>${pageInfo.page}</span>
+										<ul class="page_selection">
+											<c:forEach var="a" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
+		
+												<c:choose>
+													<c:when test="${a == pageInfo.page}">
+														<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
+														<li class="active"><a href="../mouse/${a}">${a}</a></li>
+													</c:when>
+													<c:otherwise>
+														<li><a href="../mouse/${a}">${a}</a></li>
+													</c:otherwise>
+												</c:choose>
 						
-						${article.boardSubject}<br>
-						<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 <br>
-						
-						<sec:authorize access="hasRole('ROLE_ADMIN')">
-							<button type="button" class="btn btn-info btn-lg" onclick="location.href='${pageContext.request.contextPath}/admin/update/boardNum/${article.boardNum}'">수정</button>
-							<button type="button" id="deleteBtn" class="btn btn-info btn-lg"onclick="deleteBtn(${article.boardNum})">삭제</button>
-						</sec:authorize>
-					
-					</td>
-					
-					<c:if test="${(st.count + (pageInfo.page-1)*10)%2 eq 0}">
-						</tr>
-					</c:if>
-				</c:forEach>
+											</c:forEach>
+										</ul>
+									</div>
+									<div class="page_total"><span>of</span> ${pageInfo.maxPage}</div>
+									<c:choose>
+										<c:when test="${pageInfo.page >= pageInfo.maxPage}">
+											<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨.
+				                                                  링크 교정 => page=${pageInfo.page} -->
+											<div id="next_page_1" class="page_next"><a href="../mouse/${pageInfo.page}"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div>
+										</c:when>
+										<c:otherwise>
+											<div id="next_page_1" class="page_next"><a href="../mouse/${pageInfo.page + 1}"><i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></div>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+							
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-			</table>
-			<!-- 게시글 부분 끝 -->
+<!-- Benefit -->
 
-			<!-- 페이징(paging) -->
-			<section id="pageList">
-
-				<ul class="pagination">
-
-					<c:choose>
-						<c:when test="${pageInfo.page <= 1}">
-							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
-							<li><a href="../mouse/1">이전</a></li>
-						</c:when>
-						<c:otherwise>
-							<li><a href="../mouse/${pageInfo.page - 1}">이전</a></li>
-						</c:otherwise>
-					</c:choose>
-
-					<c:forEach var="a" begin="${pageInfo.startPage}"
-						end="${pageInfo.endPage}">
-
-						<c:choose>
-							<c:when test="${a == pageInfo.page}">
-								<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨. -->
-								<li class="active"><a href="../mouse/${a}">${a}</a></li>
-							</c:when>
-							<c:otherwise>
-								<li><a href="../mouse/${a}">${a}</a></li>
-							</c:otherwise>
-						</c:choose>
-
-					</c:forEach>
-
-					<c:choose>
-						<c:when test="${pageInfo.page >= pageInfo.maxPage}">
-							<!-- 주의) 이 부분에서 bootstrap 페이징 적용시 불가피하게 <a> 기입. <a>없으면 적용 안됨.
-                                                  링크 교정 => page=${pageInfo.page} -->
-							<li><a href="../mouse/${pageInfo.page}">다음</a></li>
-						</c:when>
-						<c:otherwise>
-							<li><a href="../mouse/${pageInfo.page + 1}">다음</a></li>
-						</c:otherwise>
-					</c:choose>
-
-				</ul>
-
-			</section>
-			<!-- 페이징 끝 -->
-
-		</c:if>
-
-		<!-- 등록글 없을 경우 -->
-		<c:if test="${empty articleList || pageInfo.listCount==0}">
-			<section id="emptyArea">등록된 글이 없습니다.</section>
-		</c:if>
+	<div class="benefit">
+		<div class="container">
+			<div class="row benefit_row">
+				<div class="col-lg-3 benefit_col">
+					<div class="benefit_item d-flex flex-row align-items-center">
+						<div class="benefit_icon"><i class="fa fa-truck" aria-hidden="true"></i></div>
+						<div class="benefit_content">
+							<h6>무료 배송</h6>
+							<p>Suffered Alteration in Some Form</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 benefit_col">
+					<div class="benefit_item d-flex flex-row align-items-center">
+						<div class="benefit_icon"><i class="fa fa-money" aria-hidden="true"></i></div>
+						<div class="benefit_content">
+							<h6>현금 환불</h6>
+							<p>The Internet Tend To Repeat</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 benefit_col">
+					<div class="benefit_item d-flex flex-row align-items-center">
+						<div class="benefit_icon"><i class="fa fa-undo" aria-hidden="true"></i></div>
+						<div class="benefit_content">
+							<h6>45일 이전 반품</h6>
+							<p>Making it Look Like Readable</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 benefit_col">
+					<div class="benefit_item d-flex flex-row align-items-center">
+						<div class="benefit_icon"><i class="fa fa-clock-o" aria-hidden="true"></i></div>
+						<div class="benefit_content">
+							<h6>언제든 오픈</h6>
+							<p>8AM - 06PM</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
-	</section>
-	<!-- 게시판 리스트 끝 -->
+	<!-- Newsletter -->
+
+	<div class="newsletter">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="newsletter_text d-flex flex-column justify-content-center align-items-lg-start align-items-md-center text-center">
+						<h4>구독하기</h4>
+						<p>구독하면 매 주 열리는 할인 쿠폰을 드립니다.</p>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<form action="post">
+						<div class="newsletter_form d-flex flex-md-row flex-column flex-xs-column align-items-center justify-content-lg-end justify-content-center">
+							<input id="newsletter_email" type="email" placeholder="Your email" required="required" data-error="Valid email is required.">
+							<button id="newsletter_submit" type="submit" class="newsletter_submit_btn trans_300" value="Submit">subscribe</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+
+	<footer class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="footer_nav_container d-flex flex-sm-row flex-column align-items-center justify-content-lg-start justify-content-center text-center">
+						<ul class="footer_nav">
+							<li><a href="#">Blog</a></li>
+							<li><a href="#">FAQs</a></li>
+							<li><a href="contact.html">Contact us</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="footer_social d-flex flex-row align-items-center justify-content-lg-end justify-content-center">
+						<ul>
+							<li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+							<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+							<li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+							<li><a href="#"><i class="fa fa-skype" aria-hidden="true"></i></a></li>
+							<li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="footer_nav_container">
+						<div class="cr">©2018 All Rights Reserverd. This template is made by <a href="#">JSH</a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	</div>
+</div>
+
 
 </body>
 </html>

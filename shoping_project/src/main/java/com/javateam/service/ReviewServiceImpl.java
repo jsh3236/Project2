@@ -45,4 +45,20 @@ public class ReviewServiceImpl implements ReviewService {
 		return dao.getReview(boardNum);
 	}
 
+	@Override
+	public int getCount(int boardNum) {
+		
+		log.info("getCount ##");
+		
+		return dao.getReview(boardNum).size();
+	}
+
+	@Override
+	public List<ReviewVO> getAllReview() {
+		
+		log.info("getAllReview ##");
+		
+		return dao.getAllReview();
+	}
+
 }

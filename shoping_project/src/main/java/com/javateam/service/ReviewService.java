@@ -19,4 +19,8 @@ public interface ReviewService {
 	
 	List<ReviewVO> getReview(int boardNum);
 	
+	List<ReviewVO> getAllReview();
+	
+	int getCount(int boardNum);
+	
 }

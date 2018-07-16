@@ -144,7 +144,7 @@ function paymentSubmit(){
 	<c:set var="total" value="0" />
 	<c:set var="totalstotal" value="0" />
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
-	<br>
+	<br><br><br><br><br><br><br>
 	
 
 	
@@ -177,10 +177,9 @@ function paymentSubmit(){
 								
 						<td style="width: 200px;">
 							<c:set var="setNum" value="${(setNum + map.value)}" />
-							<a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${orderArticleList[mapSt.index].boardNum}">
-													<img src="<c:url value='/image/${orderArticleList[fn:length(orderArticleList)-setNum].boardFile}' />" 
-													width=50 height=50 style="padding: 30px" /> 
-							</a>
+							
+							<img src="<c:url value='/image/${orderArticleList[fn:length(orderArticleList)-setNum].boardFile}' />" width=70 height=70 > 
+							
 						</td>
 						<td colspan="4">
 							<table>
@@ -429,7 +428,7 @@ function paymentSubmit(){
 				</tr>
 			</table>
 			
-			<br><br>
+			<br><br><br>
 			<h2>4. 결제 하기</h2><br>		
 			<table class="mytable" style="width: 700px">
 				<tr style="border-top: 1px solid #369; border-bottom: 1px solid #369; height: 300px">
