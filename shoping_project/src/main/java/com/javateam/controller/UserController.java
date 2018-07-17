@@ -533,12 +533,14 @@ public class UserController {
 		
 		int listCount = complSvc.getListCount(username);
 		
-		
+		double maxpageCal = ((double)map.size())/4;
 		
 		// 총 페이지 수.
-		int maxPage = (int) Math.floor(listCount/4); //  큰 정수 중 가장 가까운 정수 찾기
+		int maxPage = (int) Math.ceil(maxpageCal); //  큰 정수 중 가장 가까운 정수 찾기
 		
-		System.out.println("listCount :"+listCount);
+		System.out.println("map.size() :"+map.size());
+		System.out.println("maxpageCal :"+maxpageCal);
+		System.out.println("Math.floor(map.size()/4) :"+Math.floor(map.size()/4));
 		System.out.println("maxPage :"+maxPage);
 																	
 		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)

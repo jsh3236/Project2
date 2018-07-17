@@ -43,7 +43,7 @@ function openDetail(){
 	<br>
 	
 	<div style="text-align: center;">
-		<button class="whiteBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/admin/manage.do'"><span>상품 관리</span></button>
+		<button class="whiteBtn" type="button" onclick="location.href='${pageContext.request.contextPath}/admin/manage.do'"><span>빅데이터 관리</span></button>
 	</div>
 	
 </body>

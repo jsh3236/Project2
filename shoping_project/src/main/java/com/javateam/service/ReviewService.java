@@ -23,4 +23,6 @@ public interface ReviewService {
 	
 	int getCount(int boardNum);
 	
+	List<Object> getReviewAvgScore();
+	
 }

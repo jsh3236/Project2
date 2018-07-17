@@ -46,19 +46,20 @@ public class HomeController {
 	@RequestMapping("/")
 	public String home(Model model)  {
 		
-		List<BoardVO> boardlist = boardSvc.getArticleList(1,boardSvc.getListCount());
+		List<BoardVO> boardlist = boardSvc.getArticleList(1,5);
 		System.out.println("boardlist : "+boardlist);
 		System.out.println("boardlist.size() :"+boardlist.size());
 		
+/*		// 최신리스트를 위해 역순 입력
 		List<BoardVO> boardRelist = new ArrayList<>();
 		
 		for(int i=boardlist.size()-1; i>boardlist.size()-6; i--) {
 			boardRelist.add(boardlist.get(i));
-		}
+		}*/
 		
-		// 최신리스트를 위해 역순 입력
 		
-		model.addAttribute("boardRelist", boardRelist);
+		
+		model.addAttribute("boardlist", boardlist);
 		
 		return "home";
 	}
@@ -231,7 +232,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/joinAction")
-	public String join(@RequestParam("username") String username,
+	public String join(@RequestParam("userId") String username,
 					 @RequestParam("pw") String password,
 					 @RequestParam("name") String name,
 					 @RequestParam("gender") String sex,
@@ -274,7 +275,7 @@ public class HomeController {
 								new Date(System.currentTimeMillis()));
 		authJdbcService.insertUsers(users, "ROLE_USER");
 		
-		return "/";
+		return "home";
 	} // 
 	
 	@RequestMapping("/getCount")

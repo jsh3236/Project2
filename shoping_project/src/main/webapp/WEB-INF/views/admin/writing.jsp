@@ -151,22 +151,38 @@ font {
 }
 </style>
 
-<!-- jQuery : 3.2.1 -->
-<script src="http://code.jquery.com/jquery-Latest.min.js"></script>
+ <!-- jQuery : 3.2.1 -->
+<script src="http://code.jquery.com/jquery-Latest.min.js"></script> 
 
 <script>
 var arrInput = new Array(0);
 var arrInputValue = new Array(0);
  
-function addInput() {
+/* function addInput() {
+	alert('1');
 	$(document).ready( function() {
+		alert('2');
 	  arrInput.push(arrInput.length);
 	  arrInputValue.push("");
 	  $('#inputLength').val(arrInput.length);
 	  
 	  display();
 	});
-}
+} */
+
+$(document).ready( function() {
+	
+	$("#optionBtn").click(function() {
+		  
+		  arrInput.push(arrInput.length);
+		  arrInputValue.push("");
+		  $('#inputLength').val(arrInput.length);
+		  
+		  display();
+		
+	});
+	
+});
  
 function display() {
   document.getElementById('parah').innerHTML="";
@@ -189,6 +205,7 @@ value +"'><br>";
 </head>
 <body>
 	<div><jsp:include page="../include.jsp" flush="false" /></div>
+	<br><br><br><br><br><br><br><br>
 	<!-- 게시판 등록 -->
 	<section id="writeForm">
 
@@ -204,7 +221,7 @@ value +"'><br>";
 					<th><label for="boardSubject">제 목</label></th>
 					<td class="td_right" style="height: 20px;"><input name="boardSubject" type="text"
 						id="boardSubject" required="required" style="height: 25px;"/> <form:errors
-							path="boardSubject" /></td><br>
+							path="boardSubject" /></td>
 				</tr>
 				
 				<tr>
@@ -225,7 +242,7 @@ value +"'><br>";
 					<th><label for="boardOption">옵 션</label></th>
 					<td class="td_right">
 						메인 옵션    : <input name="boardOption" type="text" id="boardOption" required="required" style="height: 25px;"/>
-						 <input type="button" value="추가하기" id="optionBtn" name="optionBtn" style="height: 25px; width: 100px" onclick="addInput();"/> <br>
+						 <input type="button" value="추가하기" id="optionBtn" name="optionBtn" style="height: 25px; width: 100px" /> <br>
 						<input type="hidden" id="inputLength" name="inputLength" value="0"> 
 						<div id="parah" style="font-size: 12px; margin-left: 15px">
 						</div>

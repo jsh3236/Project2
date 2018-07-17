@@ -111,7 +111,7 @@
     <!-- Fileupload : 파일 관리자 id(multipartResolver)는 가급적 그대로 사용할 것! -->
      <bean id="multipartResolver"
                 class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-                  <property name="maxUploadSize" value="5000000" />  <!-- 파일 크기 제한 : 50MB -->
+                  <property name="maxUploadSize" value="50000000" />  <!-- 파일 크기 제한 : 50MB -->
     </bean>          
    
     <!-- File repository : 파일 저장소 -->

@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.hibernate.mapping.Array;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -283,11 +284,12 @@ public class AdminController {
 		
 		System.out.println("userID:"+userID);
 		
-		// 총 구매 갯수
 		int listCount = complSvc.getListCount();
 		
+		double maxpageCal = ((double)map.size())/4;
+		
 		// 총 페이지 수.
-		int maxPage = (int) Math.ceil(listCount/4)-1; //  큰 정수 중 가장 가까운 정수 찾기
+		int maxPage = (int) Math.ceil(maxpageCal); //  큰 정수 중 가장 가까운 정수 찾기
 																	
 		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
 		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
@@ -339,14 +341,12 @@ public class AdminController {
 	
 
 	@RequestMapping("/manage.do")
-    public ModelAndView testd() {
+    public String testd(Model model) {
 		
         String path = "C:\\Users\\jsh32\\git\\Project2\\shoping_project\\src\\main\\webapp\\resources\\used-image";
         String fileName = "avgManage.png";
         String fileName2 = "textmining.png";
         
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/admin/management");
 
         
         String name = "";
@@ -462,14 +462,71 @@ public class AdminController {
             
             connection.close();	
             
-            view.addObject("reviewText", fileName2);
-            view.addObject("viewPage", fileName);
+            //리뷰 평균 점수 얻기
+            List<Object> reviewTemp = reviewSvc.getReviewAvgScore(); // DAO
+            List<Object[]> reviewlist = to.toList(reviewTemp.toArray()); // custom 변환 메서드
+            
+            String a = "";
+            String b = "";
+
+            // 나열 출력
+            for(int i=0; i<reviewlist.size(); i++) {
+            	
+            	for(int j=0; j<reviewlist.get(i).length; j++) {
+            		if(j==0) {
+            			a += (String)reviewlist.get(i)[j]+",";
+            		}
+            		else if(j==1) {
+            			b += (String)reviewlist.get(i)[j]+",";
+            		}
+            		
+            	}
+            }
+            
+            a = a.substring(0, a.length()-1);
+            b = b.substring(0, b.length()-1);
+            
+            StringTokenizer st = new StringTokenizer(a, ",");
+            StringTokenizer st2 = new StringTokenizer(b, ",");
+            int[] boardNumArray = new int[reviewlist.size()];
+            double[] ScoreArray = new double[reviewlist.size()];
+            int[] ScoreStarArray = new int[reviewlist.size()];
+            int countToken = st.countTokens();
+            System.out.println("countToken :"+countToken);
+            for(int i=0; i<countToken; i++) {
+            	
+            	boardNumArray[i] = Integer.parseInt(st.nextToken().trim());
+            	ScoreArray[i] = Double.parseDouble(st2.nextToken().trim());
+            	ScoreStarArray[i] = (int)Math.floor(ScoreArray[i]);
+            	
+            }
+            
+            for(int i=0; i<countToken; i++) {
+	            System.out.println("boardNumArray[i] : "+boardNumArray[i]);
+	        	System.out.println("ScoreArray[i] : "+ScoreArray[i]);
+	        	System.out.println("ScoreStarArray[i] : "+ScoreStarArray[i]);
+            }
+            
+            
+            String[] boardName = new String[countToken];
+            //boardnum에 맞는 이름 가져오기
+            for(int i=0; i<countToken; i++) {
+            		System.out.println("boardSvc.getArticle(boardNumArray[i]).getBoardSubject() :" +boardSvc.getArticle(boardNumArray[i]).getBoardSubject());
+            		boardName[i] = boardSvc.getArticle(boardNumArray[i]).getBoardSubject();
+            }
+            
+            model.addAttribute("boardName", boardName);
+            model.addAttribute("ScoreArray", ScoreArray);
+            model.addAttribute("ScoreStarArray", ScoreStarArray);
+            model.addAttribute("reviewText", fileName2);
+            model.addAttribute("viewPage", fileName);
             
         } catch (Exception e) {
         	System.out.println("!! 에러 !!");
             System.out.println(e);
         }
-        return view;
+        
+        return "/admin/management";
 	}
 	
 	

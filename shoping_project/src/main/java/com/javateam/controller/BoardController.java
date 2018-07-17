@@ -95,19 +95,24 @@ public class BoardController {
         List<String> reviewDate = new ArrayList<>();
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         
-        // 리뷰 총 점수 얻기
-        int totalScore = 0;
+        // 리뷰 총 점수의 평균과 별 점수(낮은 정수) 얻기
+        double totalScore = 0;
+        int totalScoreStar = 0;
         
         for(ReviewVO r: review) {
         	reviewDate.add(s.format(r.getReviewDate()));
         	totalScore += r.getReviewScore();
         }
         
-        if(!review.isEmpty()) totalScore = (int) Math.floor(totalScore/review.size());
+        if(!review.isEmpty()) {
+        	totalScore = Math.round(totalScore/review.size()*10)/10;
+        	totalScoreStar = (int) Math.floor(totalScore);
+        }
         
         // 리뷰 리스트 갯수 얻기
         int reviewCount = reviewSvc.getCount(boardNum);
         
+        model.addAttribute("totalScoreStar", totalScoreStar);
         model.addAttribute("totalScore", totalScore);
         model.addAttribute("reviewCount", reviewCount);
         model.addAttribute("reviewDate",reviewDate);
@@ -124,19 +129,15 @@ public class BoardController {
    
 	
 
-	@RequestMapping("/keyBoardwrite")
+	@RequestMapping("/keyBoard")
 	public void keyBoard() {
 	}
 	
-	@RequestMapping("/mouseBoard2")
-	public void mouseBoard2() {
-	}
-
-	@RequestMapping("/headBoardwrite")
+	@RequestMapping("/headBoard")
 	public void headBoard() {
 	}
 
-	@RequestMapping("/monitorBoardwrite")
+	@RequestMapping("/monitorBoard")
 	public void monitorBoard() {
 	}
 

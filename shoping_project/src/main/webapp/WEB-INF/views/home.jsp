@@ -79,14 +79,14 @@
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(${pageContext.request.contextPath}/resources/used-image/css_image/keyboard.jpg)">
 						<div class="banner_category">
-							<a href="#">Keyboard</a>
+							<a href="${pageContext.request.contextPath}/board/keyBoard">Keyboard</a>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="banner_item align-items-center" style="background-image:url(${pageContext.request.contextPath}/resources/used-image/css_image/monitor.jpg)">
 						<div class="banner_category">
-							<a href="#">Monitor</a>
+							<a href="${pageContext.request.contextPath}/board/monitorBoard">Monitor</a>
 						</div>
 					</div>
 				</div>
@@ -121,7 +121,7 @@
 				<div class="col">
 					<div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
 
-						<c:forEach var="board" items="${boardRelist}" varStatus="st">
+					<%-- 	<c:forEach var="board" items="${boardlist}" varStatus="st">
 							<div class="product-item MOUSE">
 								<div class="product discount product_filter">
 									<div class="product_image">
@@ -138,6 +138,47 @@
 								</div>
 								<div class="red_button add_to_cart_button"><a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${board.boardNum}">go buy</a></div>
 							</div>
+						</c:forEach> --%>
+						
+						<c:forEach var="board" items="${boardlist}" varStatus="st">
+								<div class="product-item MOUSE">
+									<div class="product discount">
+										<div class="product_image">
+											<img src="<c:url value='/image/${board.boardFile}' />" alt=""/>
+										</div>
+										<c:choose>
+									      	<c:when test="${board.boardDflag eq 'sale'}">
+									      	
+									            <div class="favorite favorite_left"></div>
+												<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-${board.boardSale}</span></div>
+												<div class="product_info">
+													<h6 class="product_name"><a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${board.boardNum}">${board.boardSubject}</a></h6>
+													<div class="product_price">${board.boardPrice}원<span>${board.boardPrice+board.boardSale}원</span></div>
+												</div>
+												
+									      	</c:when>
+									       	<c:when test="${board.boardDflag eq 'new'}">
+									       	
+									        	<div class="favorite"></div>
+												<div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
+												<div class="product_info">
+													<h6 class="product_name"><a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${board.boardNum}">${board.boardSubject}</a></h6>
+													<div class="product_price">${board.boardPrice}원</div>
+												</div>
+										
+									      	</c:when>
+									      	<c:otherwise>
+									      	
+									        	<div class="favorite"></div>
+										        <div class="product_info">
+													<h6 class="product_name"><a href="${pageContext.request.contextPath}/board/boardDetail.do/boardNum/${board.boardNum}">${board.boardSubject}</a></h6>
+													<div class="product_price">${board.boardPrice}원</div>
+												</div>
+												
+										    </c:otherwise>
+									    </c:choose>
+									</div>
+								</div>
 						</c:forEach>
 						
 						<!-- product 6 -->
@@ -215,7 +256,7 @@
 			</div>
 		</div>
 	</div>
-
+<%-- 
 	<!-- Best Sellers -->
 
 	<div class="best_sellers">
@@ -231,6 +272,50 @@
 				<div class="col">
 					<div class="product_slider_container">
 						<div class="owl-carousel owl-theme product_slider">
+						
+							<!-- Slide Product -->
+						<c:forEach var="board" items="${boardlist}" varStatus="st">
+							<div class="owl-item product_slider_item">
+								<div class="product-item women">
+									<div class="product discount">
+										<div class="product_image">
+											<img src="<c:url value='/image/${board.boardFile}' />" alt=""/>
+										</div>
+										<c:choose>
+									      	<c:when test="${board.boardDflag eq 'sale'}">
+									      	
+									            <div class="favorite favorite_left"></div>
+												<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-${board.boardSale}</span></div>
+												<div class="product_info">
+													<h6 class="product_name"><a href="../boardDetail.do/boardNum/${board.boardNum}">${board.boardSubject}</a></h6>
+													<div class="product_price">${board.boardPrice}원<span>${board.boardPrice+board.boardSale}원</span></div>
+												</div>
+												
+									      	</c:when>
+									       	<c:when test="${board.boardDflag eq 'new'}">
+									       	
+									        	<div class="favorite"></div>
+												<div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>
+												<div class="product_info">
+													<h6 class="product_name"><a href="../boardDetail.do/boardNum/${board.boardNum}">${board.boardSubject}</a></h6>
+													<div class="product_price">${board.boardPrice}원</div>
+												</div>
+										
+									      	</c:when>
+									      	<c:otherwise>
+									      	
+									        	<div class="favorite"></div>
+										        <div class="product_info">
+													<h6 class="product_name"><a href="../boardDetail.do/boardNum/${board.boardNum}">${board.boardSubject}</a></h6>
+													<div class="product_price">${board.boardPrice}원</div>
+												</div>
+												
+										    </c:otherwise>
+									    </c:choose>
+									</div>
+								</div>
+							</div>
+						</c:forEach>
 
 							<!-- Slide 1 -->
 
@@ -420,7 +505,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --%>
 
 	<!-- Benefit -->
 

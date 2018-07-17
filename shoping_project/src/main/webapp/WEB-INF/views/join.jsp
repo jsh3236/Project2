@@ -60,6 +60,35 @@ font {
 	color: #FF3636;
 	font-weight: 900;
 }
+
+.main_slider
+{
+	width: 100%;
+	height: 700px;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center center;
+	margin: auto;
+	
+}
+.main_slider_content
+{
+	width: 60%;
+	text-align: center;
+	margin: auto;
+}
+.main_slider_content h6
+{
+	font-weight: 500;
+	text-transform: uppercase;
+	margin-bottom: 29px;
+}
+.main_slider_content h1
+{
+	font-weight: 400;
+	line-height: 1;
+	font-size: 50px;
+}
 </style>
 
 
@@ -195,7 +224,6 @@ font {
 $(function() {
 	
 	$("input#idcheck").click(function(e) {
-		alert('1');
 		
 		    $.ajax ({
 		    	
@@ -203,18 +231,17 @@ $(function() {
 		    	type :'post',
 		    	dataType:'text',
 		    	data : {
-		    		username : $('#username').val()
+		    		username : $('#userId').val()
 		    	},
 		    	success : function(data) {
-		    		
-		    		if(data.trim()==1) { //서버 리턴 전송값 1 (ID 사용 가능)
+		    		if(data.trim()=='1') { //서버 리턴 전송값 1 (ID 사용 가능)
 		    		
 		    			// 메세지 팝업 처리
 		    			$('#username_err').text("사용할 수 있는 ID 입니다.");
 		    			$('#username_err').css('color', 'black');
 		    			$('#username').focus();
 		    			
-		    		} else if(data.trim()==3){ // 서버 리턴 값 3 (ID 사용 불가)
+		    		} else if(data.trim()=='3'){ // 서버 리턴 값 3 (ID 사용 불가)
 		    			
 		    			// 메세지 팝업 처리
 		    			$('#username_err').text("중복된  ID가 존재합니다.");
@@ -223,7 +250,7 @@ $(function() {
 		    			$('#username').val("");
 		    			$('#username').focus();
 		    			
-		    		} else if(data.trim()==2){ // 서버 리턴 2 (ID 6자 이하일때)
+		    		} else if(data.trim()=='2'){ // 서버 리턴 2 (ID 6자 이하일때)
 		    			
 		    			$('#username_err').text("");
 		    			$('#username').focus();
@@ -291,7 +318,12 @@ function joinUp() {
 
 <body ng-app="joinBody" ng-controller="joinAngularController">
 <div><jsp:include page="include.jsp" flush="false" /></div>
-<br><br><br><br><br>
+<br><br><br><br><br><br><br>
+
+	<div class="main_slider_content">
+		<h1>회원 가입</h1>
+	</div><br>
+	
 	<form id="join" 
 		  name="join" 
 		  action="joinAction" 
@@ -333,12 +365,12 @@ function joinUp() {
 				<td>
 					
 						<input type="text" 
-							   id="username" 
-							   name="username" 
+							   id="userId" 
+							   name="userId" 
 							   size=15 
 							   maxlength="20"
 							   style="height: 20px" 
-							   ng-model="username"
+							   ng-model="userId"
 							   ng-pattern="/^[a-zA-Z]{1}\w{5,19}$/" 
 							   ng-required="true"> &nbsp;
 							  
@@ -354,7 +386,7 @@ function joinUp() {
 					</div>
 					<div id="username_msg" 
 						ng-model="username_msg"
-						ng-show="join.username.$error.pattern">
+						ng-show="join.userId.$error.pattern">
 						<font size="2"> 
 							* 영문 숫자를 조합하여 6~20자 이내로 입력 <br> 
 							  (대소문자 구별. 한글/특수문자 사용 불가)

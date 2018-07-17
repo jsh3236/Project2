@@ -61,4 +61,12 @@ public class ReviewServiceImpl implements ReviewService {
 		return dao.getAllReview();
 	}
 
+	@Override
+	public List<Object> getReviewAvgScore() {
+
+		log.info("getReviewAvgScore ##");
+		
+		return dao.getReviewAvgScore();
+	}
+
 }

@@ -31,6 +31,7 @@ public interface JpaDAO {
 	List<PaymentComplVO> getCompl(String sc);
 	List<Object> getPayment();
 	List<ReviewVO> getAllReview();
+	List<Object> getReviewAvgScore();
 	
 	void update(BoardVO board);
 	void updateSale(BoardVO board);

@@ -148,8 +148,8 @@ function deleteBtn(boardNum) {
 						</div>
 						<ul class="sidebar_categories">
 							<li class="active"><a href="${pageContext.request.contextPath}/board/mouse/1"><span><i class="fa fa-angle-double-right" aria-hidden="true"></i></span>Mouse</a></li>
-							<li><a href="#">Keyboard</a></li>
-							<li><a href="#">Monitor</a></li>
+							<li><a href="${pageContext.request.contextPath}/board/keyBoard">Keyboard</a></li>
+							<li><a href="${pageContext.request.contextPath}/board/monitorBoard">Monitor</a></li>
 						</ul>
 					</div>
 

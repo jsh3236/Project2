@@ -51,7 +51,7 @@ function writeReview() {
 		
 		
 			
-		<div class="col-lg-6 add_review_col">
+		<div class="col-lg-6 add_review_col" style="margin: auto;">
 
 			<div class="add_review">
 				<form id="review_form" id="reviewform" action="${pageContext.request.contextPath}/user/reviewWriteAction.do" method="post">
@@ -86,7 +86,7 @@ function writeReview() {
 						<textarea id="content" class="input_review" name="content"  placeholder="내용을 입력해 주세요." rows="4"></textarea>
 					</div>
 					<div class="text-left text-sm-right">
-						<button id="review_submit" type="submit" class="red_button review_submit_btn trans_300" value="Submit">완료</button>
+						<button id="review_submit" type="submit" class="red_button review_submit_btn trans_300" style="width: 100%" value="Submit">완료</button>
 					</div>
 				</form>
 			</div>

@@ -223,44 +223,52 @@ function getOption(opt, size) {
 						<ul class="star_rating">
 							<c:choose>
 							
-								<c:when test="${totalScore eq 1}">
+								<c:when test="${totalScoreStar eq 1}">
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 								</c:when>
-								<c:when test="${totalScore eq 2}">
+								<c:when test="${totalScoreStar eq 2}">
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 								</c:when>
-								<c:when test="${totalScore eq 3}">
+								<c:when test="${totalScoreStar eq 3}">
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 								</c:when>
-								<c:when test="${totalScore eq 4}">
+								<c:when test="${totalScoreStar eq 4}">
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
 								</c:when>
-								<c:when test="${totalScore eq 5}">
+								<c:when test="${totalScoreStar eq 5}">
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 									<li><i class="fa fa-star" aria-hidden="true"></i></li>
 								</c:when>
+								<c:otherwise>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+									<li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+								</c:otherwise>
 							</c:choose>
 							
 						</ul>
+						(${totalScore})
 					</div>
 					<div class="product_color">
 						<span>Option:</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

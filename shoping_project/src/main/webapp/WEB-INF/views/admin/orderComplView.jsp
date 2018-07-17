@@ -67,7 +67,7 @@ function progress(complNum) {
 
 	<section id="listForm" style="width: 1000px; margin: auto;">
 		<div align="center">
-			<h2>구매 목록</h2>
+			<h2>사용자 구매 목록 관리</h2>
 		</div>
 		<br>
 			<table id="payment_tbl" class="mytable">

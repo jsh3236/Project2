@@ -222,7 +222,7 @@ public class JpaDAOImpl implements JpaDAO {
 								+ "                       m.*,"
 								+ "                       FLOOR((ROWNUM - 1)/? + 1) page " + "                FROM ("
 								+ "                         SELECT * FROM board_tbl "
-								+ "                ORDER BY BOARD_RE_REF DESC, BOARD_RE_SEQ ASC " + "                     ) m"
+								+ "                ORDER BY board_num desc " + "                     ) m"
 								+ "              )" + "      WHERE page = ?";
 
 		try {
@@ -922,6 +922,39 @@ public class JpaDAOImpl implements JpaDAO {
 		
 		return list;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Object> getReviewAvgScore() {
+		
+		String list_sql = "select board_num,avg(review_score) as avgScore from review_tbl group by board_num order by avgscore desc";
+		
+		
+		List<Object> list = null;
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = transactionManager.getTransaction(def);
+		
+		try {
+			
+			list = entityManager.createNativeQuery(list_sql)
+					.getResultList(); 
+					
+			System.out.println("getReviewAvgScore : "+list);
+			
+			transactionManager.commit(status);
+			
+		} catch (Exception e) {
+			
+			log.info("getReviewAvgScore error");
+			transactionManager.rollback(status);
+			
+		} //
+		
+		return list;
+	}
+
 
 	@Override
 	public void insert(ReviewVO review) {
