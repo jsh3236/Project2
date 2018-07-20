@@ -105,7 +105,7 @@ public class BoardController {
         }
         
         if(!review.isEmpty()) {
-        	totalScore = Math.round(totalScore/review.size()*10)/10;
+        	totalScore = (double) Math.round(totalScore/review.size()*100)/100;
         	totalScoreStar = (int) Math.floor(totalScore);
         }
         

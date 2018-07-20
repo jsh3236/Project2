@@ -318,8 +318,8 @@ public class AdminController {
 	}
 	
 
-	@RequestMapping("/progressAction.do/{complNum}")
-	public String progress(@PathVariable("complNum") int complNum) {
+	@RequestMapping("/progressAction.do/{complNum}/{page}")
+	public String progress(@PathVariable("complNum") int complNum,@PathVariable("page") int page) {
 		
 		PaymentComplVO payment = complSvc.get(complNum);
 		
@@ -329,7 +329,7 @@ public class AdminController {
 		
 		complSvc.updatePaymentCompl(payment);
 		
-		return "redirect:/admin/paymentComplete/1";
+		return "redirect:/admin/paymentComplete/"+page;
 	}
 	
 	@RequestMapping("/management")
@@ -351,7 +351,7 @@ public class AdminController {
         
         String name = "";
         String payment = "";
-        
+        int height = 0;
        
         
         myToString to = new myToString();
@@ -380,10 +380,13 @@ public class AdminController {
         String reviewTxt = "";
         
         for(ReviewVO r : review) {
-        	reviewTxt += r.getReviewContent()+" ";
+        		reviewTxt += r.getReviewContent()+" ";
         }
        
         System.out.println("reviewTxt : "+ reviewTxt);
+        
+        //상품 수에 따른 y축 길이
+        height = review.size()*23;
         
         RConnection connection = null;
         
@@ -412,8 +415,8 @@ public class AdminController {
             connection.eval("payment <- c("+payment.substring(0, payment.length()-1)+")");
             connection.eval("pp <- data.frame(이름=name,판매수입=payment)");
             connection.eval("pp$pos <- pp$판매수입>=mean(pp$판매수입)");
-            connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height=600)");
-            connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매수입, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(fill='평균 이상')+ scale_y_continuous(labels = scales::comma)+theme(axis.title.y=element_text(size=20),axis.title.x=element_text(size=20)))");
+            connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName+"',width=800,height="+height+")");
+            connection.parseAndEval("print(ggplot(pp, aes(x = 이름, y = 판매수입, fill = pos)) + geom_col(size = .25) + scale_fill_manual(values = c('#F7756B', '#00BEFF')) +labs(fill='평균 이상')+ scale_y_continuous(labels = scales::comma)+theme(axis.title.y=element_text(size=20),axis.title.x=element_text(size=20),axis.text.y=element_text(size=12,colour='grey20',angle=0))+ coord_flip());");
             connection.parseAndEval("print(dev.off());");
             
             
@@ -456,8 +459,8 @@ public class AdminController {
             connection.eval("top_20 <- df_word %>% arrange(desc(freq)) %>% head(20)");
             connection.eval("pal <- brewer.pal(9,'Blues')[5:9]");
             connection.eval("palete <- brewer.pal(9,'Set1')");
-            connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName2+"',width=400,height=300)");
-            connection.parseAndEval("print(wordcloud(words = df_word$word, freq=df_word$freq, scale=c(5,0.5), rot.per=0.25, min.freq=1, random.order=F, random.color=T, colors=pal))");
+            connection.eval("png(filename='C:/Users/jsh32/git/Project2/shoping_project/src/main/webapp/resources/used-image/"+fileName2+"',width=400,height=400)");
+            connection.parseAndEval("print(wordcloud(words = df_word$word, freq=df_word$freq, scale=c(8,0.5), rot.per=0.25, min.freq=1, random.order=F, random.color=T, colors=pal))");
             connection.parseAndEval("print(dev.off());");
             
             connection.close();	
@@ -496,15 +499,9 @@ public class AdminController {
             for(int i=0; i<countToken; i++) {
             	
             	boardNumArray[i] = Integer.parseInt(st.nextToken().trim());
-            	ScoreArray[i] = Double.parseDouble(st2.nextToken().trim());
+            	double testScore = Double.parseDouble(st2.nextToken().trim());
+            	ScoreArray[i] = (double) Math.round(testScore*100)/100;
             	ScoreStarArray[i] = (int)Math.floor(ScoreArray[i]);
-            	
-            }
-            
-            for(int i=0; i<countToken; i++) {
-	            System.out.println("boardNumArray[i] : "+boardNumArray[i]);
-	        	System.out.println("ScoreArray[i] : "+ScoreArray[i]);
-	        	System.out.println("ScoreStarArray[i] : "+ScoreStarArray[i]);
             }
             
             

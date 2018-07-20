@@ -53,7 +53,7 @@
 	<br><br><br><br><br><br><br>
 	
 </div>
-<div class="main_slider_content">
+<div class="main_slider_content" style="width: 1600px;">
 	<h1 style="margin-bottom: 50px">상품 별</h1>
 	<table style="margin: auto;">
 		<tr>
@@ -133,7 +133,7 @@
 	
 	<br><br><br><br>
 	
-	<div class="main_slider_content">
+	<div class="main_slider_content" style="width: 1600px;">
 		<h1>리뷰 텍스트 마이닝</h1>
 		<h6>리뷰 단어의 빈도를 통한 성향 확인</h6>
 		<img src="<c:url value='/image/${reviewText}' />" />

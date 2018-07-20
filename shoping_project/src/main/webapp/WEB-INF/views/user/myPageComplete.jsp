@@ -104,7 +104,7 @@ function openDetail(num){
 				</tr>
 				<c:forEach items="${boardNumMap}" var="map" varStatus="mapSt">
 					<tr style="border-bottom: 3px solid #369; height: 100px">
-						<td style="width :310px;">
+						<td style="width :300px;">
 							${datefront[mapSt.index]}<br>${dateback[mapSt.index]}(${complArticleList[mapSt.index].complNum})
 						</td>
 						<td colspan="5">
@@ -115,19 +115,19 @@ function openDetail(num){
 										<c:set var="total" value="${total+boardTotal}" /> 
 										<c:set var="count" value="${count+1}" />
 										<tr align="center">
-											<td style="width: 380px;">	
+											<td style="width: 300px;">	
 												${article.boardSubject}
 											</td>
-											<td style="width: 90px;">
+											<td style="width: 100px;">
 												${article.orderOption}
 											</td>
-											<td style="width: 90px;">	
+											<td style="width: 100px;">	
 												${article.orderCount}개
 											</td>
 											<td style="width: 150px;" >
 												<fmt:formatNumber type="number" value="${article.boardPrice}"/> 원 &nbsp;
 											</td>
-											<td style="width: 200px; height: 100px">
+											<td style="width: 300px; height: 100px">
 												${article.complProgress} <br>
 												<c:choose>
 												

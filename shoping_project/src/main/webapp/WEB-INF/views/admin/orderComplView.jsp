@@ -41,11 +41,11 @@ function openDetail(num){
     document.getElementById(frm).submit();
 }
 
-function progress(complNum) {
+function progress(complNum,page) {
 	
 	document.getElementById('progressBtn'+complNum).style.display = 'none';
 	
-	location.href='${pageContext.request.contextPath}/admin/progressAction.do/'+complNum;
+	location.href='${pageContext.request.contextPath}/admin/progressAction.do/'+complNum+'/'+page;
 	
 }
 
@@ -128,7 +128,7 @@ function progress(complNum) {
 											<td style="width: 150px;">
 												 ${article.complProgress} <br>
 												 <c:if test="${article.complProgress eq '결제완료'}">
-												 	<input type="button" id="progressBtn${article.complNum}" name="progressBtn${article.complNum}" onclick="progress(${article.complNum});" value="다음단계" /> 
+												 	<input type="button" id="progressBtn${article.complNum}" name="progressBtn${article.complNum}" onclick="progress(${article.complNum},${pageInfo.page});" value="다음단계" /> 
 												 </c:if>
 											</td>
 										</tr>

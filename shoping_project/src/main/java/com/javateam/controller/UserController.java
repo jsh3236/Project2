@@ -160,7 +160,7 @@ public class UserController {
 		if (flag.equals("1")) {
 			return "redirect:/user/orderList/1";
 		} else {
-			return "redirect:/board/boardDetail.do/boardNum/" + boardNum + "/page/" + nowPage;
+			return "redirect:/board/boardDetail.do/boardNum/" + boardNum;
 		}
 	} //
 
@@ -322,7 +322,7 @@ public class UserController {
 		                .format(new Date(System.currentTimeMillis()));
 		
 		 
-		// payment insert()
+		// payment insert() 장바구니
 		if(map.get("flag")!=null) {
 			log.info("### flag = 1 ###");
 			payment.setPaymentAddress(map.get("paymentAddress"));
@@ -343,6 +343,7 @@ public class UserController {
 			st2 = new StringTokenizer(map.get("boardNum"), ",");
 		} 
 		
+		//payment insert() 바로구매
 		if(map.get("flag2")!=null){
 			log.info("### flag2 = 2 ###");
 			
@@ -404,7 +405,9 @@ public class UserController {
 			
 			PaymentComplDTO compl = new PaymentComplDTO();
 			
-			BoardVO board = boardSvc.getArticle(Integer.parseInt(map.get("boardNum")));
+			System.out.println("map.get('boardNum2')) :"+map.get("boardNum2"));
+			
+			BoardVO board = boardSvc.getArticle(Integer.parseInt(map.get("boardNum2")));
 			
 			compl.setPaymentNum(paymentNum);
 			compl.setBoardFile(board.getBoardFile());
@@ -524,11 +527,6 @@ public class UserController {
 			dateback.add(paymentlist.get(i).getPaymentDate().substring(11, 19));
 		}
 		
-		System.out.println("#####################");
-		System.out.println("datefront : "+datefront);
-		System.out.println("dateback : "+dateback);
-		System.out.println("#####################");
-				
 
 		
 		int listCount = complSvc.getListCount(username);
@@ -538,11 +536,6 @@ public class UserController {
 		// 총 페이지 수.
 		int maxPage = (int) Math.ceil(maxpageCal); //  큰 정수 중 가장 가까운 정수 찾기
 		
-		System.out.println("map.size() :"+map.size());
-		System.out.println("maxpageCal :"+maxpageCal);
-		System.out.println("Math.floor(map.size()/4) :"+Math.floor(map.size()/4));
-		System.out.println("maxPage :"+maxPage);
-																	
 		// 현재 페이지에 보여줄 시작 페이지 수 (1, 11, 21,...)
 		int startPage = (((int) ((double) page / 10 + 0.9)) - 1) * 10 + 1;
 		// 현재 페이지에 보여줄 마지막 페이지 수(10, 20, 30, ...)
@@ -560,13 +553,11 @@ public class UserController {
 		pageInfo.setStartPage(startPage);
 		
 		List<Boolean> flag = new ArrayList<>();
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
 		for(int i=0; i<paymentArticleList.size(); i++) {
 			System.out.println("paymentArticleList.get(i).getComplNum() :"+paymentArticleList.get(i).getComplNum());
 			flag.add(reviewSvc.hasReview(paymentArticleList.get(i).getComplNum(), username));
 			System.out.println("flag :"+flag.get(i));
 		}
-		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!2");
 
 		
 		model.addAttribute("hasReview", flag);
